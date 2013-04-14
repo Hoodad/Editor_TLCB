@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Artemis;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -19,6 +20,8 @@ namespace MapEditor_TLCB
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        private EntityWorld world;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -33,7 +36,8 @@ namespace MapEditor_TLCB
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+
+            world = new EntityWorld();
 
             base.Initialize();
         }
