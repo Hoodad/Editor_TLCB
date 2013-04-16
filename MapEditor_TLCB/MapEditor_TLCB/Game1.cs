@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Artemis;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
+
+using Artemis;
+using Squid;
 
 namespace MapEditor_TLCB
 {
@@ -19,7 +19,7 @@ namespace MapEditor_TLCB
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
+        GUI gameGUI;
         private EntityWorld world;
 
         public Game1()
@@ -36,9 +36,9 @@ namespace MapEditor_TLCB
         /// </summary>
         protected override void Initialize()
         {
-
+            GuiHost.Renderer = new RendererXNA(this);
+            gameGUI = new GUI();
             world = new EntityWorld();
-
             base.Initialize();
         }
 
@@ -70,9 +70,11 @@ namespace MapEditor_TLCB
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            gameGUI.Size = new Squid.Point(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            gameGUI.Update();
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
+            //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Press)
+            //      this.Exit();
 
             // TODO: Add your update logic here
 
@@ -89,6 +91,7 @@ namespace MapEditor_TLCB
 
             // TODO: Add your drawing code here
 
+            gameGUI.Draw();
             base.Draw(gameTime);
         }
     }
