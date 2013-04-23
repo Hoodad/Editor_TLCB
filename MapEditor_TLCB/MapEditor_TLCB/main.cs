@@ -24,7 +24,7 @@ namespace MapEditor_TLCB
 					useMaxiumRes = true;
 				}
 			}
-			using (Game1 game = new Game1(useFullscreen, useMaxiumRes))
+			using (Editor game = new Editor(useFullscreen, useMaxiumRes))
 			{
 				game.Run();
 			}

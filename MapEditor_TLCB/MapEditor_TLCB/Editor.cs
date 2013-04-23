@@ -11,13 +11,14 @@ using Microsoft.Xna.Framework.Input;
 using Artemis;
 
 using TomShane.Neoforce.Controls;
+using MapEditor_TLCB.Systems;
 
 namespace MapEditor_TLCB
 {
 	/// <summary>
 	/// This is the main type for your game
 	/// </summary>
-	public class Game1 : Microsoft.Xna.Framework.Game
+	public class Editor : Microsoft.Xna.Framework.Game
 	{
 		GraphicsDeviceManager graphics;
 		SpriteBatch spriteBatch;
@@ -27,7 +28,7 @@ namespace MapEditor_TLCB
 		private Window dialog;
 		private	KeyboardState oldState;
 
-		public Game1(bool p_useFullScreen, bool p_useMaxiumRes)
+		public Editor(bool p_useFullScreen, bool p_useMaxiumRes)
 		{
 			graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
@@ -82,12 +83,19 @@ namespace MapEditor_TLCB
 			dialog.Visible = true;
 
 			manager.Add(dialog);
-	
 
 			world = new EntityWorld();
 			base.Initialize();
+
+			InitializeAllSystem();
 		}
 
+		public void InitializeAllSystem()
+		{
+			world.SystemManager.SetSystem(new ActionSystem(), ExecutionType.UpdateSynchronous);
+			world.SystemManager.SetSystem(new ContentSystem(Content,graphics), ExecutionType.UpdateSynchronous);
+			world.InitializeAll();
+		}
 		/// <summary>
 		/// LoadContent will be called once per game and is the place to load
 		/// all of your content.
@@ -131,16 +139,16 @@ namespace MapEditor_TLCB
 				{
 					if (oldState.IsKeyDown(Keys.Z))
 					{
-						//ActionSystem sys = (ActionSystem)m_world.SystemManager.GetSystem<ActionSystem>()[0];
-						//sys.UndoLastPerformedAction();
+						ActionSystem sys = (ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0];
+						sys.UndoLastPerformedAction();
 					}
 				}
 				if (newState.IsKeyUp(Keys.Y))
 				{
 					if (oldState.IsKeyDown(Keys.Y))
 					{
-						//ActionSystem sys = (ActionSystem)m_world.SystemManager.GetSystem<ActionSystem>()[0];
-						//sys.RedoLastAction();
+						ActionSystem sys = (ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0];
+						sys.RedoLastAction();
 					}
 				}
 			}

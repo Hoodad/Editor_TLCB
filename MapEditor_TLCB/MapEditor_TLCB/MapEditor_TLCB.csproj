@@ -116,9 +116,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Game1.cs" />
+    <Compile Include="Actions\ChangeColor.cs" />
+    <Compile Include="Actions\Interface\ActionInterface.cs" />
+    <Compile Include="ActionsSerialized.cs" />
+    <Compile Include="Editor.cs" />
     <Compile Include="main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serializer.cs" />
+    <Compile Include="Systems\ActionSystem.cs" />
+    <Compile Include="Systems\ContentSystem.cs" />
+    <Compile Include="Systems\Interface\ActionSystemInterface.cs" />
+    <Compile Include="Systems\ToolbarSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
