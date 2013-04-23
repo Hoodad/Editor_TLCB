@@ -32,14 +32,13 @@ namespace MapEditor_TLCB.Systems
 			toolbarWindow.Visible = true;
 			toolbarWindow.Resizable = false;
 			toolbarWindow.CloseButtonVisible = false;
-			toolbarWindow.BorderVisible = false;
+			//toolbarWindow.BorderVisible = false;
 			//toolbar.Movable = false;
 			manager.Add(toolbarWindow);
 		}
 
 		public override void Process()
 		{
-			throw new Exception("The method or operation is not implemented.");
 		}
 	}
 }

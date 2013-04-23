@@ -94,6 +94,7 @@ namespace MapEditor_TLCB
 		{
 			world.SystemManager.SetSystem(new ActionSystem(), ExecutionType.UpdateSynchronous);
 			world.SystemManager.SetSystem(new ContentSystem(Content,graphics), ExecutionType.UpdateSynchronous);
+			world.SystemManager.SetSystem(new ToolbarSystem(manager), ExecutionType.UpdateSynchronous);
 			world.InitializeAll();
 		}
 		/// <summary>
