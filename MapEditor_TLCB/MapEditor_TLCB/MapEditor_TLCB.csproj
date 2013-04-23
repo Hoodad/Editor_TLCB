@@ -126,7 +126,10 @@
     <Compile Include="Systems\ActionSystem.cs" />
     <Compile Include="Systems\ContentSystem.cs" />
     <Compile Include="Systems\Interface\ActionSystemInterface.cs" />
+    <Compile Include="Systems\NotificationBarSystem.cs" />
+    <Compile Include="Systems\TilemapBarSystem.cs" />
     <Compile Include="Systems\ToolbarSystem.cs" />
+    <Compile Include="Systems\UndoTreeSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

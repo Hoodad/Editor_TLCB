@@ -25,7 +25,6 @@ namespace MapEditor_TLCB
 		private EntityWorld world;
 		private Manager manager;
 
-		private Window dialog;
 		private	KeyboardState oldState;
 
 		public Editor(bool p_useFullScreen, bool p_useMaxiumRes)
@@ -73,17 +72,6 @@ namespace MapEditor_TLCB
 			manager.TargetFrames = 120;
 			manager.Initialize();
 
-			// Create and setup Window control.
-			dialog = new Window(manager);
-			dialog.Init();
-			dialog.Text = "Render Targets";
-			dialog.Width = 480;
-			dialog.Height = 200;
-			dialog.Center();
-			dialog.Visible = true;
-
-			manager.Add(dialog);
-
 			world = new EntityWorld();
 			base.Initialize();
 
@@ -95,6 +83,9 @@ namespace MapEditor_TLCB
 			world.SystemManager.SetSystem(new ActionSystem(), ExecutionType.UpdateSynchronous);
 			world.SystemManager.SetSystem(new ContentSystem(Content,graphics), ExecutionType.UpdateSynchronous);
 			world.SystemManager.SetSystem(new ToolbarSystem(manager), ExecutionType.UpdateSynchronous);
+			world.SystemManager.SetSystem(new UndoTreeSystem(manager), ExecutionType.UpdateSynchronous);
+			world.SystemManager.SetSystem(new NotificationBarSystem(manager), ExecutionType.UpdateSynchronous);
+			world.SystemManager.SetSystem(new TilemapBarSystem(manager), ExecutionType.UpdateSynchronous);
 			world.InitializeAll();
 		}
 		/// <summary>
