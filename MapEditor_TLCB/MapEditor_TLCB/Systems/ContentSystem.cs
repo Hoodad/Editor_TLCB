@@ -28,5 +28,9 @@ namespace MapEditor_TLCB.Systems
 		{
 			return deviceManager.GraphicsDevice.Viewport;
 		}
+		public Point GetViewportSize()
+		{
+			return new Point(deviceManager.GraphicsDevice.Viewport.Width, deviceManager.GraphicsDevice.Viewport.Height);
+		}
 	}
 }

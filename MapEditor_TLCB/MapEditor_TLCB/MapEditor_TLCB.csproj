@@ -99,6 +99,7 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml">
       <Private>False</Private>
     </Reference>
@@ -125,6 +126,8 @@
     <Compile Include="Serializer.cs" />
     <Compile Include="Systems\ActionSystem.cs" />
     <Compile Include="Systems\ContentSystem.cs" />
+    <Compile Include="Systems\StateSystem.cs" />
+    <Compile Include="Systems\XNAInputSystem.cs" />
     <Compile Include="Systems\Interface\ActionSystemInterface.cs" />
     <Compile Include="Systems\NotificationBarSystem.cs" />
     <Compile Include="Systems\TilemapBarSystem.cs" />
@@ -167,6 +170,9 @@
       <ProductName>Microsoft XNA Framework Redistributable 4.0</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CustomControls\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />

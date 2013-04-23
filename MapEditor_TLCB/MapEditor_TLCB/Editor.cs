@@ -86,6 +86,8 @@ namespace MapEditor_TLCB
 			world.SystemManager.SetSystem(new UndoTreeSystem(manager), ExecutionType.UpdateSynchronous);
 			world.SystemManager.SetSystem(new NotificationBarSystem(manager), ExecutionType.UpdateSynchronous);
 			world.SystemManager.SetSystem(new TilemapBarSystem(manager), ExecutionType.UpdateSynchronous);
+			world.SystemManager.SetSystem(new XNAInputSystem(), ExecutionType.UpdateSynchronous);
+			world.SystemManager.SetSystem(new StateSystem(manager), ExecutionType.UpdateSynchronous);
 			world.InitializeAll();
 		}
 		/// <summary>
@@ -97,6 +99,12 @@ namespace MapEditor_TLCB
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
+			System.Windows.Forms.Form f = System.Windows.Forms.Form.FromHandle(Window.Handle) as System.Windows.Forms.Form;
+			if (f != null)
+			{
+				f.FormClosing += f_FormClosing; 
+			}
+			
 			// TODO: use this.Content to load your game content here
 		}
 
@@ -116,15 +124,20 @@ namespace MapEditor_TLCB
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Update(GameTime gameTime)
 		{
+			StateSystem stateSys = (StateSystem)world.SystemManager.GetSystem<StateSystem>()[0];
+			if (stateSys.ShouldShutDown())
+			{
+				this.Exit();
+			}
 			KeyboardState newState = Keyboard.GetState(0);
 			if (newState.IsKeyUp(Keys.Escape))
 			{
 				if (oldState.IsKeyDown(Keys.Escape))
 				{
-					this.Exit();
+					stateSys.RequestToShutdown();
 				}
 			}
-
+			
 			if (newState.IsKeyDown(Keys.LeftControl))
 			{
 				if (newState.IsKeyUp(Keys.Z))
@@ -166,5 +179,15 @@ namespace MapEditor_TLCB
 			base.Draw(gameTime);
 			manager.EndDraw();
 		}
+		void f_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
+		{
+			StateSystem stateSys = (StateSystem)world.SystemManager.GetSystem<StateSystem>()[0];
+			// Check if our systems has confirmed the closing of the window
+			if (stateSys.ShouldShutDown() == false)
+			{
+				e.Cancel = true;
+				stateSys.RequestToShutdown();
+			}
+		}  
 	}
 }
