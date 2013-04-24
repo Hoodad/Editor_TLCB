@@ -5,6 +5,7 @@ using System.Text;
 using Artemis;
 using TomShane.Neoforce.Controls;
 using Microsoft.Xna.Framework.Graphics;
+using MapEditor_TLCB.CustomControls;
 
 namespace MapEditor_TLCB.Systems
 {
@@ -13,6 +14,8 @@ namespace MapEditor_TLCB.Systems
 		Manager manager;
 		Window tilemapWindow;
 
+		TilemapContainer tilemap;
+
 		public TilemapBarSystem(Manager p_manager)
 		{
 			manager = p_manager;
@@ -20,7 +23,8 @@ namespace MapEditor_TLCB.Systems
 
 		public override void Initialize()
 		{
-			Viewport viewport = ((ContentSystem)world.SystemManager.GetSystem<ContentSystem>()[0]).GetViewport();
+			ContentSystem contentSystem = ((ContentSystem)world.SystemManager.GetSystem<ContentSystem>()[0]);
+			Viewport viewport = contentSystem.GetViewport();
 
 			tilemapWindow = new Window(manager);
 			tilemapWindow.Init();
@@ -33,6 +37,14 @@ namespace MapEditor_TLCB.Systems
 			tilemapWindow.CloseButtonVisible = false;
 			//tileMap.Movable = false;
 			manager.Add(tilemapWindow);
+
+			tilemap = new TilemapContainer(manager);
+			tilemap.Init();
+			tilemap.tilemapImage = contentSystem.LoadTexture("TileSheets/tilemap_garden");
+			tilemap.Width = tilemap.tilemapImage.Width;
+			tilemap.Height = tilemap.tilemapImage.Height;
+			tilemap.Parent = tilemapWindow;
+
 		}
 
 		public override void Process()
