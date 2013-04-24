@@ -5,6 +5,7 @@ using System.Text;
 using Artemis;
 using TomShane.Neoforce.Controls;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 using MapEditor_TLCB.CustomControls;
 
 namespace MapEditor_TLCB.Systems
@@ -29,7 +30,7 @@ namespace MapEditor_TLCB.Systems
 			tilemapWindow = new Window(manager);
 			tilemapWindow.Init();
 			tilemapWindow.Text = "Tilemap";
-			tilemapWindow.Height = 200;
+			tilemapWindow.Height = 224;
 			tilemapWindow.Width = (int)((float)viewport.Width * 0.3f);
 			tilemapWindow.Visible = true;
 			tilemapWindow.Top = viewport.Height - tilemapWindow.Height;
@@ -38,17 +39,22 @@ namespace MapEditor_TLCB.Systems
 			//tileMap.Movable = false;
 			manager.Add(tilemapWindow);
 
-			tilemap = new TilemapContainer(manager);
+			tilemap = new TilemapContainer(manager, contentSystem.LoadTexture("TileSheets/tilemap_garden"), contentSystem.LoadTexture("TileSelector_v3"), tilemapWindow);
 			tilemap.Init();
-			tilemap.tilemapImage = contentSystem.LoadTexture("TileSheets/tilemap_garden");
 			tilemap.Width = tilemap.tilemapImage.Width;
 			tilemap.Height = tilemap.tilemapImage.Height;
 			tilemap.Parent = tilemapWindow;
+			tilemap.CanFocus = false;
+			tilemap.Click += new TomShane.Neoforce.Controls.EventHandler(OnClick);
 
 		}
 
 		public override void Process()
 		{
+		}
+		public void OnClick(object sender, TomShane.Neoforce.Controls.EventArgs e)
+		{
+
 		}
 	}
 }
