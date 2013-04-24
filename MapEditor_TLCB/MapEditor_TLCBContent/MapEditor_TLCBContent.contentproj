@@ -56,20 +56,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TileSelector.png">
-      <Name>TileSelector</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="TileSelector_v2.png">
-      <Name>TileSelector_v2</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="TileSelector_v3.png">
       <Name>TileSelector_v3</Name>
       <Importer>TextureImporter</Importer>
