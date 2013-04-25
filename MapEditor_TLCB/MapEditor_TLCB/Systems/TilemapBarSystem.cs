@@ -31,15 +31,17 @@ namespace MapEditor_TLCB.Systems
 			tilemapWindow.Init();
 			tilemapWindow.Text = "Tilemap";
 			tilemapWindow.Height = 224;
-			tilemapWindow.Width = (int)((float)viewport.Width * 0.3f);
+			tilemapWindow.Width = 576;
 			tilemapWindow.Visible = true;
 			tilemapWindow.Top = viewport.Height - tilemapWindow.Height;
-			tilemapWindow.Left = (int)((float)viewport.Width * 0.7f);
+			tilemapWindow.Left = (int)((float)viewport.Width -tilemapWindow.Width);
 			tilemapWindow.CloseButtonVisible = false;
+			tilemapWindow.MaximumHeight = 960 + 54;
+			tilemapWindow.MaximumWidth = 960;
 			//tileMap.Movable = false;
 			manager.Add(tilemapWindow);
 
-			tilemap = new TilemapContainer(manager, contentSystem.LoadTexture("TileSheets/tilemap_garden"), contentSystem.LoadTexture("TileSelector_v3"), tilemapWindow);
+			tilemap = new TilemapContainer(manager, contentSystem.LoadTexture("TileSheets/tilemap_garden"), contentSystem.LoadTexture("TileSelector_v3"), tilemapWindow, contentSystem.GetViewportSize());
 			tilemap.Init();
 			tilemap.Width = tilemap.tilemapImage.Width;
 			tilemap.Height = tilemap.tilemapImage.Height;
