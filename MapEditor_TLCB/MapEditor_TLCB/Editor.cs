@@ -12,6 +12,7 @@ using Artemis;
 
 using TomShane.Neoforce.Controls;
 using MapEditor_TLCB.Systems;
+using MapEditor_TLCB.Components;
 
 namespace MapEditor_TLCB
 {
@@ -76,20 +77,41 @@ namespace MapEditor_TLCB
 			base.Initialize();
 
 			InitializeAllSystem();
+			InitializeEntities();
 		}
 
 		public void InitializeAllSystem()
 		{
-			world.SystemManager.SetSystem(new ActionSystem(), ExecutionType.UpdateSynchronous);
-			world.SystemManager.SetSystem(new ContentSystem(Content,graphics), ExecutionType.UpdateSynchronous);
-			world.SystemManager.SetSystem(new ToolbarSystem(manager), ExecutionType.UpdateSynchronous);
-			world.SystemManager.SetSystem(new UndoTreeSystem(manager), ExecutionType.UpdateSynchronous);
-			world.SystemManager.SetSystem(new NotificationBarSystem(manager), ExecutionType.UpdateSynchronous);
-			world.SystemManager.SetSystem(new TilemapBarSystem(manager), ExecutionType.UpdateSynchronous);
-			world.SystemManager.SetSystem(new XNAInputSystem(), ExecutionType.UpdateSynchronous);
-			world.SystemManager.SetSystem(new StateSystem(manager), ExecutionType.UpdateSynchronous);
+			//world.SystemManager.SetSystem(new ActionSystem(), ExecutionType.UpdateSynchronous);
+			//world.SystemManager.SetSystem(new ContentSystem(Content,graphics), ExecutionType.UpdateSynchronous);
+			//world.SystemManager.SetSystem(new ToolbarSystem(manager), ExecutionType.UpdateSynchronous);
+			//world.SystemManager.SetSystem(new UndoTreeSystem(manager), ExecutionType.UpdateSynchronous);
+			//world.SystemManager.SetSystem(new NotificationBarSystem(manager), ExecutionType.UpdateSynchronous);
+			//world.SystemManager.SetSystem(new TilemapBarSystem(manager), ExecutionType.UpdateSynchronous);
+			//world.SystemManager.SetSystem(new XNAInputSystem(), ExecutionType.UpdateSynchronous);
+			//world.SystemManager.SetSystem(new StateSystem(manager), ExecutionType.UpdateSynchronous);
+			world.SystemManager.SetSystem(new RoadAndWallMapperSystem(), ExecutionType.UpdateSynchronous);
 			world.InitializeAll();
 		}
+
+		private void InitializeEntities()
+		{
+			Entity entity = world.CreateEntity();
+			//entity.Tag = "mainTilemap";
+			//entity.AddComponent(new Tilemap(10, 10, 32, 32));
+			entity.Refresh();
+			
+			//entity = world.CreateEntity();
+			//entity.Tag = "roadTilemap";
+			//entity.AddComponent(new Tilemap(10, 10, 32, 32));
+			//entity.Refresh();
+			//
+			//entity = world.CreateEntity();
+			//entity.Tag = "wallTilemap";
+			//entity.AddComponent(new Tilemap(10, 10, 32, 32));
+			//entity.Refresh();
+		}
+
 		/// <summary>
 		/// LoadContent will be called once per game and is the place to load
 		/// all of your content.
@@ -124,44 +146,44 @@ namespace MapEditor_TLCB
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Update(GameTime gameTime)
 		{
-			StateSystem stateSys = (StateSystem)world.SystemManager.GetSystem<StateSystem>()[0];
-			if (stateSys.ShouldShutDown())
-			{
-				this.Exit();
-			}
-			KeyboardState newState = Keyboard.GetState(0);
-			if (newState.IsKeyUp(Keys.Escape))
-			{
-				if (oldState.IsKeyDown(Keys.Escape))
-				{
-					stateSys.RequestToShutdown();
-				}
-			}
-			
-			if (newState.IsKeyDown(Keys.LeftControl))
-			{
-				if (newState.IsKeyUp(Keys.Z))
-				{
-					if (oldState.IsKeyDown(Keys.Z))
-					{
-						ActionSystem sys = (ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0];
-						sys.UndoLastPerformedAction();
-					}
-				}
-				if (newState.IsKeyUp(Keys.Y))
-				{
-					if (oldState.IsKeyDown(Keys.Y))
-					{
-						ActionSystem sys = (ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0];
-						sys.RedoLastAction();
-					}
-				}
-			}
-			// Call manager updates.
-			manager.Update(gameTime);
-			world.Update(gameTime.ElapsedGameTime.Seconds);
+			//StateSystem stateSys = (StateSystem)world.SystemManager.GetSystem<StateSystem>()[0];
+			//if (stateSys.ShouldShutDown())
+			//{
+			//	this.Exit();
+			//}
+			//KeyboardState newState = Keyboard.GetState(0);
+			//if (newState.IsKeyUp(Keys.Escape))
+			//{
+			//	if (oldState.IsKeyDown(Keys.Escape))
+			//	{
+			//		stateSys.RequestToShutdown();
+			//	}
+			//}
+			//
+			//if (newState.IsKeyDown(Keys.LeftControl))
+			//{
+			//	if (newState.IsKeyUp(Keys.Z))
+			//	{
+			//		if (oldState.IsKeyDown(Keys.Z))
+			//		{
+			//			ActionSystem sys = (ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0];
+			//			sys.UndoLastPerformedAction();
+			//		}
+			//	}
+			//	if (newState.IsKeyUp(Keys.Y))
+			//	{
+			//		if (oldState.IsKeyDown(Keys.Y))
+			//		{
+			//			ActionSystem sys = (ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0];
+			//			sys.RedoLastAction();
+			//		}
+			//	}
+			//}
+			//// Call manager updates.
+			//manager.Update(gameTime);
+			world.Update(gameTime.ElapsedGameTime.Milliseconds / 1000.0f);
 
-			oldState = newState;
+			//oldState = newState;
 		}
 
 		/// <summary>
