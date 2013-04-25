@@ -60,13 +60,15 @@ namespace MapEditor_TLCB.Systems
 		public override void Process()
 		{
             notificationBar.Update(World.Delta / 1000.0f);
-            notificationWindow.CloseButtonVisible = !notificationWindow.CloseButtonVisible;
-            notificationWindow.CloseButtonVisible = !notificationWindow.CloseButtonVisible;
+   
+            
             notificationBar.Width = notificationWindow.Width;
             notificationBar.Height = notificationWindow.Height;
             if (notificationWindow.Width != originalWidth)
                 notificationWindow.Width = originalWidth;
             notificationBar.Height = notificationWindow.Height;
+
+            notificationWindow.Refresh();
 		}
 	}
 }
