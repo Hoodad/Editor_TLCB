@@ -88,6 +88,7 @@ namespace MapEditor_TLCB
 			world.SystemManager.SetSystem(new TilemapBarSystem(manager), ExecutionType.UpdateSynchronous);
 			world.SystemManager.SetSystem(new XNAInputSystem(), ExecutionType.UpdateSynchronous);
 			world.SystemManager.SetSystem(new StateSystem(manager), ExecutionType.UpdateSynchronous);
+            world.SystemManager.SetSystem(new RadialMenuSystem(GraphicsDevice, Content), ExecutionType.UpdateSynchronous);
 			world.InitializeAll();
 		}
 		/// <summary>
@@ -159,7 +160,7 @@ namespace MapEditor_TLCB
 			}
 			// Call manager updates.
 			manager.Update(gameTime);
-			world.Update(gameTime.ElapsedGameTime.Seconds);
+			world.Update(gameTime.ElapsedGameTime.Milliseconds / 1000.0f);
 
 			oldState = newState;
 		}
@@ -174,6 +175,9 @@ namespace MapEditor_TLCB
 
 			spriteBatch.Begin();
 			GraphicsDevice.Clear(Color.White);
+
+            RadialMenuSystem radial = (RadialMenuSystem)world.SystemManager.GetSystem<RadialMenuSystem>()[0];
+            radial.Render(spriteBatch);
 
 			spriteBatch.End();
 			base.Draw(gameTime);
