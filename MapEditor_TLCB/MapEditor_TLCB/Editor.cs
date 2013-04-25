@@ -12,6 +12,7 @@ using Artemis;
 
 using TomShane.Neoforce.Controls;
 using MapEditor_TLCB.Systems;
+using MapEditor_TLCB.Components;
 
 namespace MapEditor_TLCB
 {
@@ -24,6 +25,7 @@ namespace MapEditor_TLCB
 		SpriteBatch spriteBatch;
 		private EntityWorld world;
 		private Manager manager;
+		Dictionary<string, Texture2D> textures;
 
 		private	KeyboardState oldState;
 
@@ -31,6 +33,7 @@ namespace MapEditor_TLCB
 		{
 			graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
+			textures = new Dictionary<string, Texture2D>();
 
 			IsMouseVisible = true;
 
@@ -73,24 +76,49 @@ namespace MapEditor_TLCB
 			manager.Initialize();
 
 			world = new EntityWorld();
-			base.Initialize();
 
-			InitializeAllSystem();
+			base.Initialize();
 		}
 
 		public void InitializeAllSystem()
 		{
-			world.SystemManager.SetSystem(new ActionSystem(), ExecutionType.UpdateSynchronous);
-			world.SystemManager.SetSystem(new ContentSystem(Content,graphics), ExecutionType.UpdateSynchronous);
-			world.SystemManager.SetSystem(new ToolbarSystem(manager), ExecutionType.UpdateSynchronous);
-			world.SystemManager.SetSystem(new UndoTreeSystem(manager), ExecutionType.UpdateSynchronous);
-			world.SystemManager.SetSystem(new NotificationBarSystem(manager, GraphicsDevice, Content), ExecutionType.UpdateSynchronous);
-			world.SystemManager.SetSystem(new TilemapBarSystem(manager), ExecutionType.UpdateSynchronous);
-			world.SystemManager.SetSystem(new XNAInputSystem(), ExecutionType.UpdateSynchronous);
-			world.SystemManager.SetSystem(new StateSystem(manager), ExecutionType.UpdateSynchronous);
-			world.SystemManager.SetSystem(new RadialMenuSystem(GraphicsDevice, Content), ExecutionType.UpdateSynchronous);
-			world.InitializeAll();
+			SystemManager systemManager = world.SystemManager;
+			systemManager.SetSystem(new ActionSystem(), ExecutionType.Update);
+			systemManager.SetSystem(new ContentSystem(Content,graphics), ExecutionType.Update);
+			systemManager.SetSystem(new ToolbarSystem(manager), ExecutionType.Update);
+			systemManager.SetSystem(new UndoTreeSystem(manager), ExecutionType.Update);
+			systemManager.SetSystem(new NotificationBarSystem(manager, GraphicsDevice, Content), ExecutionType.Update);
+			systemManager.SetSystem(new TilemapBarSystem(manager), ExecutionType.Update);
+			systemManager.SetSystem(new XNAInputSystem(), ExecutionType.Update);
+			systemManager.SetSystem(new StateSystem(manager), ExecutionType.Update);
+			systemManager.SetSystem(new RoadAndWallMapperSystem(), ExecutionType.Update);
+			systemManager.SetSystem(new RoadToolSystem(), ExecutionType.Update);
+			world.SystemManager.SetSystem(new RadialMenuSystem(GraphicsDevice, Content), ExecutionType.Update);
+
+			world.SystemManager.SetSystem(new DrawCanvasSystem(textures, spriteBatch), ExecutionType.Draw);
+			world.SystemManager.InitializeAll();
 		}
+
+		private void InitializeEntities()
+		{
+			Entity entity = world.CreateEntity();
+			entity.Tag = "mainTilemap";
+			entity.AddComponent(new Tilemap(10, 10, 32, 32));
+			entity.AddComponent(new Transform(new Vector2(400.0f, 200.0f)));
+			entity.AddComponent(new TilemapRender("tilemap_garden"));
+			entity.Refresh();
+			
+			entity = world.CreateEntity();
+			entity.Tag = "roadTilemap";
+			entity.AddComponent(new Tilemap(10, 10, 32, 32));
+			entity.Refresh();
+			
+			entity = world.CreateEntity();
+			entity.Tag = "wallTilemap";
+			entity.AddComponent(new Tilemap(10, 10, 32, 32));
+			entity.Refresh();
+		}
+
 		/// <summary>
 		/// LoadContent will be called once per game and is the place to load
 		/// all of your content.
@@ -103,8 +131,14 @@ namespace MapEditor_TLCB
 			System.Windows.Forms.Form f = System.Windows.Forms.Form.FromHandle(Window.Handle) as System.Windows.Forms.Form;
 			if (f != null)
 			{
-				f.FormClosing += f_FormClosing; 
+				f.FormClosing += f_FormClosing;
 			}
+			
+			textures.Add("tilemap_garden", Content.Load<Texture2D>("TileSheets/tilemap_garden"));
+			textures.Add("tilemap_winecellar", Content.Load<Texture2D>("TileSheets/tilemap_winecellar"));
+
+			InitializeAllSystem();
+			InitializeEntities();
 			
 			// TODO: use this.Content to load your game content here
 		}
@@ -160,7 +194,9 @@ namespace MapEditor_TLCB
 			}
 			// Call manager updates.
 			manager.Update(gameTime);
-			world.Update(gameTime.ElapsedGameTime.Milliseconds / 1000.0f);
+			world.Delta = gameTime.ElapsedGameTime.Milliseconds;
+			world.LoopStart();
+			world.SystemManager.UpdateSynchronous(ExecutionType.Update);
 
 			oldState = newState;
 		}
@@ -175,11 +211,13 @@ namespace MapEditor_TLCB
 
 			spriteBatch.Begin();
 			GraphicsDevice.Clear(Color.White);
+			world.SystemManager.UpdateSynchronous(ExecutionType.Draw);
 
 			RadialMenuSystem radial = (RadialMenuSystem)world.SystemManager.GetSystem<RadialMenuSystem>()[0];
 			radial.Render(spriteBatch);
 
 			spriteBatch.End();
+
 			base.Draw(gameTime);
 			manager.EndDraw();
 		}

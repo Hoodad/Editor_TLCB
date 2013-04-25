@@ -55,7 +55,7 @@ namespace MapEditor_TLCB.Systems
 		}
 		public override void Process()
 		{
-            notificationBar.Update(World.ElapsedTime);
+            notificationBar.Update(World.Delta / 1000.0f);
             notificationWindow.CloseButtonVisible = !notificationWindow.CloseButtonVisible;
             notificationWindow.CloseButtonVisible = !notificationWindow.CloseButtonVisible;
             notificationBar.Width = notificationWindow.Width;

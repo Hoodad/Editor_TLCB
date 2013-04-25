@@ -63,8 +63,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="artemis">
-      <HintPath>Artemis\artemis.dll</HintPath>
+    <Reference Include="artemis, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\Diamonde\Desktop\artemis.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
       <Private>False</Private>
@@ -121,6 +122,10 @@
     <Compile Include="Actions\Interface\ActionInterface.cs" />
     <Compile Include="ActionsSerialized.cs" />
     <Compile Include="CustomControls\NotificationBarContainer.cs" />
+    <Compile Include="Components\Tilemap.cs" />
+    <Compile Include="Components\TilemapRender.cs" />
+    <Compile Include="Components\Transform.cs" />
+    <Compile Include="ContactMap.cs" />
     <Compile Include="CustomControls\TilemapContainer.cs" />
     <Compile Include="Editor.cs" />
     <Compile Include="main.cs" />
@@ -131,10 +136,14 @@
     <Compile Include="Radial Menu\RadialMenuContext.cs" />
     <Compile Include="Radial Menu\RadialMenuItem.cs" />
     <Compile Include="Radial Menu\SwitchRadialData.cs" />
+    <Compile Include="RoadMapper.cs" />
     <Compile Include="Serializer.cs" />
     <Compile Include="Systems\ActionSystem.cs" />
     <Compile Include="Systems\ContentSystem.cs" />
     <Compile Include="Systems\RadialMenuSystem.cs" />
+    <Compile Include="Systems\DrawCanvasSystem.cs" />
+    <Compile Include="Systems\RoadAndWallMapperSystem.cs" />
+    <Compile Include="Systems\RoadToolSystem.cs" />
     <Compile Include="Systems\StateSystem.cs" />
     <Compile Include="Systems\XNAInputSystem.cs" />
     <Compile Include="Systems\Interface\ActionSystemInterface.cs" />
@@ -142,6 +151,7 @@
     <Compile Include="Systems\TilemapBarSystem.cs" />
     <Compile Include="Systems\ToolbarSystem.cs" />
     <Compile Include="Systems\UndoTreeSystem.cs" />
+    <Compile Include="WallMapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
