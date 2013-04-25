@@ -34,15 +34,17 @@ namespace MapEditor_TLCB.Systems
 			notificationWindow = new Window(manager);
 			notificationWindow.Init();
 			notificationWindow.Text = "Notification Bar";
-			notificationWindow.Height = 200;
+			notificationWindow.Height = 159;
 			notificationWindow.Width = (int)((float)viewport.Width * 0.3f);
 			notificationWindow.Visible = true;
 			notificationWindow.Top = viewport.Height - notificationWindow.Height;
 			notificationWindow.Left = 0;
 			notificationWindow.CloseButtonVisible = false;
+            notificationWindow.AutoScroll = false;
+            notificationWindow.Resizable = false;
 			manager.Add(notificationWindow);
 
-            NotificationBar data = new NotificationBar(m_device, m_content);
+            NotificationBar data = new NotificationBar(m_device, m_content, 400, 25);
 
             notificationBar = new NotificationBarContainer(manager, notificationWindow, data);
             notificationBar.Init();
@@ -56,6 +58,8 @@ namespace MapEditor_TLCB.Systems
             notificationBar.Update(World.ElapsedTime);
             notificationWindow.CloseButtonVisible = !notificationWindow.CloseButtonVisible;
             notificationWindow.CloseButtonVisible = !notificationWindow.CloseButtonVisible;
+            notificationBar.Width = notificationWindow.Width;
+            notificationBar.Height = notificationWindow.Height;
 		}
 	}
 }

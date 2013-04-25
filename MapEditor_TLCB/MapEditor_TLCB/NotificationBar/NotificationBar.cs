@@ -34,9 +34,9 @@ namespace MapEditor_TLCB
         float m_transitionDT;
         int m_transitionCurrent;
 
-        int m_addType;
+        int m_addType = 3;
 
-        float m_transitionTime = 0.1f;
+        float m_transitionTime = 0.25f;
 
         Notification m_awaitingAdd;
 
@@ -54,7 +54,7 @@ namespace MapEditor_TLCB
         float m_timeNotOver = 100;
         float m_timeOver = 0;
 
-        float m_maxAge = 5;
+        float m_maxAge = 10;
 
         int m_unseen = 0;
 
@@ -64,11 +64,12 @@ namespace MapEditor_TLCB
         bool m_pressed = false;
         bool m_active = true;
 
-        public NotificationBar(GraphicsDevice p_gd, ContentManager p_content)
+        float m_randomAddTimer = 0;
+
+        public NotificationBar(GraphicsDevice p_gd, ContentManager p_content, float p_width, float p_height)
         {
-            m_addType = 0;
-            m_width = 400;
-            m_height = 25;
+            m_width = (int)p_width;
+            m_height = (int)p_height;
             m_border = 2;
             m_barTexture = new Texture2D(p_gd, m_width, m_height);
             m_transition = false;
@@ -280,6 +281,33 @@ namespace MapEditor_TLCB
                 else
                     m_pressed = false;
             }
+
+            m_randomAddTimer += p_dt;
+            if (m_randomAddTimer > 2.0f)
+            {
+                m_randomAddTimer = 0;
+
+                Random random = new Random();
+                int rnd = random.Next(4);
+                Notification note = null;
+                if (rnd == 0)
+                {
+                    note = new Notification("Anton pwns Robin", NotificationType.ERROR);
+                }
+                else if (rnd == 1)
+                {
+                    note = new Notification("Anton l33t, Johan N00b", NotificationType.WARNING);
+                }
+                else if (rnd == 2)
+                {
+                    note = new Notification("Anton handles Jarl like a small potatoe", NotificationType.SUCCESS);
+                }
+                else
+                {
+                    note = new Notification("Anton kills all with cool rocket launcher", NotificationType.INFO);
+                }
+                addNotification(note);
+            }
         }
         public void draw(SpriteBatch p_sb)
         {
@@ -288,11 +316,9 @@ namespace MapEditor_TLCB
 
             if (m_addType == 0 || m_addType == 1)
             {
-                draw1(p_sb);
             }
             else if (m_addType == 2)
             {
-                draw2(p_sb);
             }
             else
             {
@@ -345,167 +371,6 @@ namespace MapEditor_TLCB
             p_sb.DrawString(m_font, text, m_position - new Vector2(-50 + textSize.X*0.5f, 12.5f + textSize.Y*0.5f), textColor);*/
 
         }
-        public void draw1(SpriteBatch p_sb)
-        {
-            Color warningColor = new Color(255, 242, 184, 255);
-            Color successColor = new Color(185, 255, 182, 255);
-            Color errorColor = new Color(255, 202, 202, 255);
-            Color infoColor = new Color(176, 224, 230, 255);
-
-
-            Vector2 startPos = m_position;// +new Vector2(m_barBorder, m_barBorder);
-            for (int i = 0; i < 5; i++)
-            {
-                Vector2 barPos = startPos + new Vector2(0, m_height * i);
-
-                p_sb.Draw(m_barTexture, barPos, Color.White);
-                if (m_notifications.Count - i - 1 != m_transitionCurrent ||
-                    m_transition == false)
-                {
-                    if (m_notifications.Count - i - 1 >= 0)
-                    {
-                        Notification n = m_notifications[m_notifications.Count - i - 1];
-                        Texture2D icon = m_info;
-                        Color color = infoColor;
-                        if (n.type == NotificationType.ERROR)
-                        {
-                            color = errorColor;
-                            icon = m_error;
-                        }
-                        else if (n.type == NotificationType.SUCCESS)
-                        {
-                            color = successColor;
-                            icon = m_success;
-                        }
-                        else if (n.type == NotificationType.WARNING)
-                        {
-                            color = warningColor;
-                            icon = m_warning;
-                        }
-
-                        float grayness = Math.Min(n.age / m_maxAge, 1.0f);
-
-                        Color barColor = Color.White;
-                        barColor.R = (byte)(color.R * (1 - grayness) + Color.White.R * grayness);
-                        barColor.G = (byte)(color.G * (1 - grayness) + Color.White.G * grayness);
-                        barColor.B = (byte)(color.B * (1 - grayness) + Color.White.B * grayness);
-                        barColor.A = (byte)(color.A * (1 - grayness) + Color.White.A * grayness);
-
-                        Rectangle rect;
-                        rect.X = 0;
-                        rect.Y = (int)((startPos + new Vector2(0, m_height * i)).Y);
-                        rect.Width = m_width;
-                        rect.Height = m_height;
-
-                        if (rect.Contains(Mouse.GetState().X, Mouse.GetState().Y))
-                            barColor = color;
-
-                        p_sb.Draw(m_barTexture, barPos, barColor);
-                        rect.X = (int)(barPos.X + m_border);
-                        rect.Y = (int)(barPos.Y + m_border);
-                        rect.Width = m_height - m_border * 2;
-                        rect.Height = m_height - m_border * 2;
-
-                        p_sb.Draw(icon, rect, barColor);
-
-                        Vector2 textSize = m_font.MeasureString(n.message);
-
-                        Vector2 textPos = barPos + new Vector2(0, 0.5f * (m_height - textSize.Y));
-
-                        textPos.X += m_border + m_height;
-
-                        p_sb.DrawString(m_font, n.message, textPos, Color.Black);
-                    }
-                }
-            }
-        }
-        public void draw2(SpriteBatch p_sb)
-        {
-            Color warningColor = new Color(255, 242, 184, 255);
-            Color successColor = new Color(185, 255, 182, 255);
-            Color errorColor = new Color(255, 202, 202, 255);
-            Color infoColor = new Color(176, 224, 230, 255);
-
-
-            Vector2 startPos = m_position + new Vector2(m_barBorder, m_barBorder);
-            for (int i = 0; i < 5; i++)
-            {
-                Vector2 barPos = startPos + new Vector2(0, m_height * i);
-                p_sb.Draw(m_barTexture, barPos, Color.White);
-                if (m_notifications.Count - i - 1 != m_transitionCurrent ||
-                    m_transition == false)
-                {
-                    if (m_notifications.Count - i - 1 >= 0)
-                    {
-                        Notification n = m_notifications[m_notifications.Count - i - 1];
-                        Texture2D icon = m_info;
-                        Color color = infoColor;
-                        if (n.type == NotificationType.ERROR)
-                        {
-                            color = errorColor;
-                            icon = m_error;
-                        }
-                        else if (n.type == NotificationType.SUCCESS)
-                        {
-                            color = successColor;
-                            icon = m_success;
-                        }
-                        else if (n.type == NotificationType.WARNING)
-                        {
-                            color = warningColor;
-                            icon = m_warning;
-                        }
-
-                        float grayness = Math.Min(n.age / m_maxAge, 1.0f);
-
-                        Color barColor = Color.White;
-                        barColor.R = (byte)(color.R * (1 - grayness) + Color.White.R * grayness);
-                        barColor.G = (byte)(color.G * (1 - grayness) + Color.White.G * grayness);
-                        barColor.B = (byte)(color.B * (1 - grayness) + Color.White.B * grayness);
-                        barColor.A = (byte)(color.A * (1 - grayness) + Color.White.A * grayness);
-
-                        Rectangle rect;
-                        rect.X = 0;
-                        rect.Y = (int)((startPos + new Vector2(0, m_height * i)).Y);
-                        rect.Width = m_width;
-                        rect.Height = m_height;
-
-                        if (rect.Contains(Mouse.GetState().X, Mouse.GetState().Y))
-                            barColor = color;
-
-                        Color textColor = Color.Black;
-                        if (m_transition && m_notifications.Count - i - 1 == m_transitionCurrent + 1)
-                        {
-                            float opacity = 1.0f - m_transitionDT / m_transitionTime;
-                            barColor *= opacity;
-                            textColor *= opacity;
-                        }
-                        else if (m_transition && m_notifications.Count - i - 1 == m_transitionCurrent - 1)
-                        {
-                            float opacity = m_transitionDT / m_transitionTime;
-                            barColor *= opacity;
-                            textColor *= opacity;
-                        }
-
-                        p_sb.Draw(m_barTexture, barPos, barColor);
-                        rect.X = (int)(barPos.X + m_border);
-                        rect.Y = (int)(barPos.Y + m_border);
-                        rect.Width = m_height - m_border * 2;
-                        rect.Height = m_height - m_border * 2;
-
-                        p_sb.Draw(icon, rect, barColor);
-
-                        Vector2 textSize = m_font.MeasureString(n.message);
-
-                        Vector2 textPos = barPos + new Vector2(0, 0.5f * (m_height - textSize.Y));
-
-                        textPos.X += m_border + m_height;
-
-                        p_sb.DrawString(m_font, n.message, textPos, textColor);
-                    }
-                }
-            }
-        }
         public void draw3(SpriteBatch p_sb)
         {
             Color warningColor = new Color(255, 242, 184, 255);
@@ -520,7 +385,7 @@ namespace MapEditor_TLCB
                 offset *= m_height;
             }
 
-            Vector2 startPos = m_position + new Vector2(m_barBorder, m_barBorder + offset);
+            Vector2 startPos = m_position + new Vector2(0, offset);// +new Vector2(m_barBorder, m_barBorder + offset);
             for (int i = 0; i < 5; i++)
             {
                 if (m_transition && i == 4)
