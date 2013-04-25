@@ -44,8 +44,8 @@ namespace MapEditor_TLCB
 			}
 			else
 			{
-				graphics.PreferredBackBufferWidth = 1920;
-				graphics.PreferredBackBufferHeight = 1080;
+				graphics.PreferredBackBufferWidth = 1280;
+				graphics.PreferredBackBufferHeight = 720;
 			}
 			graphics.ApplyChanges();
 		}
@@ -88,7 +88,7 @@ namespace MapEditor_TLCB
 			world.SystemManager.SetSystem(new TilemapBarSystem(manager), ExecutionType.UpdateSynchronous);
 			world.SystemManager.SetSystem(new XNAInputSystem(), ExecutionType.UpdateSynchronous);
 			world.SystemManager.SetSystem(new StateSystem(manager), ExecutionType.UpdateSynchronous);
-            world.SystemManager.SetSystem(new RadialMenuSystem(GraphicsDevice, Content), ExecutionType.UpdateSynchronous);
+			world.SystemManager.SetSystem(new RadialMenuSystem(GraphicsDevice, Content), ExecutionType.UpdateSynchronous);
 			world.InitializeAll();
 		}
 		/// <summary>
@@ -176,8 +176,8 @@ namespace MapEditor_TLCB
 			spriteBatch.Begin();
 			GraphicsDevice.Clear(Color.White);
 
-            RadialMenuSystem radial = (RadialMenuSystem)world.SystemManager.GetSystem<RadialMenuSystem>()[0];
-            radial.Render(spriteBatch);
+			RadialMenuSystem radial = (RadialMenuSystem)world.SystemManager.GetSystem<RadialMenuSystem>()[0];
+			radial.Render(spriteBatch);
 
 			spriteBatch.End();
 			base.Draw(gameTime);

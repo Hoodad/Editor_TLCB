@@ -103,7 +103,7 @@ namespace MapEditor_TLCB.Systems
 			exitButton.Parent = toolbarWindow;
 			exitButton.Text = "Exit";
 			exitButton.Width = toolbarWindow.Width;
-			exitButton.Height = 24;
+			exitButton.Height = 25;
 			exitButton.Left = 0;
 			exitButton.Top = toolbarWindow.Height - exitButton.Height;
 			exitButton.Click += new TomShane.Neoforce.Controls.EventHandler(ExitBehavior);
