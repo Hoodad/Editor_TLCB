@@ -25,6 +25,7 @@ namespace MapEditor_TLCB
 		SpriteBatch spriteBatch;
 		private EntityWorld world;
 		private Manager manager;
+		Dictionary<string, Texture2D> textures;
 
 		private	KeyboardState oldState;
 
@@ -32,6 +33,7 @@ namespace MapEditor_TLCB
 		{
 			graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
+			textures = new Dictionary<string, Texture2D>();
 
 			IsMouseVisible = true;
 
@@ -74,10 +76,8 @@ namespace MapEditor_TLCB
 			manager.Initialize();
 
 			world = new EntityWorld();
-			base.Initialize();
 
-			InitializeAllSystem();
-			InitializeEntities();
+			base.Initialize();
 		}
 
 		public void InitializeAllSystem()
@@ -91,6 +91,8 @@ namespace MapEditor_TLCB
 			world.SystemManager.SetSystem(new XNAInputSystem(), ExecutionType.Update);
 			world.SystemManager.SetSystem(new StateSystem(manager), ExecutionType.Update);
 			world.SystemManager.SetSystem(new RoadAndWallMapperSystem(), ExecutionType.Update);
+
+			world.SystemManager.SetSystem(new DrawCanvasSystem(textures, spriteBatch), ExecutionType.Draw);
 			world.SystemManager.InitializeAll();
 		}
 
@@ -99,6 +101,8 @@ namespace MapEditor_TLCB
 			Entity entity = world.CreateEntity();
 			entity.Tag = "mainTilemap";
 			entity.AddComponent(new Tilemap(10, 10, 32, 32));
+			entity.AddComponent(new Transform(new Vector2(400.0f, 200.0f)));
+			entity.AddComponent(new TilemapRender("tilemap_garden"));
 			entity.Refresh();
 			
 			entity = world.CreateEntity();
@@ -124,8 +128,14 @@ namespace MapEditor_TLCB
 			System.Windows.Forms.Form f = System.Windows.Forms.Form.FromHandle(Window.Handle) as System.Windows.Forms.Form;
 			if (f != null)
 			{
-				f.FormClosing += f_FormClosing; 
+				f.FormClosing += f_FormClosing;
 			}
+			
+			textures.Add("tilemap_garden", Content.Load<Texture2D>("TileSheets/tilemap_garden"));
+			textures.Add("tilemap_winecellar", Content.Load<Texture2D>("TileSheets/tilemap_winecellar"));
+
+			InitializeAllSystem();
+			InitializeEntities();
 			
 			// TODO: use this.Content to load your game content here
 		}
@@ -183,6 +193,7 @@ namespace MapEditor_TLCB
 			manager.Update(gameTime);
 			world.Delta = gameTime.ElapsedGameTime.Milliseconds;
 			world.LoopStart();
+			world.SystemManager.UpdateSynchronous(ExecutionType.Update);
 
 			oldState = newState;
 		}
@@ -197,8 +208,10 @@ namespace MapEditor_TLCB
 
 			spriteBatch.Begin();
 			GraphicsDevice.Clear(Color.White);
+			world.SystemManager.UpdateSynchronous(ExecutionType.Draw);
 
 			spriteBatch.End();
+
 			base.Draw(gameTime);
 			manager.EndDraw();
 		}

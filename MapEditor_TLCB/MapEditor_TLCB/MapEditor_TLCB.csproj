@@ -122,6 +122,8 @@
     <Compile Include="Actions\Interface\ActionInterface.cs" />
     <Compile Include="ActionsSerialized.cs" />
     <Compile Include="Components\Tilemap.cs" />
+    <Compile Include="Components\TilemapRender.cs" />
+    <Compile Include="Components\Transform.cs" />
     <Compile Include="ContactMap.cs" />
     <Compile Include="CustomControls\TilemapContainer.cs" />
     <Compile Include="Editor.cs" />
@@ -131,6 +133,7 @@
     <Compile Include="Serializer.cs" />
     <Compile Include="Systems\ActionSystem.cs" />
     <Compile Include="Systems\ContentSystem.cs" />
+    <Compile Include="Systems\DrawCanvasSystem.cs" />
     <Compile Include="Systems\RoadAndWallMapperSystem.cs" />
     <Compile Include="Systems\StateSystem.cs" />
     <Compile Include="Systems\XNAInputSystem.cs" />
