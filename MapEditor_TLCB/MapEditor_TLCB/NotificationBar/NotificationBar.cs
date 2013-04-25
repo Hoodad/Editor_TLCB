@@ -32,13 +32,8 @@ namespace MapEditor_TLCB
 
         bool m_transition;
         float m_transitionDT;
-        int m_transitionCurrent;
 
-        int m_addType = 3;
-
-        float m_transitionTime = 0.25f;
-
-        Notification m_awaitingAdd;
+        float m_transitionTime = 0.5f;
 
         int m_barWidth;
         int m_barHeight;
@@ -62,7 +57,6 @@ namespace MapEditor_TLCB
         Texture2D m_unpin;
 
         bool m_pressed = false;
-        bool m_active = true;
 
         float m_randomAddTimer = 0;
 
@@ -74,7 +68,6 @@ namespace MapEditor_TLCB
             m_barTexture = new Texture2D(p_gd, m_width, m_height);
             m_transition = false;
             m_transitionDT = 0;
-            m_transitionCurrent = 0;
 
             Color[] data = new Color[m_width * m_height];
 
@@ -123,37 +116,12 @@ namespace MapEditor_TLCB
         }
         public void addNotification(Notification p_notification)
         {
-            if (m_addType == 0 || m_addType == 2)
-            {
-                int ind = m_notifications.Count - Math.Min(m_notifications.Count, 5);
-                m_notifications.Insert(ind, p_notification);
-                m_transition = true;
-                m_transitionCurrent = ind;
-                m_transitionDT = 0;
-            }
-            else if (m_addType == 3)
-            {
-                m_awaitingAdd = p_notification;
-                m_transition = true;
-                m_transitionDT = 0;
-            }
-            else
-            {
-                m_notifications.Add(p_notification);
-            }
+            m_notifications.Add(p_notification);
+            m_transition = true;
+            m_transitionDT = 0;
 
             if (m_openOnHover)
                 m_unseen++;
-        }
-        public void setAddType(int p_addType)
-        {
-            m_addType = p_addType;
-            if (m_addType == 2)
-                m_transitionTime = 0.1f;
-            else if (m_addType == 3)
-                m_transitionTime = 0.25f;
-            else
-                m_transitionTime = 0.1f;
         }
 
         public void setAging(bool p_value)
@@ -173,34 +141,15 @@ namespace MapEditor_TLCB
             return m_openOnHover;
         }
 
-        public void update(float p_dt)
+        public void update(float p_dt, Vector2 p_topLeft)
         {
             if (m_transition)
             {
                 m_transitionDT += p_dt;
                 if (m_transitionDT > m_transitionTime)
                 {
-                    if (m_addType < 3)
-                    {
-                        m_transitionDT -= m_transitionTime;
-                        if (m_transitionCurrent + 1 < m_notifications.Count)
-                        {
-                            Notification temp = m_notifications[m_transitionCurrent];
-                            m_notifications[m_transitionCurrent] = m_notifications[m_transitionCurrent + 1];
-                            m_notifications[m_transitionCurrent + 1] = temp;
-                            m_transitionCurrent++;
-                        }
-                        else
-                        {
-                            m_transition = false;
-                        }
-                    }
-                    else
-                    {
-                        m_transition = false;
-                        m_transitionDT = 0;
-                        m_notifications.Add(m_awaitingAdd);
-                    }
+                    m_transition = false;
+                    m_transitionDT = 0;
                 }
             }
 
@@ -240,7 +189,6 @@ namespace MapEditor_TLCB
                     {
                         m_position.Y = 623;
                         m_unseen = 0;
-                        m_active = true;
                     }
                 }
                 else
@@ -250,15 +198,10 @@ namespace MapEditor_TLCB
                     if (m_timeNotOver > 1.0f)
                     {
                         m_position.Y = 768;
-                        m_active = false;
                     }
                 }
 
                 //Check for collision against the pin
-            }
-            else
-            {
-                m_active = true;
             }
 
             dest.X = (int)m_position.X + 125;
@@ -272,7 +215,6 @@ namespace MapEditor_TLCB
                         m_openOnHover = !m_openOnHover;
                         if (m_openOnHover)
                         {
-                            m_active = false;
                             m_position.Y = 768;
                         }
                     }
@@ -309,21 +251,12 @@ namespace MapEditor_TLCB
                 addNotification(note);
             }
         }
-        public void draw(SpriteBatch p_sb)
+        public void draw(SpriteBatch p_sb, int p_height, Vector2 p_topLeft)
         {
 
             //p_sb.Draw(m_borderTexture, m_position, Color.Black);
 
-            if (m_addType == 0 || m_addType == 1)
-            {
-            }
-            else if (m_addType == 2)
-            {
-            }
-            else
-            {
-                draw3(p_sb);
-            }
+            draw3(p_sb, p_height, p_topLeft);
 
             //Pin
             /*Rectangle dest;
@@ -371,25 +304,33 @@ namespace MapEditor_TLCB
             p_sb.DrawString(m_font, text, m_position - new Vector2(-50 + textSize.X*0.5f, 12.5f + textSize.Y*0.5f), textColor);*/
 
         }
-        public void draw3(SpriteBatch p_sb)
+        public void draw3(SpriteBatch p_sb, int p_height, Vector2 p_topLeft)
         {
             Color warningColor = new Color(255, 242, 184, 255);
             Color successColor = new Color(185, 255, 182, 255);
             Color errorColor = new Color(255, 202, 202, 255);
             Color infoColor = new Color(176, 224, 230, 255);
 
+            Color warningHighlight = new Color(255, 255, 100, 255);
+            Color successHighlight = new Color(100, 200, 100, 255);
+            Color errorHighlight = new Color(255, 100, 100, 255);
+            Color infoHighlight = new Color(100, 200, 200, 255);
+
             float offset = 0;
             if (m_transition)
             {
-                offset = m_transitionDT / m_transitionTime;
+                offset = (m_transitionTime-m_transitionDT) / m_transitionTime;
                 offset *= m_height;
             }
 
-            Vector2 startPos = m_position + new Vector2(0, offset);// +new Vector2(m_barBorder, m_barBorder + offset);
-            for (int i = 0; i < 5; i++)
+            Vector2 startPos = m_position - new Vector2(0, offset);// +new Vector2(m_barBorder, m_barBorder + offset);
+
+            int count = p_height / m_height;
+            if (m_transition)
+                count++;
+
+            for (int i = 0; i < count; i++)
             {
-                if (m_transition && i == 4)
-                    break;
                 Vector2 barPos = startPos + new Vector2(0, m_height * i);
                 p_sb.Draw(m_barTexture, barPos, Color.White);
 
@@ -398,20 +339,24 @@ namespace MapEditor_TLCB
                     Notification n = m_notifications[m_notifications.Count - i - 1];
                     Texture2D icon = m_info;
                     Color color = infoColor;
+                    Color highlight = infoHighlight;
                     if (n.type == NotificationType.ERROR)
                     {
                         color = errorColor;
                         icon = m_error;
+                        highlight = errorHighlight;
                     }
                     else if (n.type == NotificationType.SUCCESS)
                     {
                         color = successColor;
                         icon = m_success;
+                        highlight = successHighlight;
                     }
                     else if (n.type == NotificationType.WARNING)
                     {
                         color = warningColor;
                         icon = m_warning;
+                        highlight = warningHighlight;
                     }
 
                     float grayness = Math.Min(n.age / m_maxAge, 1.0f);
@@ -428,8 +373,12 @@ namespace MapEditor_TLCB
                     rect.Width = m_width;
                     rect.Height = m_height;
 
-                    if (rect.Contains(Mouse.GetState().X, Mouse.GetState().Y))
-                        barColor = color;
+                    Vector2 mousePos = new Vector2(Mouse.GetState().X - p_topLeft.X, Mouse.GetState().Y - p_topLeft.Y);
+
+                    if (rect.Contains((int)mousePos.X, (int)mousePos.Y))
+                    {
+                        barColor = highlight;
+                    }
 
                     p_sb.Draw(m_barTexture, barPos, barColor);
                     rect.X = (int)(barPos.X + m_border);
@@ -447,162 +396,6 @@ namespace MapEditor_TLCB
 
                     p_sb.DrawString(m_font, n.message, textPos, Color.Black);
                 }
-            }
-            if (m_transition) //Fade out last
-            {
-                float p_opacity = 1.0f - m_transitionDT / m_transitionTime;
-
-                Vector2 barPos = startPos + new Vector2(0, m_height * (4));
-
-                Rectangle sourceRect;
-                sourceRect.X = 0;
-                sourceRect.Y = 0;
-                sourceRect.Width = m_barTexture.Width;
-                sourceRect.Height = (int)(p_opacity * m_barTexture.Height);
-
-                p_sb.Draw(m_barTexture, barPos, sourceRect, Color.White);
-
-                if (m_notifications.Count - 4 - 1 >= 0)
-                {
-
-                    Notification n = m_notifications[m_notifications.Count - 4 - 1];
-                    Texture2D icon = m_info;
-                    Color color = infoColor;
-                    if (n.type == NotificationType.ERROR)
-                    {
-                        color = errorColor;
-                        icon = m_error;
-                    }
-                    else if (n.type == NotificationType.SUCCESS)
-                    {
-                        color = successColor;
-                        icon = m_success;
-                    }
-                    else if (n.type == NotificationType.WARNING)
-                    {
-                        color = warningColor;
-                        icon = m_warning;
-                    }
-
-                    float grayness = Math.Min(n.age / m_maxAge, 1.0f);
-
-                    Color barColor = Color.White;
-                    barColor.R = (byte)(color.R * (1 - grayness) + Color.White.R * grayness);
-                    barColor.G = (byte)(color.G * (1 - grayness) + Color.White.G * grayness);
-                    barColor.B = (byte)(color.B * (1 - grayness) + Color.White.B * grayness);
-                    barColor.A = (byte)(color.A * (1 - grayness) + Color.White.A * grayness);
-
-                    Rectangle rect;
-                    rect.X = (int)barPos.X;
-                    rect.Y = (int)barPos.Y;
-                    rect.Width = m_width;
-                    rect.Height = m_height;
-
-                    if (rect.Contains(Mouse.GetState().X, Mouse.GetState().Y))
-                        barColor = color;
-
-                    barColor *= p_opacity;
-
-                    p_sb.Draw(m_barTexture, barPos, sourceRect, barColor);
-
-
-
-                    rect.X = (int)barPos.X + m_border;
-                    rect.Y = (int)barPos.Y + m_border;
-                    rect.Width = m_height - m_border * 2;
-                    rect.Height = (int)((m_height - m_border * 2) * p_opacity);
-
-                    sourceRect.X = 0;
-                    sourceRect.Y = 0;
-                    sourceRect.Width = icon.Width;
-                    sourceRect.Height = (int)(p_opacity * icon.Height);
-
-                    p_sb.Draw(icon, rect, sourceRect, barColor);
-
-                    Vector2 textSize = m_font.MeasureString(n.message);
-
-                    Vector2 textPos = barPos + new Vector2(0, 0.5f * (m_height - textSize.Y));
-
-                    textPos.X += m_border + m_height;
-
-                    //p_sb.DrawString(m_font, n.message, textPos, Color.Black);
-                }
-            }
-            if (m_transition) //Fade in new
-            {
-                float p_opacity = m_transitionDT / m_transitionTime;
-
-                //p_sb.Draw(m_barTexture, new Vector2(0, 480 - m_height * (5 - (-1)) + offset), Color.White);
-
-                Notification n = m_awaitingAdd;
-                Texture2D icon = m_info;
-                Color color = infoColor;
-                if (n.type == NotificationType.ERROR)
-                {
-                    color = errorColor;
-                    icon = m_error;
-                }
-                else if (n.type == NotificationType.SUCCESS)
-                {
-                    color = successColor;
-                    icon = m_success;
-                }
-                else if (n.type == NotificationType.WARNING)
-                {
-                    color = warningColor;
-                    icon = m_warning;
-                }
-
-                float grayness = Math.Min(n.age / m_maxAge, 1.0f);
-
-                Vector2 barPos = startPos + new Vector2(0, m_height * (-1));
-
-                Color barColor = Color.White;
-                barColor.R = (byte)(color.R * (1 - grayness) + Color.White.R * grayness);
-                barColor.G = (byte)(color.G * (1 - grayness) + Color.White.G * grayness);
-                barColor.B = (byte)(color.B * (1 - grayness) + Color.White.B * grayness);
-                barColor.A = (byte)(color.A * (1 - grayness) + Color.White.A * grayness);
-
-                Rectangle rect;
-                rect.X = (int)barPos.X;
-                rect.Y = (int)barPos.Y;
-                rect.Width = m_width;
-                rect.Height = m_height;
-
-                if (rect.Contains(Mouse.GetState().X, Mouse.GetState().Y))
-                    barColor = color;
-
-                barColor *= p_opacity;
-
-                Rectangle sourceRect;
-                sourceRect.X = 0;
-                sourceRect.Y = (int)((1 - p_opacity) * m_barTexture.Height);
-                sourceRect.Width = m_barTexture.Width;
-                sourceRect.Height = (int)(p_opacity*m_barTexture.Height);
-
-                p_sb.Draw(m_barTexture, barPos + new Vector2(0, m_barTexture.Height*(1-p_opacity)), sourceRect, barColor);
-
-
-
-                rect.X = (int)barPos.X + m_border;
-                rect.Y = (int)barPos.Y + m_border + (int)(m_barTexture.Height * (1 - p_opacity));
-                rect.Width = m_height - m_border * 2;
-                rect.Height = (int)((m_height - m_border * 2) * p_opacity);
-
-                sourceRect.X = 0;
-                sourceRect.Y = (int)((1 - p_opacity) * icon.Height);
-                sourceRect.Width = icon.Width;
-                sourceRect.Height = (int)(p_opacity * icon.Height);
-
-                p_sb.Draw(icon, rect, sourceRect, barColor);
-
-                Vector2 textSize = m_font.MeasureString(n.message);
-
-                Vector2 textPos = barPos + new Vector2(0, 0.5f * (m_height - textSize.Y));
-
-                textPos.X += m_border + m_height;
-
-                //p_sb.DrawString(m_font, n.message, textPos, Color.Black);
             }
         }
     }

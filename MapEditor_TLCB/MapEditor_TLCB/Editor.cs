@@ -174,7 +174,7 @@ namespace MapEditor_TLCB
 			manager.BeginDraw(gameTime);
 
 			spriteBatch.Begin();
-			GraphicsDevice.Clear(Color.White);
+			GraphicsDevice.Clear(Color.Gray);
 
 			RadialMenuSystem radial = (RadialMenuSystem)world.SystemManager.GetSystem<RadialMenuSystem>()[0];
 			radial.Render(spriteBatch);
