@@ -5,6 +5,8 @@ using System.Text;
 using TomShane.Neoforce.Controls;
 using Artemis;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Content;
+using MapEditor_TLCB.CustomControls;
 
 namespace MapEditor_TLCB.Systems
 {
@@ -13,9 +15,16 @@ namespace MapEditor_TLCB.Systems
 		Manager manager;
 		Window notificationWindow;
 
-		public NotificationBarSystem(Manager p_manager)
+        NotificationBarContainer notificationBar;
+
+        GraphicsDevice m_device;
+        ContentManager m_content;
+
+		public NotificationBarSystem(Manager p_manager, GraphicsDevice p_device, ContentManager p_content)
 		{
 			manager = p_manager;
+            m_device = p_device;
+            m_content = p_content;
 		}
 		public override void Initialize()
 		{
@@ -31,11 +40,24 @@ namespace MapEditor_TLCB.Systems
 			notificationWindow.Top = viewport.Height - notificationWindow.Height;
 			notificationWindow.Left = 0;
 			notificationWindow.CloseButtonVisible = false;
-			//notificationBar.Movable = false;
 			manager.Add(notificationWindow);
+
+            NotificationBar data = new NotificationBar(m_device, m_content);
+
+            notificationBar = new NotificationBarContainer(manager, notificationWindow, data);
+            notificationBar.Init();
+            notificationBar.Width = (int)((float)viewport.Width * 0.3f);// tilemap.tilemapImage.Width;
+            notificationBar.Height = 200;// tilemap.tilemapImage.Height;
+            notificationBar.Parent = notificationWindow;
+            notificationBar.CanFocus = false;
 		}
 		public override void Process()
 		{
+            notificationBar.Update(World.ElapsedTime);
+            notificationWindow.CloseButtonVisible = !notificationWindow.CloseButtonVisible;
+            notificationWindow.CloseButtonVisible = !notificationWindow.CloseButtonVisible;
 		}
 	}
 }
+
+///OSTBIT I MITTEN?

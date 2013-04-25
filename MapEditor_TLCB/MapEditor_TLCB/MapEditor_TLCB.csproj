@@ -120,9 +120,12 @@
     <Compile Include="Actions\ChangeColor.cs" />
     <Compile Include="Actions\Interface\ActionInterface.cs" />
     <Compile Include="ActionsSerialized.cs" />
+    <Compile Include="CustomControls\NotificationBarContainer.cs" />
     <Compile Include="CustomControls\TilemapContainer.cs" />
     <Compile Include="Editor.cs" />
     <Compile Include="main.cs" />
+    <Compile Include="NotificationBar\Notification.cs" />
+    <Compile Include="NotificationBar\NotificationBar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Radial Menu\RadialMenu.cs" />
     <Compile Include="Radial Menu\RadialMenuContext.cs" />
