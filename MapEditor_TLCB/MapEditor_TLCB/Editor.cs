@@ -82,15 +82,17 @@ namespace MapEditor_TLCB
 
 		public void InitializeAllSystem()
 		{
-			world.SystemManager.SetSystem(new ActionSystem(), ExecutionType.Update);
-			world.SystemManager.SetSystem(new ContentSystem(Content,graphics), ExecutionType.Update);
-			world.SystemManager.SetSystem(new ToolbarSystem(manager), ExecutionType.Update);
-			world.SystemManager.SetSystem(new UndoTreeSystem(manager), ExecutionType.Update);
-			world.SystemManager.SetSystem(new NotificationBarSystem(manager), ExecutionType.Update);
-			world.SystemManager.SetSystem(new TilemapBarSystem(manager), ExecutionType.Update);
-			world.SystemManager.SetSystem(new XNAInputSystem(), ExecutionType.Update);
-			world.SystemManager.SetSystem(new StateSystem(manager), ExecutionType.Update);
-			world.SystemManager.SetSystem(new RoadAndWallMapperSystem(), ExecutionType.Update);
+			SystemManager systemManager = world.SystemManager;
+			systemManager.SetSystem(new ActionSystem(), ExecutionType.Update);
+			systemManager.SetSystem(new ContentSystem(Content,graphics), ExecutionType.Update);
+			systemManager.SetSystem(new ToolbarSystem(manager), ExecutionType.Update);
+			systemManager.SetSystem(new UndoTreeSystem(manager), ExecutionType.Update);
+			systemManager.SetSystem(new NotificationBarSystem(manager), ExecutionType.Update);
+			systemManager.SetSystem(new TilemapBarSystem(manager), ExecutionType.Update);
+			systemManager.SetSystem(new XNAInputSystem(), ExecutionType.Update);
+			systemManager.SetSystem(new StateSystem(manager), ExecutionType.Update);
+			systemManager.SetSystem(new RoadAndWallMapperSystem(), ExecutionType.Update);
+			systemManager.SetSystem(new RoadToolSystem(), ExecutionType.Update);
 
 			world.SystemManager.SetSystem(new DrawCanvasSystem(textures, spriteBatch), ExecutionType.Draw);
 			world.SystemManager.InitializeAll();

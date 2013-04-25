@@ -25,14 +25,6 @@ namespace MapEditor_TLCB.Systems
 			return m_roadMapper;
 		}
 
-		public override void Initialize()
-		{
-		}
-
-		protected override void ProcessEntities(System.Collections.Generic.Dictionary<int, Artemis.Entity> entities)
-		{
-		}
-
 		WallMapper m_wallMapper;
 		RoadMapper m_roadMapper;
 	}
