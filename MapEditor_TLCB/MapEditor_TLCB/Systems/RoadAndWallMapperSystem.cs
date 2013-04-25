@@ -9,7 +9,7 @@ namespace MapEditor_TLCB.Systems
 {
 	class RoadAndWallMapperSystem: EntitySystem
 	{
-		public RoadAndWallMapperSystem(): base()
+		public RoadAndWallMapperSystem()
 		{
 			m_wallMapper = new WallMapper();
 			m_roadMapper = new RoadMapper();
