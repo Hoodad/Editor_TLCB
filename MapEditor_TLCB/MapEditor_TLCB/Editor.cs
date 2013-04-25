@@ -84,7 +84,7 @@ namespace MapEditor_TLCB
 			world.SystemManager.SetSystem(new ContentSystem(Content,graphics), ExecutionType.UpdateSynchronous);
 			world.SystemManager.SetSystem(new ToolbarSystem(manager), ExecutionType.UpdateSynchronous);
 			world.SystemManager.SetSystem(new UndoTreeSystem(manager), ExecutionType.UpdateSynchronous);
-			world.SystemManager.SetSystem(new NotificationBarSystem(manager), ExecutionType.UpdateSynchronous);
+			world.SystemManager.SetSystem(new NotificationBarSystem(manager, GraphicsDevice, Content), ExecutionType.UpdateSynchronous);
 			world.SystemManager.SetSystem(new TilemapBarSystem(manager), ExecutionType.UpdateSynchronous);
 			world.SystemManager.SetSystem(new XNAInputSystem(), ExecutionType.UpdateSynchronous);
 			world.SystemManager.SetSystem(new StateSystem(manager), ExecutionType.UpdateSynchronous);
