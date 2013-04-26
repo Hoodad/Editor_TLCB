@@ -225,7 +225,7 @@ namespace MapEditor_TLCB
             }
 
             m_randomAddTimer += p_dt;
-            if (m_randomAddTimer > 2.0f)
+            if (false)//m_randomAddTimer > 2.0f)
             {
                 m_randomAddTimer = 0;
 

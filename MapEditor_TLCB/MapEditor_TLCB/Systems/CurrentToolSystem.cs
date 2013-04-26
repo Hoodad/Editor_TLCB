@@ -51,13 +51,31 @@ namespace MapEditor_TLCB.Systems
             m_container.Height = currentToolWindow.Height;// tilemap.tilemapImage.Height;
             m_container.Parent = currentToolWindow;
             m_container.CanFocus = false;
+            m_container.Click += new TomShane.Neoforce.Controls.EventHandler(OnWindowClickBehavior);
 		}
 		public override void Process()
 		{
 		}
-        public CurrentToolContainer GetCurrentToolContainer()
+        public void SetCurrentTool(Tool p_tool)
         {
-            return m_container;
+            m_container.SetCurrentTool(p_tool);
+            if (p_tool == Tool.PAINT_TOOL)
+            {
+                TilemapBarSystem tbs = (TilemapBarSystem)world.SystemManager.GetSystem<TilemapBarSystem>()[0];
+                Texture2D tilemapTex = tbs.GetTilemapContainer().GetTilemapTexture();
+                m_container.SetTilemapTexture(tilemapTex);
+                m_container.SetTilemapRectangle(tbs.GetTilemapContainer().GetTilemapSourceRectangle());
+            }
+        }
+		public Tool GetCurrentTool()
+		{
+			return m_container.GetCurrentTool();
+		}
+        public void OnWindowClickBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
+        {
+            NotificationBarSystem noteSys = (NotificationBarSystem)world.SystemManager.GetSystem<NotificationBarSystem>()[0];
+            Notification n = new Notification("This window shows the current tool. Draw by left clicking on the canvas.", NotificationType.INFO);
+            noteSys.AddNotification(n);
         }
     }
 }

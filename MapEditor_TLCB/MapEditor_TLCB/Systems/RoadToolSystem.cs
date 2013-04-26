@@ -61,7 +61,7 @@ namespace MapEditor_TLCB.Systems
 
 		public override void Process()
 		{
-			Tool currentTool = m_toolSys.GetCurrentToolContainer().GetCurrentTool();
+			Tool currentTool = m_toolSys.GetCurrentTool();
 			if (mainTilemap != null && roadTilemap != null && wallTilemap != null &&
 				canvasTransform != null)
 			{

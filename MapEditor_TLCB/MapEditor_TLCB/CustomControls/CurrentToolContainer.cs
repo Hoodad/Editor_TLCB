@@ -24,6 +24,9 @@ namespace MapEditor_TLCB.CustomControls
         Texture2D m_eraserToolIcon;
         Texture2D m_paintToolIcon;
 
+        Texture2D m_tileMapIcon;
+        Rectangle m_tileMapIconRectangle;
+
         public CurrentToolContainer(Manager p_manager, Window p_parent, ContentManager p_content)
 			: base(p_manager)
 		{
@@ -47,6 +50,12 @@ namespace MapEditor_TLCB.CustomControls
             else if (m_currentTool == Tool.PAINT_TOOL)
             {
                 renderer.Draw(m_paintToolIcon, rect, Color.White);
+
+                Rectangle rect2 = rect;
+                rect2.Width = (int)(rect2.Width*0.5f);
+                rect2.Height = (int)(rect2.Height * 0.5f);
+
+                renderer.SpriteBatch.Draw(m_tileMapIcon, rect2, m_tileMapIconRectangle, Color.White);
             }
             else
             {
@@ -69,5 +78,13 @@ namespace MapEditor_TLCB.CustomControls
 		{
 			return m_currentTool;
 		}
+        public void SetTilemapTexture(Texture2D p_texture)
+        {
+            m_tileMapIcon = p_texture;
+        }
+        public void SetTilemapRectangle(Rectangle p_rectangle)
+        {
+            m_tileMapIconRectangle = p_rectangle;
+        }
     }
 }

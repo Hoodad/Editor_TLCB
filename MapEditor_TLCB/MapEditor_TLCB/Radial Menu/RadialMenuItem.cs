@@ -39,18 +39,52 @@ namespace MapEditor_TLCB
 
         public RadialMenu submenu;
 
-        public RadialMenuItem(string p_text, Texture2D p_texture, EventData p_event)
+        public Rectangle sourceRect;
+
+        public float scale;
+
+        public RadialMenuItem(string p_text, Texture2D p_texture, EventData p_event, float p_scale = 1.0f)
         {
             text = p_text;
             texture = p_texture;
             activateEvent = p_event;
+
+            sourceRect.X = 0;
+            sourceRect.Y = 0;
+            sourceRect.Width = p_texture.Width;
+            sourceRect.Height = p_texture.Height;
+            scale = p_scale;
         }
-        public RadialMenuItem(string p_text, Texture2D p_texture, RadialMenu p_submenu)
+        public RadialMenuItem(string p_text, Texture2D p_texture, EventData p_event, Rectangle p_sourceRect, float p_scale = 1.0f)
+        {
+            text = p_text;
+            texture = p_texture;
+            activateEvent = p_event;
+            sourceRect = p_sourceRect;
+            scale = p_scale;
+        }
+        public RadialMenuItem(string p_text, Texture2D p_texture, RadialMenu p_submenu, float p_scale = 1.0f)
         {
             text = p_text;
             texture = p_texture;
             submenu = p_submenu;
             activateEvent = null;
+
+            sourceRect.X = 0;
+            sourceRect.Y = 0;
+            sourceRect.Width = p_texture.Width;
+            sourceRect.Height = p_texture.Height;
+            scale = p_scale;
+        }
+        public RadialMenuItem(string p_text, Texture2D p_texture, RadialMenu p_submenu, Rectangle p_sourceRect, float p_scale = 1.0f)
+        {
+            text = p_text;
+            texture = p_texture;
+            submenu = p_submenu;
+            activateEvent = null;
+
+            sourceRect = p_sourceRect;
+            scale = p_scale;
         }
     }
 }

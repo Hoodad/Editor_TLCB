@@ -38,6 +38,7 @@ namespace MapEditor_TLCB.Systems
 			tilemapWindow.CloseButtonVisible = false;
 			tilemapWindow.MaximumHeight = 960 + 54;
 			tilemapWindow.MaximumWidth = 960;
+            tilemapWindow.Click += new TomShane.Neoforce.Controls.EventHandler(OnWindowClickBehavior);
 			//tileMap.Movable = false;
 			manager.Add(tilemapWindow);
 
@@ -56,7 +57,18 @@ namespace MapEditor_TLCB.Systems
 		}
 		public void OnClick(object sender, TomShane.Neoforce.Controls.EventArgs e)
 		{
-
+            CurrentToolSystem toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
+            toolSys.SetCurrentTool(CustomControls.Tool.PAINT_TOOL);
 		}
+        public void OnWindowClickBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
+        {
+            NotificationBarSystem noteSys = (NotificationBarSystem)world.SystemManager.GetSystem<NotificationBarSystem>()[0];
+            Notification n = new Notification("Select a tile from the tilemap to start drawing.", NotificationType.INFO);
+            noteSys.AddNotification(n);
+        }
+        public TilemapContainer GetTilemapContainer()
+        {
+            return tilemap;
+        }
 	}
 }
