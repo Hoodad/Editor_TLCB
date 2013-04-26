@@ -57,7 +57,7 @@ namespace MapEditor_TLCB.Systems
 				if (Mouse.GetState().LeftButton == ButtonState.Pressed)
 				{
 					int[] mapPos = roadTilemap.getTilePosition(mousePos);
-					roadTilemap.setState(mapPos[0], mapPos[1], 1);
+					roadTilemap.setState(mapPos[0], mapPos[1], 0);
 				}
 				else if (Mouse.GetState().RightButton == ButtonState.Pressed)
 				{
@@ -84,7 +84,7 @@ namespace MapEditor_TLCB.Systems
 			{
 				for (int x = 0; x < p_roadMap.getColumns(); x++)
 				{
-					if (p_roadMap.getState(x, y) == 1)
+					if (p_roadMap.getState(x, y) >= 0)
 					{
 						p_tilemap.setState(x, y, p_roadMapper.getContactType(x, y, p_roadMap));
 					}
@@ -103,7 +103,7 @@ namespace MapEditor_TLCB.Systems
 			{
 				for (int x = 0; x < p_wallMap.getColumns(); x++)
 				{
-					if (p_wallMap.getState(x, y) == 1)
+					if (p_wallMap.getState(x, y) >= 0)
 					{
 						p_tilemap.setState(x, y, p_wallMapper.getContactType(x, y, p_roadMap));
 					}
@@ -119,7 +119,7 @@ namespace MapEditor_TLCB.Systems
 			{
 				for (int x = 0; x < p_roadMap.getColumns(); x++)
 				{
-					if (p_roadMap.getState(x, y) == 1)
+					if (p_roadMap.getState(x, y) >= 0)
 					{
 						p_wallMap.setState(x - 1, y - 1, 1);
 						p_wallMap.setState(x, y - 1, 1);
@@ -137,7 +137,7 @@ namespace MapEditor_TLCB.Systems
 			{
 				for (int x = 0; x < p_roadMap.getColumns(); x++)
 				{
-					if (p_roadMap.getState(x, y) == 1)
+					if (p_roadMap.getState(x, y) >= 0)
 					{
 						p_wallMap.setState(x, y, -1);
 					}

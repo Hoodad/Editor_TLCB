@@ -106,12 +106,14 @@ namespace MapEditor_TLCB
 			entity.Tag = "mainTilemap";
 			entity.AddComponent(new Tilemap(10, 10, 32, 32));
 			entity.AddComponent(new Transform(new Vector2(400.0f, 200.0f)));
-			entity.AddComponent(new TilemapRender("tilemap_garden"));
+			entity.AddComponent(new TilemapRender("tilemap_garden", false));
 			entity.Refresh();
 			
 			entity = world.CreateEntity();
 			entity.Tag = "roadTilemap";
 			entity.AddComponent(new Tilemap(10, 10, 32, 32));
+			entity.AddComponent(new Transform(new Vector2(400.0f, 200.0f)));
+			entity.AddComponent(new TilemapRender("debugBlock", true));
 			entity.Refresh();
 			
 			entity = world.CreateEntity();
@@ -137,6 +139,7 @@ namespace MapEditor_TLCB
 			
 			textures.Add("tilemap_garden", Content.Load<Texture2D>("TileSheets/tilemap_garden"));
 			textures.Add("tilemap_winecellar", Content.Load<Texture2D>("TileSheets/tilemap_winecellar"));
+			textures.Add("debugBlock", Content.Load<Texture2D>("debugBlock"));
 
 			InitializeAllSystem();
 			InitializeEntities();

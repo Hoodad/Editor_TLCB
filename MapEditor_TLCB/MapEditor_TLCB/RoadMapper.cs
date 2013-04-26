@@ -50,13 +50,13 @@ namespace MapEditor_TLCB
 		private ContactMap getContactMap(int p_x, int p_y, Tilemap p_roadMap)
 		{
 			ContactMap contact = new ContactMap();
-			if (p_roadMap.getState(p_x, p_y - 1) == 1)
+			if (p_roadMap.getState(p_x, p_y - 1) >= 0)
 				contact.m_map[0] = true;
-			if (p_roadMap.getState(p_x + 1, p_y) == 1)
+			if (p_roadMap.getState(p_x + 1, p_y) >= 0)
 				contact.m_map[1] = true;
-			if (p_roadMap.getState(p_x, p_y + 1) == 1)
+			if (p_roadMap.getState(p_x, p_y + 1) >= 0)
 				contact.m_map[2] = true;
-			if (p_roadMap.getState(p_x - 1, p_y) == 1)
+			if (p_roadMap.getState(p_x - 1, p_y) >= 0)
 				contact.m_map[3] = true;
 			return contact;
 		}

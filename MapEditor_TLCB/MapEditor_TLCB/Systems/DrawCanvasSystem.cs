@@ -20,6 +20,7 @@ namespace MapEditor_TLCB.Systems
 
 		protected override void ProcessEntities(Dictionary<int, Entity> entities)
 		{
+			Color transparent = new Color(0.3f, 0.3f, 0.3f, 0.2f);
 			foreach (Entity e in entities.Values)
 			{
 				Transform transform = m_transformMapper.Get(e);
@@ -33,14 +34,21 @@ namespace MapEditor_TLCB.Systems
 					{
 						int state = tilemap.getState(x, y);
 						Vector2 mapPosition = tilemap.getPosition(x, y);
-						if (state > -1)
+						if (state >= 0 && !render.overlay)
 						{
 							int sourceX = state % 30;
 							int sourceY = state / 30;
 							m_spriteBatch.Draw(texture, transform.position + mapPosition,
 								new Rectangle(sourceX * 32, sourceY * 32, 32, 32), Color.White);
 						}
-						else
+						else if(state >= 0 && render.overlay)
+						{
+							int sourceX = state % 30;
+							int sourceY = state / 30;
+							m_spriteBatch.Draw(texture, transform.position + mapPosition,
+								new Rectangle(sourceX * 32, sourceY * 32, 32, 32), transparent);
+						}
+						else if(!render.overlay)
 						{
 							m_spriteBatch.Draw(texture, transform.position + mapPosition,
 								new Rectangle(1 * 32, 1 * 32, 32, 32), Color.White);
