@@ -8,8 +8,10 @@ namespace MapEditor_TLCB.UndoTree
 {
     class ActionNode
     {
-        public ActionNode(int p_actionId, int p_parentId, int p_level)
+        public ActionNode(ActionInterface p_action, 
+            int p_actionId, int p_parentId, int p_level)
         {
+            m_action = p_action;
             m_level = p_level;
             m_parentId = p_parentId;
             m_children = new List<int>();

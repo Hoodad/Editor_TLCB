@@ -5,6 +5,8 @@ using System.Text;
 using TomShane.Neoforce.Controls;
 using Microsoft.Xna.Framework.Graphics;
 using Artemis;
+using Microsoft.Xna.Framework;
+using MapEditor_TLCB.UndoTree;
 
 namespace MapEditor_TLCB.Systems
 {
@@ -17,14 +19,20 @@ namespace MapEditor_TLCB.Systems
         Button redoBtn;
         RadioButton viewMode;
 
-		public UndoTreeSystem(Manager p_manager)
+        UndoTreeContext undoTreeContext;
+        GraphicsDevice m_gd;
+
+
+		public UndoTreeSystem(Manager p_manager, GraphicsDevice p_gd)
 		{
 			manager = p_manager;
+            m_gd = p_gd;
 		}
 
 		public override void Initialize()
 		{
-			Viewport viewport = ((ContentSystem)world.SystemManager.GetSystem<ContentSystem>()[0]).GetViewport();
+            ContentSystem contentSystem = ((ContentSystem)world.SystemManager.GetSystem<ContentSystem>()[0]);
+			Viewport viewport = contentSystem.GetViewport();
 
 			undoTreeWindow = new Window(manager);
 			undoTreeWindow.Init();
@@ -65,15 +73,25 @@ namespace MapEditor_TLCB.Systems
             viewMode.Left = 0;
             viewMode.Top = 24;
             viewMode.Text = "Tree view";
+
+            undoTreeContext = new UndoTreeContext(manager, undoTreeWindow, m_gd);
+            undoTreeContext.Init();
+            undoTreeContext.Width = undoTreeWindow.Width;
+            undoTreeContext.Height = undoTreeWindow.Height;
+            undoTreeContext.Parent = undoTreeWindow;
+            undoTreeContext.CanFocus = false;
+            undoTreeContext.Click += new TomShane.Neoforce.Controls.EventHandler(OnClick);
 		}
 
 		public override void Process()
 		{
+            undoTreeContext.Update((float)world.Delta/1000.0f);
 		}
 
-        public void Render(SpriteBatch p_spriteBatch)
+
+        public void OnClick(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
-            
+
         }
 	}
 }

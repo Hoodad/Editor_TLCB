@@ -56,7 +56,7 @@ namespace MapEditor_TLCB.Systems
 		}
 		public void OnClick(object sender, TomShane.Neoforce.Controls.EventArgs e)
 		{
-
+            
 		}
 	}
 }

@@ -122,6 +122,7 @@
     <Compile Include="Actions\Interface\ActionInterface.cs" />
     <Compile Include="ActionsSerialized.cs" />
     <Compile Include="Common\InvariableIndexList.cs" />
+    <Compile Include="Common\LineRenderer.cs" />
     <Compile Include="CustomControls\NotificationBarContainer.cs" />
     <Compile Include="Components\Tilemap.cs" />
     <Compile Include="Components\TilemapRender.cs" />
@@ -153,6 +154,7 @@
     <Compile Include="Systems\ToolbarSystem.cs" />
     <Compile Include="Systems\UndoTreeSystem.cs" />
     <Compile Include="UndoTree\ActionNode.cs" />
+    <Compile Include="UndoTree\UndoTreeContext.cs" />
     <Compile Include="WallMapper.cs" />
   </ItemGroup>
   <ItemGroup>
