@@ -84,6 +84,5 @@ namespace MapEditor_TLCB.UndoTree
             Refresh();
         }
 
-
     }
 }

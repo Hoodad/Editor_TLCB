@@ -19,6 +19,9 @@ namespace MapEditor_TLCB.Systems
         Button redoBtn;
         RadioButton viewMode;
 
+        ScrollBar sbVert;
+        ScrollBar sbHorz;
+
         UndoTreeContext undoTreeContext;
         GraphicsDevice m_gd;
 
@@ -43,6 +46,7 @@ namespace MapEditor_TLCB.Systems
 			undoTreeWindow.Left = 0;
 			undoTreeWindow.Visible = true;
 			undoTreeWindow.CloseButtonVisible = false;
+            undoTreeWindow.AutoScroll = false;
 			//toolbarWindow.BorderVisible = false;
 			//toolbar.Movable = false;
 			manager.Add(undoTreeWindow);
@@ -73,6 +77,28 @@ namespace MapEditor_TLCB.Systems
             viewMode.Left = 0;
             viewMode.Top = 24;
             viewMode.Text = "Tree view";
+
+            sbVert = new ScrollBar(manager, Orientation.Vertical);
+            sbVert.Init();
+            sbVert.Detached = false;
+            sbVert.Anchor = Anchors.Top | Anchors.Right | Anchors.Bottom;
+            //sbVert.ValueChanged += new EventHandler(ScrollBarValueChanged);
+            sbVert.Range = 0;
+            sbVert.PageSize = 0;
+            sbVert.Value = 0;
+            sbVert.Visible = true;
+            undoTreeWindow.Add(sbVert);
+
+            sbHorz = new ScrollBar(manager, Orientation.Horizontal);
+            sbHorz.Init();
+            sbHorz.Detached = false;
+            sbHorz.Anchor = Anchors.Right | Anchors.Left | Anchors.Bottom;
+            //sbHorz.ValueChanged += new EventHandler(ScrollBarValueChanged);
+            sbHorz.Range = 0;
+            sbHorz.PageSize = 0;
+            sbHorz.Value = 0;
+            sbHorz.Visible = true;
+            undoTreeWindow.Add(sbHorz);
 
             undoTreeContext = new UndoTreeContext(manager, undoTreeWindow, m_gd);
             undoTreeContext.Init();
