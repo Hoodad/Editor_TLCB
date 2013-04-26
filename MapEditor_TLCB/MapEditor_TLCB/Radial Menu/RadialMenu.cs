@@ -315,7 +315,7 @@ namespace MapEditor_TLCB
                 Rectangle drawRect;
                 Vector2 IconPos = m_position + dir * distance;
 
-                int rectSize = (int)(size / (float)Math.Sqrt(2.0));
+                int rectSize = (int)(m_items[i].scale * size / (float)Math.Sqrt(2.0));
 
                 if (i == arrowTarget && p_selectedOpaque)
                 {
@@ -325,7 +325,7 @@ namespace MapEditor_TLCB
                     drawRect.Width = rectSize;
                     drawRect.Height = rectSize;
 
-                    sp.Draw(m_items[i].texture, drawRect, Color.White);
+                    sp.Draw(m_items[i].texture, drawRect, m_items[i].sourceRect, Color.White);
                 }
                 else
                 {
@@ -344,7 +344,7 @@ namespace MapEditor_TLCB
                         c.A = alpha;
                     }
 
-                    sp.Draw(m_items[i].texture, drawRect, c);
+                    sp.Draw(m_items[i].texture, drawRect, m_items[i].sourceRect, c);
                 }
                 //if (i == arrowTarget)
                     //sp.Draw(m_circleTexture, IconPos - new Vector2(size, size)*0.5f, Color.White);
@@ -483,7 +483,7 @@ namespace MapEditor_TLCB
                 Rectangle drawRect;
                 Vector2 IconPos = m_position + dir * distance;
 
-                int rectSize = (int)(size / (float)Math.Sqrt(2.0));
+                int rectSize = (int)(m_items[i].scale * size / (float)Math.Sqrt(2.0));
 
                 drawRect.X = (int)(IconPos.X - rectSize * 0.5f);
                 drawRect.Y = (int)(IconPos.Y - rectSize * 0.5f);
@@ -492,14 +492,14 @@ namespace MapEditor_TLCB
                 drawRect.Height = rectSize;
 
                 if (i == arrowTarget)
-                    sp.Draw(m_items[i].texture, drawRect, Color.White);
+                    sp.Draw(m_items[i].texture, drawRect, m_items[i].sourceRect, Color.White);
                 else
                 {
                     Color c = drawColor;
                         byte alpha = drawColor.A;
                         c *= 0.5f;
                         c.A = alpha;
-                    sp.Draw(m_items[i].texture, drawRect, c);
+                        sp.Draw(m_items[i].texture, drawRect, m_items[i].sourceRect, c);
                 }
                 //if (i == arrowTarget)
                 //sp.Draw(m_circleTexture, IconPos - new Vector2(size, size)*0.5f, Color.White);
@@ -612,7 +612,7 @@ namespace MapEditor_TLCB
                     Rectangle drawRect;
                     Vector2 IconPos = m_position + dir * distance * (1.0f - p_moveFraction);
 
-                    int rectSize = (int)(size / (float)Math.Sqrt(2.0));
+                    int rectSize = (int)(m_items[i].scale * size / (float)Math.Sqrt(2.0));
 
                     rectSize = (int)((1.0f - p_moveFraction) * rectSize + (p_moveFraction * size)); 
 
@@ -622,7 +622,7 @@ namespace MapEditor_TLCB
                     drawRect.Width = rectSize;
                     drawRect.Height = rectSize;
 
-                    sp.Draw(m_items[i].texture, drawRect, Color.White);
+                    sp.Draw(m_items[i].texture, drawRect, m_items[i].sourceRect, Color.White);
                 }
                 x = cos * dir.X - sin * dir.Y;
                 y = sin * dir.X + cos * dir.Y;
