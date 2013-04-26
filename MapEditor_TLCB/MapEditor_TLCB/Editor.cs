@@ -110,6 +110,11 @@ namespace MapEditor_TLCB
 			entity.Refresh();
 			
 			entity = world.CreateEntity();
+			entity.Tag = "singlesTilemap";
+			entity.AddComponent(new Tilemap(10, 10, 32, 32));
+			entity.Refresh();
+
+			entity = world.CreateEntity();
 			entity.Tag = "roadTilemap";
 			entity.AddComponent(new Tilemap(10, 10, 32, 32));
 			entity.AddComponent(new Transform(new Vector2(400.0f, 200.0f)));
