@@ -125,17 +125,17 @@ namespace MapEditor_TLCB.Systems
         public void PaintToolBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
             CurrentToolSystem toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
-            toolSys.GetCurrentToolContainer().SetCurrentTool(CustomControls.Tool.PAINT_TOOL);
+            toolSys.SetCurrentTool(CustomControls.Tool.PAINT_TOOL);
         }
         public void RoadToolBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
             CurrentToolSystem toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
-            toolSys.GetCurrentToolContainer().SetCurrentTool(CustomControls.Tool.ROAD_TOOL);
+            toolSys.SetCurrentTool(CustomControls.Tool.ROAD_TOOL);
         }
         public void EraseToolBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
             CurrentToolSystem toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
-            toolSys.GetCurrentToolContainer().SetCurrentTool(CustomControls.Tool.ERASE_TOOL);
+            toolSys.SetCurrentTool(CustomControls.Tool.ERASE_TOOL);
         }
         public void OnWindowClickBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {

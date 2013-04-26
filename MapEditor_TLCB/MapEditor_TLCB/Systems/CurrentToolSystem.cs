@@ -56,9 +56,16 @@ namespace MapEditor_TLCB.Systems
 		public override void Process()
 		{
 		}
-        public CurrentToolContainer GetCurrentToolContainer()
+        public void SetCurrentTool(Tool p_tool)
         {
-            return m_container;
+            m_container.SetCurrentTool(p_tool);
+            if (p_tool == Tool.PAINT_TOOL)
+            {
+                TilemapBarSystem tbs = (TilemapBarSystem)world.SystemManager.GetSystem<TilemapBarSystem>()[0];
+                Texture2D tilemapTex = tbs.GetTilemapContainer().GetTilemapTexture();
+                m_container.SetTilemapTexture(tilemapTex);
+                m_container.SetTilemapRectangle(tbs.GetTilemapContainer().GetTilemapSourceRectangle());
+            }
         }
         public void OnWindowClickBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {

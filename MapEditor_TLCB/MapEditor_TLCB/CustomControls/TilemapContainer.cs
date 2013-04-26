@@ -18,6 +18,8 @@ namespace MapEditor_TLCB.CustomControls
 
 		private Point tileSize;
 
+        private Point curr;
+
 		public TilemapContainer(Manager p_manager, Texture2D p_tilemapImage, Texture2D p_tileSelector, Window p_parent, Point p_windowSize)
 			: base(p_manager)
 		{
@@ -56,8 +58,15 @@ namespace MapEditor_TLCB.CustomControls
 			//Debug.Print("Mouse " + e.Position.ToString());
 			//Debug.Print( "Scrollvalue {X "+windowParent.ScrollBarValue.Horizontal + ", Y "+ windowParent.ScrollBarValue.Vertical+"}");
 
-			selectorRect.X = (e.Position.X / tileSize.X);
-			selectorRect.Y = (e.Position.Y / tileSize.Y);
+
+            curr.X = (e.Position.X + 0) / tileSize.X;
+            curr.Y = (e.Position.Y + 0) / tileSize.Y;
+
+
+			selectorRect.X = ((e.Position.X+0) / tileSize.X);
+			selectorRect.Y = ((e.Position.Y+0) / tileSize.Y);
+            //curr.X = selectorRect.X;
+            //curr.Y = selectorRect.Y;
 			//Debug.Print( "Resulting Tile {X: "+selectorRect.X +" Y: "+ selectorRect.Y+"}");
 			selectorRect.X *= tileSize.X;
 			selectorRect.Y *= tileSize.Y;
@@ -68,5 +77,18 @@ namespace MapEditor_TLCB.CustomControls
 
 			Refresh();
 		}
+        public Texture2D GetTilemapTexture()
+        {
+            return tilemapImage;
+        }
+        public Rectangle GetTilemapSourceRectangle()
+        {
+            Rectangle rect;
+            rect.X = 32 * curr.X;
+            rect.Width = 32;
+            rect.Y = 32 * curr.Y;
+            rect.Height = 32;
+            return rect;
+        }
 	}
 }
