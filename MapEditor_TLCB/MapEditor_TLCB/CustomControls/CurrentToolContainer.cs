@@ -65,5 +65,9 @@ namespace MapEditor_TLCB.CustomControls
             m_currentTool = p_tool;
             Refresh();
         }
+		public Tool GetCurrentTool()
+		{
+			return m_currentTool;
+		}
     }
 }

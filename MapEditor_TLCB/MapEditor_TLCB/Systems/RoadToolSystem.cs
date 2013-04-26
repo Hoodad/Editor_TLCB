@@ -6,6 +6,7 @@ using Artemis;
 using MapEditor_TLCB.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using MapEditor_TLCB.CustomControls;
 
 namespace MapEditor_TLCB.Systems
 {
@@ -18,6 +19,7 @@ namespace MapEditor_TLCB.Systems
 		public override void Initialize()
 		{
 			m_tilemapMapper = new ComponentMapper<Tilemap>(world);
+			m_toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
 		}
 
 		public override void OnRemoved(Artemis.Entity e)
@@ -49,32 +51,36 @@ namespace MapEditor_TLCB.Systems
 
 		public override void Process()
 		{
-			if (mainTilemap != null && roadTilemap != null && wallTilemap != null &&
-				canvasTransform != null)
+			Tool currentTool = m_toolSys.GetCurrentToolContainer().GetCurrentTool();
+			if (currentTool == Tool.ROAD_TOOL)
 			{
-				Vector2 mousePos = new Vector2((float)Mouse.GetState().X, (float)Mouse.GetState().Y);
-				mousePos -= canvasTransform.position;
-				if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+				if (mainTilemap != null && roadTilemap != null && wallTilemap != null &&
+					canvasTransform != null)
 				{
-					int[] mapPos = roadTilemap.getTilePosition(mousePos);
-					roadTilemap.setState(mapPos[0], mapPos[1], 0);
-				}
-				else if (Mouse.GetState().RightButton == ButtonState.Pressed)
-				{
-					int[] mapPos = roadTilemap.getTilePosition(mousePos);
-					roadTilemap.setState(mapPos[0], mapPos[1], -1);
-				}
+					Vector2 mousePos = new Vector2((float)Mouse.GetState().X, (float)Mouse.GetState().Y);
+					mousePos -= canvasTransform.position;
+					if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+					{
+						int[] mapPos = roadTilemap.getTilePosition(mousePos);
+						roadTilemap.setState(mapPos[0], mapPos[1], 0);
+					}
+					else if (Mouse.GetState().RightButton == ButtonState.Pressed)
+					{
+						int[] mapPos = roadTilemap.getTilePosition(mousePos);
+						roadTilemap.setState(mapPos[0], mapPos[1], -1);
+					}
 
-				generateWallmapFromRoadmap(wallTilemap, roadTilemap);
+					generateWallmapFromRoadmap(wallTilemap, roadTilemap);
 
-				RoadAndWallMapperSystem mapperSystem =
-					(RoadAndWallMapperSystem)world.SystemManager.GetSystem<
-					RoadAndWallMapperSystem>()[0];
-				// Write to the resulting tilemap
-				updateTilemapUsingRoadmap(mainTilemap, roadTilemap, 
-					mapperSystem.getRoadMapper());
-				updateTilemapUsingWallmap(mainTilemap, wallTilemap, roadTilemap, 
-					mapperSystem.getWallMapper());
+					RoadAndWallMapperSystem mapperSystem =
+						(RoadAndWallMapperSystem)world.SystemManager.GetSystem<
+						RoadAndWallMapperSystem>()[0];
+					// Write to the resulting tilemap
+					updateTilemapUsingRoadmap(mainTilemap, roadTilemap, 
+						mapperSystem.getRoadMapper());
+					updateTilemapUsingWallmap(mainTilemap, wallTilemap, roadTilemap, 
+						mapperSystem.getWallMapper());
+				}
 			}
 		}
 
@@ -149,7 +155,7 @@ namespace MapEditor_TLCB.Systems
 		Transform canvasTransform;
 		Tilemap roadTilemap;
 		Tilemap wallTilemap;
-
 		ComponentMapper<Tilemap> m_tilemapMapper;
+		CurrentToolSystem m_toolSys;
 	}
 }
