@@ -41,6 +41,7 @@ namespace MapEditor_TLCB.Systems
 			toolbarWindow.Resizable = false;
 			toolbarWindow.CloseButtonVisible = false;
 			toolbarWindow.BorderVisible = false;
+            toolbarWindow.Click += new TomShane.Neoforce.Controls.EventHandler(OnWindowClickBehavior);
 			//toolbar.Movable = false;
 			manager.Add(toolbarWindow);
 
@@ -135,6 +136,12 @@ namespace MapEditor_TLCB.Systems
         {
             CurrentToolSystem toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
             toolSys.GetCurrentToolContainer().SetCurrentTool(CustomControls.Tool.ERASE_TOOL);
+        }
+        public void OnWindowClickBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
+        {
+            NotificationBarSystem noteSys = (NotificationBarSystem)world.SystemManager.GetSystem<NotificationBarSystem>()[0];
+            Notification n = new Notification("The toolbar enables you to select draw tools and handle the project.", NotificationType.INFO);
+            noteSys.AddNotification(n);
         }
 	}
 }

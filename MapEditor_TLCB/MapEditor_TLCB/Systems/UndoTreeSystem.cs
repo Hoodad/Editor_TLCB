@@ -31,6 +31,7 @@ namespace MapEditor_TLCB.Systems
 			undoTreeWindow.Left = 0;
 			undoTreeWindow.Visible = true;
 			undoTreeWindow.CloseButtonVisible = false;
+            undoTreeWindow.Click += new TomShane.Neoforce.Controls.EventHandler(OnWindowClickBehavior);
 			//toolbarWindow.BorderVisible = false;
 			//toolbar.Movable = false;
 			manager.Add(undoTreeWindow);
@@ -39,5 +40,11 @@ namespace MapEditor_TLCB.Systems
 		public override void Process()
 		{
 		}
+        public void OnWindowClickBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
+        {
+            NotificationBarSystem noteSys = (NotificationBarSystem)world.SystemManager.GetSystem<NotificationBarSystem>()[0];
+            Notification n = new Notification("The Undo Tree allows you to jump between various map states.", NotificationType.INFO);
+            noteSys.AddNotification(n);
+        }
 	}
 }

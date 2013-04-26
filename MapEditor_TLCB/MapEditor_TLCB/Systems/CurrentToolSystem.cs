@@ -51,6 +51,7 @@ namespace MapEditor_TLCB.Systems
             m_container.Height = currentToolWindow.Height;// tilemap.tilemapImage.Height;
             m_container.Parent = currentToolWindow;
             m_container.CanFocus = false;
+            m_container.Click += new TomShane.Neoforce.Controls.EventHandler(OnWindowClickBehavior);
 		}
 		public override void Process()
 		{
@@ -58,6 +59,12 @@ namespace MapEditor_TLCB.Systems
         public CurrentToolContainer GetCurrentToolContainer()
         {
             return m_container;
+        }
+        public void OnWindowClickBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
+        {
+            NotificationBarSystem noteSys = (NotificationBarSystem)world.SystemManager.GetSystem<NotificationBarSystem>()[0];
+            Notification n = new Notification("This window shows the current tool. Draw by left clicking on the canvas.", NotificationType.INFO);
+            noteSys.AddNotification(n);
         }
     }
 }

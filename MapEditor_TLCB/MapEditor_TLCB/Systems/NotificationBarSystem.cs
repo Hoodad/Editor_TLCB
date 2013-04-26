@@ -32,27 +32,28 @@ namespace MapEditor_TLCB.Systems
 		{
 			Viewport viewport = ((ContentSystem)world.SystemManager.GetSystem<ContentSystem>()[0]).GetViewport();
 
-            originalWidth = (int)((float)viewport.Width * 0.3f);
+            originalWidth = (int)((float)viewport.Width * 0.4f);
 
 			//Notification Bar
 			notificationWindow = new Window(manager);
 			notificationWindow.Init();
 			notificationWindow.Text = "Notification Bar";
 			notificationWindow.Height = 160;
-			notificationWindow.Width = (int)((float)viewport.Width * 0.3f);
+            notificationWindow.Width = originalWidth;
 			notificationWindow.Visible = true;
 			notificationWindow.Top = viewport.Height - notificationWindow.Height;
 			notificationWindow.Left = 0;
 			notificationWindow.CloseButtonVisible = false;
             notificationWindow.AutoScroll = false;
             notificationWindow.Resizable = true;
+            notificationWindow.Click += new TomShane.Neoforce.Controls.EventHandler(OnWindowClickBehavior);
 			manager.Add(notificationWindow);
 
-            NotificationBar data = new NotificationBar(m_device, m_content, 400, 25);
+            NotificationBar data = new NotificationBar(m_device, m_content, originalWidth, 25);
 
             notificationBar = new NotificationBarContainer(manager, notificationWindow, data);
             notificationBar.Init();
-            notificationBar.Width = (int)((float)viewport.Width * 0.3f);// tilemap.tilemapImage.Width;
+            notificationBar.Width = originalWidth;// tilemap.tilemapImage.Width;
             notificationBar.Height = 160;// tilemap.tilemapImage.Height;
             notificationBar.Parent = notificationWindow;
             notificationBar.CanFocus = false;
@@ -70,6 +71,15 @@ namespace MapEditor_TLCB.Systems
 
             notificationWindow.Refresh();
 		}
+        public void AddNotification(Notification p_notification)
+        {
+            notificationBar.AddNotification(p_notification);
+        }
+        public void OnWindowClickBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
+        {
+            Notification n = new Notification("The notification bar shows important information, warnings and errors.", NotificationType.INFO);
+            AddNotification(n);
+        }
 	}
 }
 

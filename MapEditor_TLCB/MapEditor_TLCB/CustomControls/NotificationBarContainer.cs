@@ -34,5 +34,9 @@ namespace MapEditor_TLCB.CustomControls
         {
             m_bar.update(p_dt, new Vector2(m_parentWindow.AbsoluteLeft, m_parentWindow.AbsoluteTop));
         }
+        public void AddNotification(Notification p_notification)
+        {
+            m_bar.addNotification(p_notification);
+        }
     }
 }
