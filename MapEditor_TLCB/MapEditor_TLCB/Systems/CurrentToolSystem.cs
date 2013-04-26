@@ -55,5 +55,9 @@ namespace MapEditor_TLCB.Systems
 		public override void Process()
 		{
 		}
+        public CurrentToolContainer GetCurrentToolContainer()
+        {
+            return m_container;
+        }
     }
 }

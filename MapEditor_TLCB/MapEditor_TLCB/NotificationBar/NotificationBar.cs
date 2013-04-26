@@ -242,7 +242,7 @@ namespace MapEditor_TLCB
                 }
                 else if (rnd == 2)
                 {
-                    note = new Notification("Anton handles Jarl like a small potatoe", NotificationType.SUCCESS);
+                    note = new Notification("Anton handles Jarl like a small potato", NotificationType.SUCCESS);
                 }
                 else
                 {

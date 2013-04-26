@@ -52,6 +52,7 @@ namespace MapEditor_TLCB.Systems
 			roadTool.Left = 0;
 			roadTool.Top = 0;
 			roadTool.Text = "Road";
+            roadTool.Click += new TomShane.Neoforce.Controls.EventHandler(RoadToolBehavior);
 
 			eraserTool = new Button(manager);
 			eraserTool.Init();
@@ -61,6 +62,7 @@ namespace MapEditor_TLCB.Systems
 			eraserTool.Left = 50;
 			eraserTool.Top = 0;
 			eraserTool.Text = "Erase";
+            eraserTool.Click += new TomShane.Neoforce.Controls.EventHandler(EraseToolBehavior);
 
 			paintTool = new Button(manager);
 			paintTool.Init();
@@ -70,6 +72,7 @@ namespace MapEditor_TLCB.Systems
 			paintTool.Left = 0;
 			paintTool.Top = 24;
 			paintTool.Text = "Paint";
+            paintTool.Click += new TomShane.Neoforce.Controls.EventHandler(PaintToolBehavior);
 
 			exportMap = new Button(manager);
 			exportMap.Init();
@@ -118,5 +121,20 @@ namespace MapEditor_TLCB.Systems
 		{
 			((StateSystem)world.SystemManager.GetSystem<StateSystem>()[0]).RequestToShutdown();
 		}
+        public void PaintToolBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
+        {
+            CurrentToolSystem toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
+            toolSys.GetCurrentToolContainer().SetCurrentTool(CustomControls.Tool.PAINT_TOOL);
+        }
+        public void RoadToolBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
+        {
+            CurrentToolSystem toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
+            toolSys.GetCurrentToolContainer().SetCurrentTool(CustomControls.Tool.ROAD_TOOL);
+        }
+        public void EraseToolBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
+        {
+            CurrentToolSystem toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
+            toolSys.GetCurrentToolContainer().SetCurrentTool(CustomControls.Tool.ERASE_TOOL);
+        }
 	}
 }
