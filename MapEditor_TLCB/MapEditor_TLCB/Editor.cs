@@ -211,11 +211,17 @@ namespace MapEditor_TLCB
 
 			spriteBatch.Begin();
 
+            // Render draw-execution systems
 			GraphicsDevice.Clear(Color.Gray);
 			world.SystemManager.UpdateSynchronous(ExecutionType.Draw);
 
+            // Render radial menu
 			RadialMenuSystem radial = (RadialMenuSystem)world.SystemManager.GetSystem<RadialMenuSystem>()[0];
 			radial.Render(spriteBatch);
+
+            // Render undo tree
+            UndoTreeSystem utree = (UndoTreeSystem)world.SystemManager.GetSystem<UndoTreeSystem>()[0];
+            utree.Render(spriteBatch);
 
 			spriteBatch.End();
 
