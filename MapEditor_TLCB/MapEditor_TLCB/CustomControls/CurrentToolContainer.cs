@@ -27,6 +27,8 @@ namespace MapEditor_TLCB.CustomControls
         Texture2D m_tileMapIcon;
         Rectangle m_tileMapIconRectangle;
 
+        int m_currentDrawTileIndex;
+
         public CurrentToolContainer(Manager p_manager, Window p_parent, ContentManager p_content)
 			: base(p_manager)
 		{
@@ -37,6 +39,8 @@ namespace MapEditor_TLCB.CustomControls
             m_paintToolIcon = p_content.Load<Texture2D>("paintTool");
 
             m_currentTool = Tool.ROAD_TOOL;
+
+            m_currentDrawTileIndex = 0;
 		}
         
 		protected override void DrawControl(TomShane.Neoforce.Controls.Renderer renderer, Microsoft.Xna.Framework.Rectangle rect, Microsoft.Xna.Framework.GameTime gameTime)
@@ -85,6 +89,14 @@ namespace MapEditor_TLCB.CustomControls
         public void SetTilemapRectangle(Rectangle p_rectangle)
         {
             m_tileMapIconRectangle = p_rectangle;
+        }
+        public void SetCurrentDrawTileIndex(int p_index)
+        {
+            m_currentDrawTileIndex = p_index;
+        }
+        public int GetCurrentDrawTileIndex()
+        {
+            return m_currentDrawTileIndex;
         }
     }
 }

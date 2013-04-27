@@ -77,7 +77,7 @@ namespace MapEditor_TLCB.Systems
 					else if (currentTool == Tool.PAINT_TOOL)
 					{
 						int[] mapPos = roadTilemap.getTilePosition(mousePos);
-						singlesTilemap.setState(mapPos[0], mapPos[1], 0);
+						singlesTilemap.setState(mapPos[0], mapPos[1], m_toolSys.GetCurrentDrawTileIndex());
 						roadTilemap.setState(mapPos[0], mapPos[1], -1);
 					}
 					else if (currentTool == Tool.ERASE_TOOL)

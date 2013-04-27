@@ -65,12 +65,17 @@ namespace MapEditor_TLCB.Systems
                 Texture2D tilemapTex = tbs.GetTilemapContainer().GetTilemapTexture();
                 m_container.SetTilemapTexture(tilemapTex);
                 m_container.SetTilemapRectangle(tbs.GetTilemapContainer().GetTilemapSourceRectangle());
+                m_container.SetCurrentDrawTileIndex(tbs.GetTilemapContainer().GetCurrentIndex());
             }
         }
 		public Tool GetCurrentTool()
 		{
 			return m_container.GetCurrentTool();
 		}
+        public int GetCurrentDrawTileIndex()
+        {
+            return m_container.GetCurrentDrawTileIndex();
+        }
         public void OnWindowClickBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
             NotificationBarSystem noteSys = (NotificationBarSystem)world.SystemManager.GetSystem<NotificationBarSystem>()[0];

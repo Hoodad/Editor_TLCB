@@ -20,6 +20,8 @@ namespace MapEditor_TLCB.CustomControls
 
         private Point curr;
 
+        private int currentIndex;
+
 		public TilemapContainer(Manager p_manager, Texture2D p_tilemapImage, Texture2D p_tileSelector, Window p_parent, Point p_windowSize)
 			: base(p_manager)
 		{
@@ -45,6 +47,8 @@ namespace MapEditor_TLCB.CustomControls
 			selectorRect.Y = 26;
 			selectorRect.Width = tileSize.X;
 			selectorRect.Height = tileSize.Y;
+
+            currentIndex = 0;
 		}
 
 		protected override void DrawControl(TomShane.Neoforce.Controls.Renderer renderer, Microsoft.Xna.Framework.Rectangle rect, Microsoft.Xna.Framework.GameTime gameTime)
@@ -61,6 +65,7 @@ namespace MapEditor_TLCB.CustomControls
 
             curr.X = (e.Position.X + 0) / tileSize.X;
             curr.Y = (e.Position.Y + 0) / tileSize.Y;
+            currentIndex = curr.Y * 30 + curr.X;
 
 
 			selectorRect.X = ((e.Position.X+0) / tileSize.X);
@@ -89,6 +94,10 @@ namespace MapEditor_TLCB.CustomControls
             rect.Y = 32 * curr.Y;
             rect.Height = 32;
             return rect;
+        }
+        public int GetCurrentIndex()
+        {
+            return currentIndex;
         }
 	}
 }
