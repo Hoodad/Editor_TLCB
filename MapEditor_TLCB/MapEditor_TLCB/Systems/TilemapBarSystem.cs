@@ -42,13 +42,19 @@ namespace MapEditor_TLCB.Systems
 			//tileMap.Movable = false;
 			manager.Add(tilemapWindow);
 
-			tilemap = new TilemapContainer(manager, contentSystem.LoadTexture("TileSheets/tilemap_garden"), contentSystem.LoadTexture("TileSelector_v3"), tilemapWindow, contentSystem.GetViewportSize());
-			tilemap.Init();
+			tilemap = new TilemapContainer(manager);
+			tilemap.gridImage = contentSystem.LoadTexture("TileSheets/grid");
+			tilemap.tilemapImage = contentSystem.LoadTexture("TileSheets/tilemap_garden");
+			tilemap.tileSelectorImage = contentSystem.LoadTexture("TileSelector_v3");
+			tilemap.Parent = tilemapWindow;
+			tilemap.windowParent = tilemapWindow;
 			tilemap.Width = tilemap.tilemapImage.Width;
 			tilemap.Height = tilemap.tilemapImage.Height;
 			tilemap.Parent = tilemapWindow;
+			tilemap.gridColor = Color.Black;
 			tilemap.CanFocus = false;
 			tilemap.Click += new TomShane.Neoforce.Controls.EventHandler(OnClick);
+			tilemap.Init(contentSystem.GetViewportSize());
 
 		}
 

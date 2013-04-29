@@ -13,8 +13,10 @@ namespace MapEditor_TLCB.CustomControls
 	{
 		public Texture2D tilemapImage;
 		public Texture2D tileSelectorImage;
+		public Texture2D gridImage;
+		public Color gridColor;
 		private Rectangle selectorRect;
-		private Window windowParent;
+		public Window windowParent;
 
 		private Point tileSize;
 
@@ -22,31 +24,10 @@ namespace MapEditor_TLCB.CustomControls
 
         private int currentIndex;
 
-		public TilemapContainer(Manager p_manager, Texture2D p_tilemapImage, Texture2D p_tileSelector, Window p_parent, Point p_windowSize)
+		public TilemapContainer(Manager p_manager)
 			: base(p_manager)
 		{
-			tilemapImage = p_tilemapImage;
-			tileSelectorImage = p_tileSelector;
-			windowParent = p_parent;
-	
-
-			// Calculate the tile size and see if the maximum window size is not able to contain the whole 
-			// tilemap.
-			float aspect = (float)(p_windowSize.X) / (float)(tilemapImage.Width);
-			if (aspect > 1.0f)
-				aspect = 1.0f;
-			tileSize.X = (int)(32 * aspect);
-
-			aspect = (float)(p_windowSize.Y) / (float)(tilemapImage.Height);
-			if (aspect > 1.0f)
-				aspect = 1.0f;
-			tileSize.Y = (int)(32 * aspect);
-
-			selectorRect = new Rectangle();
-			selectorRect.X = 6;
-			selectorRect.Y = 26;
-			selectorRect.Width = tileSize.X;
-			selectorRect.Height = tileSize.Y;
+			gridColor = Color.White;
 
             currentIndex = 0;
 		}
@@ -54,6 +35,7 @@ namespace MapEditor_TLCB.CustomControls
 		protected override void DrawControl(TomShane.Neoforce.Controls.Renderer renderer, Microsoft.Xna.Framework.Rectangle rect, Microsoft.Xna.Framework.GameTime gameTime)
 		{
 			renderer.Draw(tilemapImage, rect, Color.White);
+			renderer.Draw(gridImage, rect, gridColor);
 			renderer.Draw(tileSelectorImage, selectorRect, Color.White);
 		}
 
@@ -99,5 +81,27 @@ namespace MapEditor_TLCB.CustomControls
         {
             return currentIndex;
         }
+
+		public void Init(Point p_windowSize)
+		{
+			base.Init();
+			// Calculate the tile size and see if the maximum window size is not able to contain the whole 
+			// tilemap.
+			float aspect = (float)(p_windowSize.X) / (float)(tilemapImage.Width);
+			if (aspect > 1.0f)
+				aspect = 1.0f;
+			tileSize.X = (int)(32 * aspect);
+
+			aspect = (float)(p_windowSize.Y) / (float)(tilemapImage.Height);
+			if (aspect > 1.0f)
+				aspect = 1.0f;
+			tileSize.Y = (int)(32 * aspect);
+
+			selectorRect = new Rectangle();
+			selectorRect.X = 6;
+			selectorRect.Y = 26;
+			selectorRect.Width = tileSize.X;
+			selectorRect.Height = tileSize.Y;
+		}
 	}
 }
