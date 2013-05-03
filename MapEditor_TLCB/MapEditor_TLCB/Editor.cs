@@ -94,6 +94,7 @@ namespace MapEditor_TLCB
 			systemManager.SetSystem(new RoadAndWallMapperSystem(), ExecutionType.Update);
 			systemManager.SetSystem(new RoadToolSystem(), ExecutionType.Update);
 			systemManager.SetSystem(new CurrentToolSystem(manager, GraphicsDevice, Content), ExecutionType.Update);
+			systemManager.SetSystem(new StartupDialogSystem(manager), ExecutionType.Update);
 			world.SystemManager.SetSystem(new RadialMenuSystem(GraphicsDevice, Content), ExecutionType.Update);
 
 			world.SystemManager.SetSystem(new DrawCanvasSystem(textures, spriteBatch), ExecutionType.Draw);
