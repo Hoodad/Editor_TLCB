@@ -75,8 +75,10 @@ namespace MapEditor_TLCB.Systems
 						mousePos = Vector2.Transform(mousePos, Matrix.Invert(camTransform.getMatrix()));
 					}
 				}
-				
-				if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+
+                RadialMenuSystem rms = (RadialMenuSystem)(world.SystemManager.GetSystem<RadialMenuSystem>()[0]);
+
+				if (Mouse.GetState().LeftButton == ButtonState.Pressed && !rms.isRadialActive())
 				{
 					if (currentTool == Tool.ROAD_TOOL)
 					{

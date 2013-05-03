@@ -135,5 +135,9 @@ namespace MapEditor_TLCB.Systems
 		{
 			m_context.draw5(p_spriteBatch);
 		}
+        public bool isRadialActive()
+        {
+            return m_context.isActive();
+        }
 	}
 }

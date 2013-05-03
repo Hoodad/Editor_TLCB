@@ -30,8 +30,8 @@ namespace MapEditor_TLCB
         private SpriteFont m_font;
         private int prevMouseWheel;
 
-        Vector2 m_position = new Vector2(512, 384);
-        Vector2 m_originalPosition = new Vector2(512, 384);
+        Vector2 m_position = new Vector2(640, 360);
+        Vector2 m_originalPosition = new Vector2(640, 360);
 
         bool m_transitionPhase = false;
         float m_transitionDT = 0.0f;
@@ -152,6 +152,9 @@ namespace MapEditor_TLCB
                 m_active = !m_active;
                 if (!m_active)
                     m_current = m_root;
+
+                m_position.X = m_originalPosition.X = Mouse.GetState().X;
+                m_position.Y = m_originalPosition.Y = Mouse.GetState().Y;
             }
             else if (!Keyboard.GetState().IsKeyDown(Keys.Up) && Mouse.GetState().RightButton != ButtonState.Pressed)
             {

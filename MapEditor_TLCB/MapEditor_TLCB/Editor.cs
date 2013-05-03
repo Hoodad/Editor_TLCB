@@ -240,10 +240,11 @@ namespace MapEditor_TLCB
 			GraphicsDevice.Clear(Color.Gray);
 			world.SystemManager.UpdateSynchronous(ExecutionType.Draw);
 
-			RadialMenuSystem radial = (RadialMenuSystem)world.SystemManager.GetSystem<RadialMenuSystem>()[0];
-			radial.Render(spriteBatch);
-
 			spriteBatch.End();
+            spriteBatch.Begin();
+            RadialMenuSystem radial = (RadialMenuSystem)world.SystemManager.GetSystem<RadialMenuSystem>()[0];
+            radial.Render(spriteBatch);
+            spriteBatch.End();
 
 			base.Draw(gameTime);
 			manager.EndDraw();
