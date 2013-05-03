@@ -32,5 +32,9 @@ namespace MapEditor_TLCB.Systems
 		{
 			return new Point(deviceManager.GraphicsDevice.Viewport.Width, deviceManager.GraphicsDevice.Viewport.Height);
 		}
+		public Texture2D CreateANewTexture2D(int p_width, int p_height)
+		{
+			return new Texture2D(deviceManager.GraphicsDevice, p_width, p_height);
+		}
 	}
 }

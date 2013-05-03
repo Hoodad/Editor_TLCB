@@ -127,6 +127,7 @@
     <Compile Include="Components\TilemapRender.cs" />
     <Compile Include="Components\Transform.cs" />
     <Compile Include="ContactMap.cs" />
+    <Compile Include="CustomControls\ImageBasedButton.cs" />
     <Compile Include="CustomControls\TilemapContainer.cs" />
     <Compile Include="Editor.cs" />
     <Compile Include="main.cs" />
