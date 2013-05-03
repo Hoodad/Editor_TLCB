@@ -36,8 +36,6 @@ namespace MapEditor_TLCB.Systems
 				{
 					camTransform.position += mouseDiff;
 				}
-				
-
 
 				Vector2 mousePos = new Vector2(currentState.X, currentState.Y);
 				Vector2 worldMousePos = Vector2.Transform(mousePos, Matrix.Invert(camTransform.getMatrix()));
@@ -75,9 +73,6 @@ namespace MapEditor_TLCB.Systems
 			m_canvasWindow.BorderVisible = false;
 			m_canvasWindow.Resizable = false;
 			m_canvasWindow.StayOnBack = true;
-			//m_canvasWindow.CanFocus = false;
-			//m_canvasWindow.Focused = true;
-			//m_canvasWindow.Passive = true;
 			m_canvasWindow.CanvasTexture = m_canvasRender;
 			RoadToolSystem roadSys = ((RoadToolSystem)world.SystemManager.GetSystem<RoadToolSystem>()[0]);
 			m_canvasWindow.MouseMove += new MouseEventHandler(roadSys.canvasWindow_MouseMove);

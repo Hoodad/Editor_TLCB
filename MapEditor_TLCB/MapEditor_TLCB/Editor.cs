@@ -92,9 +92,7 @@ namespace MapEditor_TLCB
 		public void InitializeAllSystem()
 		{
 			SystemManager systemManager = world.SystemManager;
-			systemManager.SetSystem(new CanvasControlSystem(manager, canvasRender), ExecutionType.Update);
-			world.SystemManager.SetSystem(new DrawCanvasSystem(textures, GraphicsDevice,
-				canvasRender, manager), ExecutionType.Draw); // Canvas window is furthest back.
+			systemManager.SetSystem(new CanvasControlSystem(manager, canvasRender), ExecutionType.Update); // Canvas window is furthest back.
 			systemManager.SetSystem(new ActionSystem(), ExecutionType.Update);
 			systemManager.SetSystem(new ContentSystem(Content,graphics), ExecutionType.Update);
 			systemManager.SetSystem(new ToolbarSystem(manager), ExecutionType.Update);
@@ -108,7 +106,9 @@ namespace MapEditor_TLCB
 			systemManager.SetSystem(new CurrentToolSystem(manager, GraphicsDevice, Content), ExecutionType.Update);
 			systemManager.SetSystem(new StartupDialogSystem(manager), ExecutionType.Update);
 			world.SystemManager.SetSystem(new RadialMenuSystem(GraphicsDevice, Content), ExecutionType.Update);
-
+			
+			world.SystemManager.SetSystem(new DrawCanvasSystem(textures, GraphicsDevice,
+				canvasRender, manager), ExecutionType.Draw);
 			world.SystemManager.InitializeAll();
 		}
 
@@ -234,20 +234,14 @@ namespace MapEditor_TLCB
 		protected override void Draw(GameTime gameTime)
 		{
 			manager.BeginDraw(gameTime);
-
-			spriteBatch.Begin();
-			GraphicsDevice.Clear(Color.Gray);
 			world.SystemManager.UpdateSynchronous(ExecutionType.Draw);
-
-			//spriteBatch.Draw(canvasRender, Vector2.Zero, Color.White);
-
-			RadialMenuSystem radial = (RadialMenuSystem)world.SystemManager.GetSystem<RadialMenuSystem>()[0];
-			radial.Render(spriteBatch);
-
-			spriteBatch.End();
-
 			base.Draw(gameTime);
 			manager.EndDraw();
+
+			spriteBatch.Begin();
+			RadialMenuSystem radial = (RadialMenuSystem)world.SystemManager.GetSystem<RadialMenuSystem>()[0];
+			radial.Render(spriteBatch);
+			spriteBatch.End();
 		}
 		void f_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
 		{
