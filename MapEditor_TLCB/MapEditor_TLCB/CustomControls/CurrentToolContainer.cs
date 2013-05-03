@@ -86,13 +86,18 @@ namespace MapEditor_TLCB.CustomControls
         {
             m_tileMapIcon = p_texture;
         }
-        public void SetTilemapRectangle(Rectangle p_rectangle)
+        /*public void SetTilemapRectangle(Rectangle p_rectangle)
         {
             m_tileMapIconRectangle = p_rectangle;
-        }
+        }*/
         public void SetCurrentDrawTileIndex(int p_index)
         {
+            Vector2 curr = new Vector2(p_index - 30 * (p_index / 30), p_index / 30);
             m_currentDrawTileIndex = p_index;
+            m_tileMapIconRectangle.X = (int)(32 * curr.X);
+            m_tileMapIconRectangle.Width = 32;
+            m_tileMapIconRectangle.Y = (int)(32 * curr.Y);
+            m_tileMapIconRectangle.Height = 32;
         }
         public int GetCurrentDrawTileIndex()
         {
