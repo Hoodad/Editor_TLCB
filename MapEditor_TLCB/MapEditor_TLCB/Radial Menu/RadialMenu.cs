@@ -38,6 +38,8 @@ namespace MapEditor_TLCB
 
         private RadialMenu m_parent;
 
+        private Keys m_hotKey;
+
         public RadialMenu(GraphicsDevice p_gd, ContentManager p_content,
                             List<RadialMenuItem> p_items, Texture2D p_symbol,
                                 RadialMenu p_parent)
@@ -45,6 +47,7 @@ namespace MapEditor_TLCB
             m_symbol = p_symbol;
             m_items = p_items;
             m_parent = p_parent;
+            m_hotKey = Keys.None;
         }
 
         public RadialMenu getParent()
@@ -125,6 +128,10 @@ namespace MapEditor_TLCB
                             m_items[arrowTarget].activateEvent.hotkey = pressed[i];
                             break;
                         }
+                        else if (m_items[arrowTarget].submenu != null)
+                        {
+                            m_items[arrowTarget].submenu.m_hotKey = pressed[i];
+                        }
                     }
                 }
             }
@@ -133,6 +140,10 @@ namespace MapEditor_TLCB
         {
             prevMouseX = Mouse.GetState().X;
             prevMouseY = Mouse.GetState().Y;
+        }
+        public Keys getHotkey()
+        {
+            return m_hotKey;
         }
         public void setCurrentWithTarget(RadialMenu p_menu)
         {
@@ -418,6 +429,14 @@ namespace MapEditor_TLCB
                     text = "Hotkey(" + hotKey + ")";
                     sp.DrawString(m_font, text, drawTextPos + new Vector2(0, wordSize.Y), drawColor, 0, Vector2.Zero, textSize, SpriteEffects.None, 0);
                 }
+                else
+                {
+                    string hotKey = Enum.GetName(typeof(Keys), Keys.None);
+                    if (m_items[arrowTarget].submenu != null)
+                        hotKey = Enum.GetName(typeof(Keys), m_items[arrowTarget].submenu.getHotkey());
+                    text = "Hotkey(" + hotKey + ")";
+                    sp.DrawString(m_font, text, drawTextPos + new Vector2(0, wordSize.Y), drawColor, 0, Vector2.Zero, textSize, SpriteEffects.None, 0);
+                }
             }
 
             arrowDir *= distance * 0.5f;
@@ -559,6 +578,14 @@ namespace MapEditor_TLCB
                 string hotKey = Enum.GetName(typeof(Keys), m_items[arrowTarget].activateEvent.hotkey);
                 text = "Hotkey(" + hotKey + ")";
                 sp.DrawString(m_font, text, drawTextPos + new Vector2(0, wordSize.Y), drawColor * opacity, 0, Vector2.Zero, textSize, SpriteEffects.None, 0);
+            }
+            else
+            {
+                string hotKey = Enum.GetName(typeof(Keys), Keys.None);
+                if (m_items[arrowTarget].submenu != null)
+                    hotKey = Enum.GetName(typeof(Keys), m_items[arrowTarget].submenu.getHotkey());
+                text = "Hotkey(" + hotKey + ")";
+                sp.DrawString(m_font, text, drawTextPos + new Vector2(0, wordSize.Y), drawColor, 0, Vector2.Zero, textSize, SpriteEffects.None, 0);
             }
 
             arrowDir *= distance * 0.5f;

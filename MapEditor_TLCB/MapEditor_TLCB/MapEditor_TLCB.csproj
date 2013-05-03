@@ -132,6 +132,7 @@
     <Compile Include="CustomControls\ImageBasedButton.cs" />
     <Compile Include="CustomControls\TilemapContainer.cs" />
     <Compile Include="Editor.cs" />
+    <Compile Include="KeyDelta.cs" />
     <Compile Include="main.cs" />
     <Compile Include="NotificationBar\Notification.cs" />
     <Compile Include="NotificationBar\NotificationBar.cs" />

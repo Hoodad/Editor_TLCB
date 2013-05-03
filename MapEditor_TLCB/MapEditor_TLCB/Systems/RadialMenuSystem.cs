@@ -22,6 +22,8 @@ namespace MapEditor_TLCB.Systems
 		GraphicsDevice m_device;
 		ContentManager m_content;
 
+        List<EventData> m_events;
+
 		public RadialMenuSystem(GraphicsDevice p_device, ContentManager p_content)
 		{
 			m_device = p_device;
@@ -52,15 +54,15 @@ namespace MapEditor_TLCB.Systems
 
             Texture2D tilemap = m_content.Load<Texture2D>("TileSheets/tilemap_garden");
 
-            List<EventData> events = new List<EventData>();
+            m_events = new List<EventData>();
             int start = 3 * 30;
 
             for (int i = 0; i < 6; i++)
             {
                 for (int j = 0; j < 3; j++)
-                    events.Add(new EventData(setToolCallback, start + i + j * 30));
+                    m_events.Add(new EventData(setToolCallback, start + i + j * 30));
             }
-            events.Add(new EventData(setToolCallback, start + 7));
+            m_events.Add(new EventData(setToolCallback, start + 7));
 
 			EventData tempEvent = new EventData(null, null);
 
@@ -82,26 +84,26 @@ namespace MapEditor_TLCB.Systems
 
             //ROAD TILES MENU
             List<RadialMenuItem> roadTileList = new List<RadialMenuItem>();
-            roadTileList.Add(new RadialMenuItem("Upper Left", tilemap, events[0], new Rectangle(0, 96, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Vertical", tilemap, events[1], new Rectangle(0, 128, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Lower Left", tilemap, events[2], new Rectangle(0, 160, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Horizontal", tilemap, events[3], new Rectangle(32, 96, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Single Dot", tilemap, events[4], new Rectangle(32, 128, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Horizontal", tilemap, events[5], new Rectangle(32, 160, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Upper Right", tilemap, events[6], new Rectangle(64, 96, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Vertical", tilemap, events[7], new Rectangle(64, 128, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Lower Right", tilemap, events[8], new Rectangle(64, 160, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Upper Left", tilemap, m_events[0], new Rectangle(0, 96, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Vertical", tilemap, m_events[1], new Rectangle(0, 128, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Lower Left", tilemap, m_events[2], new Rectangle(0, 160, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Horizontal", tilemap, m_events[3], new Rectangle(32, 96, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Single Dot", tilemap, m_events[4], new Rectangle(32, 128, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Horizontal", tilemap, m_events[5], new Rectangle(32, 160, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Upper Right", tilemap, m_events[6], new Rectangle(64, 96, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Vertical", tilemap, m_events[7], new Rectangle(64, 128, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Lower Right", tilemap, m_events[8], new Rectangle(64, 160, 32, 32), 0.4f));
 
-            roadTileList.Add(new RadialMenuItem("Road1", tilemap, events[9], new Rectangle(96, 96, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Road2", tilemap, events[10], new Rectangle(96, 128, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Road3", tilemap, events[11], new Rectangle(96, 160, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Road4", tilemap, events[12], new Rectangle(128, 96, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Road5", tilemap, events[13], new Rectangle(128, 128, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Road6", tilemap, events[14], new Rectangle(128, 160, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Road7", tilemap, events[15], new Rectangle(160, 96, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Road8", tilemap, events[16], new Rectangle(160, 128, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Road9", tilemap, events[17], new Rectangle(160, 160, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Road9", tilemap, events[18], new Rectangle(224, 96, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Dead End Left", tilemap, m_events[9], new Rectangle(96, 96, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Dead End Up", tilemap, m_events[10], new Rectangle(96, 128, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Dead End Down", tilemap, m_events[11], new Rectangle(96, 160, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Dead End Right", tilemap, m_events[12], new Rectangle(128, 96, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("T Up Right Down", tilemap, m_events[13], new Rectangle(128, 128, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Crossing", tilemap, m_events[14], new Rectangle(128, 160, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("T Left Right Down", tilemap, m_events[15], new Rectangle(160, 96, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("T Left Up Down", tilemap, m_events[16], new Rectangle(160, 128, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("T Left Up Right", tilemap, m_events[17], new Rectangle(160, 160, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Horizontal", tilemap, m_events[18], new Rectangle(224, 96, 32, 32), 0.4f));
             RadialMenu RoadTileMenu = new RadialMenu(m_device, m_content, roadTileList, road, null);
 
             //COLLECTION MENU
@@ -137,6 +139,14 @@ namespace MapEditor_TLCB.Systems
 
 		public override void Process()
 		{
+            for (int i = 0; i < m_events.Count; i++)
+            {
+                if (KeyDelta.getDelta(m_events[i].hotkey) > 0.0f)
+                {
+                    m_events[i].callback(m_events[i].data);
+                }
+            }
+
 			float dt = World.Delta / 1000.0f;
 			m_context.update(dt);
 		}

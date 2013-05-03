@@ -100,7 +100,7 @@ namespace MapEditor_TLCB
             }
             m_infoBox.SetData<Color>(data);
 
-            m_font = p_content.Load<SpriteFont>("Arial12");
+            m_font = p_content.Load<SpriteFont>("Arial8");
 
             m_arrow = p_content.Load<Texture2D>("arrow2");
 
@@ -257,6 +257,23 @@ namespace MapEditor_TLCB
                         m_menus[m_current].preSetMouse();
                         useTempPos = false;
                         m_position = m_originalPosition;
+                    }
+                }
+            }
+            for (int i = 0; i < m_menus.Count; i++)
+            {
+                if (KeyDelta.getDelta(m_menus[i].getHotkey()) > 0.0f &&
+                    !Keyboard.GetState().IsKeyDown(Keys.LeftControl))
+                {
+                    if (m_current == i && m_active)
+                    {
+                        m_active = false;
+                        m_current = m_root;
+                    }
+                    else
+                    {
+                        setCurrent(i);
+                        m_active = true;
                     }
                 }
             }
