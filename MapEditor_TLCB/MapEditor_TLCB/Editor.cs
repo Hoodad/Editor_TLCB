@@ -103,9 +103,14 @@ namespace MapEditor_TLCB
 		private void InitializeEntities()
 		{
 			Entity entity = world.CreateEntity();
+			entity.Tag = "mainCamera";
+			entity.AddComponent(new Transform(new Vector2(200.0f, 100.0f), 1.0f));
+			entity.Refresh();
+
+			entity = world.CreateEntity();
 			entity.Tag = "mainTilemap";
-			entity.AddComponent(new Tilemap(60, 31, 32, 32));
-			entity.AddComponent(new Transform(new Vector2(400.0f, 200.0f)));
+			entity.AddComponent(new Tilemap(10, 10, 32, 32));
+			entity.AddComponent(new Transform(new Vector2(0, 0)));
 			entity.AddComponent(new TilemapRender("tilemap_garden", false));
 			entity.Refresh();
 			
@@ -117,7 +122,7 @@ namespace MapEditor_TLCB
 			entity = world.CreateEntity();
 			entity.Tag = "roadTilemap";
 			entity.AddComponent(new Tilemap(10, 10, 32, 32));
-			entity.AddComponent(new Transform(new Vector2(400.0f, 200.0f)));
+			entity.AddComponent(new Transform(new Vector2(0, 0)));
 			entity.AddComponent(new TilemapRender("debugBlock", true));
 			entity.Refresh();
 			
@@ -216,9 +221,19 @@ namespace MapEditor_TLCB
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Draw(GameTime gameTime)
 		{
+			Matrix cameraMatrix = Matrix.Identity;
+			Entity camera = world.TagManager.GetEntity("mainCamera");
+			if (camera != null)
+			{
+				Transform camTransform = camera.GetComponent<Transform>();
+				if (camTransform != null)
+				{
+					cameraMatrix = camTransform.getMatrix();
+				}
+			}
 			manager.BeginDraw(gameTime);
-
-			spriteBatch.Begin();
+			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend,
+				null, null, null, null, cameraMatrix);
 
 			GraphicsDevice.Clear(Color.Gray);
 			world.SystemManager.UpdateSynchronous(ExecutionType.Draw);

@@ -66,7 +66,16 @@ namespace MapEditor_TLCB.Systems
 				canvasTransform != null)
 			{
 				Vector2 mousePos = new Vector2((float)Mouse.GetState().X, (float)Mouse.GetState().Y);
-				mousePos -= canvasTransform.position;
+				Entity camera = world.TagManager.GetEntity("mainCamera");
+				if (camera != null)
+				{
+					Transform camTransform = camera.GetComponent<Transform>();
+					if (camTransform != null)
+					{
+						mousePos = Vector2.Transform(mousePos, Matrix.Invert(camTransform.getMatrix()));
+					}
+				}
+				
 				if (Mouse.GetState().LeftButton == ButtonState.Pressed)
 				{
 					if (currentTool == Tool.ROAD_TOOL)
