@@ -34,7 +34,7 @@ namespace MapEditor_TLCB
 			}
 		}
 
-		public void QueryAction(ActionInterface p_action)
+		public void QueAction(ActionInterface p_action)
 		{
 			queuedActions.Add(p_action);
 		}
