@@ -26,31 +26,19 @@ namespace MapEditor_TLCB
 		private EntityWorld world;
 		private Manager manager;
 		Dictionary<string, Texture2D> textures;
+		RenderTarget2D canvasRender;
+		bool useFullScreen;
+		bool useMaxRes;
 
 		private	KeyboardState oldState;
 
-		public Editor(bool p_useFullScreen, bool p_useMaxiumRes)
+		public Editor(bool p_useFullScreen, bool p_useMaxRes)
 		{
 			graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
 			textures = new Dictionary<string, Texture2D>();
-
-			IsMouseVisible = true;
-
-			graphics.IsFullScreen = p_useFullScreen;
-			graphics.SynchronizeWithVerticalRetrace = true;
-
-			if (p_useMaxiumRes)
-			{
-				graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-				graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-			}
-			else
-			{
-				graphics.PreferredBackBufferWidth = 1280;
-				graphics.PreferredBackBufferHeight = 720;
-			}
-			graphics.ApplyChanges();
+			useFullScreen = p_useFullScreen;
+			useMaxRes = p_useMaxRes;
 		}
 
 		/// <summary>
@@ -77,12 +65,34 @@ namespace MapEditor_TLCB
 
 			world = new EntityWorld();
 
+			if (useMaxRes)
+			{
+				graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+				graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+				canvasRender = new RenderTarget2D(GraphicsDevice,
+					GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width,
+					GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
+			}
+			else
+			{
+				graphics.PreferredBackBufferWidth = 1280;
+				graphics.PreferredBackBufferHeight = 720;
+				canvasRender = new RenderTarget2D(GraphicsDevice, 1280, 720);
+			}
+			IsMouseVisible = true;
+
+			graphics.IsFullScreen = useFullScreen;
+			graphics.SynchronizeWithVerticalRetrace = true;
+
+			graphics.ApplyChanges();
+
 			base.Initialize();
 		}
 
 		public void InitializeAllSystem()
 		{
 			SystemManager systemManager = world.SystemManager;
+			systemManager.SetSystem(new CanvasControlSystem(manager, canvasRender), ExecutionType.Update); // Canvas window is furthest back.
 			systemManager.SetSystem(new ActionSystem(), ExecutionType.Update);
 			systemManager.SetSystem(new ContentSystem(Content,graphics), ExecutionType.Update);
 			systemManager.SetSystem(new ToolbarSystem(manager), ExecutionType.Update);
@@ -96,9 +106,9 @@ namespace MapEditor_TLCB
 			systemManager.SetSystem(new CurrentToolSystem(manager, GraphicsDevice, Content), ExecutionType.Update);
 			systemManager.SetSystem(new StartupDialogSystem(manager), ExecutionType.Update);
 			world.SystemManager.SetSystem(new RadialMenuSystem(GraphicsDevice, Content), ExecutionType.Update);
-			systemManager.SetSystem(new CanvasControlSystem(), ExecutionType.Update);
-
-			world.SystemManager.SetSystem(new DrawCanvasSystem(textures, spriteBatch), ExecutionType.Draw);
+			
+			world.SystemManager.SetSystem(new DrawCanvasSystem(textures, GraphicsDevice,
+				canvasRender, manager), ExecutionType.Draw);
 			world.SystemManager.InitializeAll();
 		}
 
@@ -223,31 +233,15 @@ namespace MapEditor_TLCB
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Draw(GameTime gameTime)
 		{
-			Matrix cameraMatrix = Matrix.Identity;
-			Entity camera = world.TagManager.GetEntity("mainCamera");
-			if (camera != null)
-			{
-				Transform camTransform = camera.GetComponent<Transform>();
-				if (camTransform != null)
-				{
-					cameraMatrix = camTransform.getMatrix();
-				}
-			}
 			manager.BeginDraw(gameTime);
-			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend,
-				null, null, null, null, cameraMatrix);
-
-			GraphicsDevice.Clear(Color.Gray);
 			world.SystemManager.UpdateSynchronous(ExecutionType.Draw);
-
-			spriteBatch.End();
-            spriteBatch.Begin();
-            RadialMenuSystem radial = (RadialMenuSystem)world.SystemManager.GetSystem<RadialMenuSystem>()[0];
-            radial.Render(spriteBatch);
-            spriteBatch.End();
-
 			base.Draw(gameTime);
 			manager.EndDraw();
+			
+			spriteBatch.Begin();
+			RadialMenuSystem radial = (RadialMenuSystem)world.SystemManager.GetSystem<RadialMenuSystem>()[0];
+			radial.Render(spriteBatch);
+			spriteBatch.End();
 		}
 		void f_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
 		{
