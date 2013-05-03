@@ -80,6 +80,8 @@ namespace MapEditor_TLCB.Systems
 			startupDialog.Text = "What would you like to do?";
 			startupDialog.ShowModal();
 			startupDialog.CloseButtonVisible = false;
+			startupDialog.Resizable = false;
+			startupDialog.Movable = false;
 			manager.Add(startupDialog);
 
 			possibleMaps = new GroupPanel(manager);
@@ -114,8 +116,10 @@ namespace MapEditor_TLCB.Systems
 			tileMapGarden.tilemap = contentSystem.LoadTexture("TileSheets/tilemap_garden");
 			tileMapGarden.Click += new TomShane.Neoforce.Controls.EventHandler(OnTilemapButtonClickBehavior);
 			tileMapGarden.MouseOver += new MouseEventHandler(OnTilemapButtonMouseOverBehavior);
+			tileMapGarden.FocusGained += new TomShane.Neoforce.Controls.EventHandler(OnTilemapButtonMouseOverBehavior);
 			tileMapGarden.Text = "";
 			tileMapGarden.GenerateFirstTile(contentSystem);
+			tileMapGarden.Focused = true;
 			//manager.Add(tileMapGarden);
 
 			tileMapCellar = new ImageBasedButton(manager);
@@ -128,6 +132,7 @@ namespace MapEditor_TLCB.Systems
 			tileMapCellar.tilemap = contentSystem.LoadTexture("TileSheets/tilemap_winecellar");
 			tileMapCellar.Click += new TomShane.Neoforce.Controls.EventHandler(OnTilemapButtonClickBehavior);
 			tileMapCellar.MouseOver += new MouseEventHandler(OnTilemapButtonMouseOverBehavior);
+			tileMapCellar.FocusGained += new TomShane.Neoforce.Controls.EventHandler(OnTilemapButtonMouseOverBehavior);
 			tileMapCellar.Text = "";
 
 			tileMapCellar.GenerateFirstTile(contentSystem);
