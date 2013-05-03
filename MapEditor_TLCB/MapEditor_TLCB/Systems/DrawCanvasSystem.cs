@@ -11,11 +11,16 @@ namespace MapEditor_TLCB.Systems
 {
 	class DrawCanvasSystem: EntitySystem
 	{
-		public DrawCanvasSystem(Dictionary<string, Texture2D> p_textures, SpriteBatch p_spriteBatch)
+		public DrawCanvasSystem(Dictionary<string, Texture2D> p_textures,
+			SpriteBatch p_spriteBatch, GraphicsDevice p_graphicsDevice,
+			RenderTarget2D p_canvasRender)
 			: base(typeof(Tilemap), typeof(Transform), typeof(TilemapRender))
 		{
 			m_textures = p_textures;
-			m_spriteBatch = p_spriteBatch;
+			//m_spriteBatch = p_spriteBatch;
+			m_spriteBatch = new SpriteBatch(p_graphicsDevice);
+			m_graphicsDevice = p_graphicsDevice;
+			m_canvasRender = p_canvasRender;
 		}
 
 		protected override void ProcessEntities(Dictionary<int, Entity> entities)
@@ -65,8 +70,36 @@ namespace MapEditor_TLCB.Systems
 			m_tilemapRenderMapper = new ComponentMapper<TilemapRender>(world);
 		}
 
+		protected override void Begin()
+		{
+			m_graphicsDevice.SetRenderTarget(m_canvasRender);
+			m_graphicsDevice.Clear(Color.DarkGray);
+
+			Matrix cameraMatrix = Matrix.Identity;
+			Entity camera = world.TagManager.GetEntity("mainCamera");
+			if (camera != null)
+			{
+				Transform camTransform = camera.GetComponent<Transform>();
+				if (camTransform != null)
+				{
+					cameraMatrix = camTransform.getMatrix();
+				}
+			}
+			
+			m_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend,
+				null, null, null, null, cameraMatrix);
+		}
+
+		protected override void End()
+		{
+			m_spriteBatch.End();
+			m_graphicsDevice.SetRenderTarget(null);
+		}
+
 		Dictionary<string, Texture2D> m_textures;
 		SpriteBatch m_spriteBatch;
+		GraphicsDevice m_graphicsDevice;
+		RenderTarget2D m_canvasRender;
 		ComponentMapper<Transform> m_transformMapper;
 		ComponentMapper<Tilemap> m_tilemapMapper;
 		ComponentMapper<TilemapRender> m_tilemapRenderMapper;
