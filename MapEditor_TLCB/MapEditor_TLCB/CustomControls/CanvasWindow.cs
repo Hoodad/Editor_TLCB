@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace MapEditor_TLCB.CustomControls
 {
-	class CanvasWindow: Window
+	class CanvasWindow: Control
 	{
 		public CanvasWindow(Manager p_manager)
 			: base(p_manager)
