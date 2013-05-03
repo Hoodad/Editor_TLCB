@@ -7,10 +7,13 @@ using MapEditor_TLCB.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MapEditor_TLCB.CustomControls;
+using MapEditor_TLCB.Systems.Interface;
+using MapEditor_TLCB.Actions.Interface;
+using MapEditor_TLCB.Actions;
 
 namespace MapEditor_TLCB.Systems
 {
-	class RoadToolSystem: EntitySystem
+	class RoadToolSystem: EntitySystem, ActionSystemInterface
 	{
 		public RoadToolSystem(): base(typeof(Tilemap))
 		{
@@ -83,13 +86,41 @@ namespace MapEditor_TLCB.Systems
 					if (currentTool == Tool.ROAD_TOOL)
 					{
 						int[] mapPos = roadTilemap.getTilePosition(mousePos);
-						roadTilemap.setState(mapPos[0], mapPos[1], 0);
+						ModifyTile changeTile = new ModifyTile(world.SystemManager);
+						changeTile.col = mapPos[0];
+						changeTile.row = mapPos[1];
+						changeTile.state = 0;
+						changeTile.affectedTilemap = roadTilemap;
+
+						if (roadTilemap.getState(mapPos[0], mapPos[1]) != 0)
+						{
+							ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
+							actionSys.QueAction(changeTile);
+						}
 					}
 					else if (currentTool == Tool.PAINT_TOOL)
 					{
 						int[] mapPos = roadTilemap.getTilePosition(mousePos);
-						singlesTilemap.setState(mapPos[0], mapPos[1], m_toolSys.GetCurrentDrawTileIndex());
-						roadTilemap.setState(mapPos[0], mapPos[1], -1);
+
+						if (singlesTilemap.getState(mapPos[0], mapPos[1]) != m_toolSys.GetCurrentDrawTileIndex())
+						{
+							ModifyTile changeTile = new ModifyTile(world.SystemManager);
+							changeTile.col = mapPos[0];
+							changeTile.row = mapPos[1];
+							changeTile.state = m_toolSys.GetCurrentDrawTileIndex();
+							changeTile.affectedTilemap = singlesTilemap;
+
+							ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
+							actionSys.QueAction(changeTile);
+
+							ModifyTile roadChangeTile = new ModifyTile(world.SystemManager);
+							roadChangeTile.col = changeTile.col;
+							roadChangeTile.row = changeTile.row;
+							roadChangeTile.state = -1;
+							roadChangeTile.affectedTilemap = roadTilemap;
+							actionSys.QueAction(roadChangeTile);
+
+						}
 					}
 					else if (currentTool == Tool.ERASE_TOOL)
 					{
@@ -191,6 +222,25 @@ namespace MapEditor_TLCB.Systems
 						p_wallMap.setState(x, y, -1);
 					}
 				}
+			}
+		}
+
+		public void ReceiveAction(ActionInterface p_action)
+		{
+			if (p_action.GetType() == typeof(ModifyTile))
+			{
+				ModifyTile action = (ModifyTile)p_action;
+				//roadTilemap.setState(mapPos[0], mapPos[1], 0);
+
+				//singlesTilemap.setState(mapPos[0], mapPos[1], m_toolSys.GetCurrentDrawTileIndex());
+				//roadTilemap.setState(mapPos[0], mapPos[1], -1);
+				//if (action.affectedTilemap == roadTilemap)
+				//{
+					int oldState;
+					oldState = action.affectedTilemap.getState(action.col, action.row);
+					action.affectedTilemap.setState(action.col, action.row, action.state);
+					action.state = oldState;
+				//}
 			}
 		}
 		
