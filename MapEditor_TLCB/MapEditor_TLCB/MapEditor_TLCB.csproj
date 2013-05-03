@@ -127,6 +127,7 @@
     <Compile Include="Components\TilemapRender.cs" />
     <Compile Include="Components\Transform.cs" />
     <Compile Include="ContactMap.cs" />
+    <Compile Include="CustomControls\ImageBasedButton.cs" />
     <Compile Include="CustomControls\TilemapContainer.cs" />
     <Compile Include="Editor.cs" />
     <Compile Include="main.cs" />
@@ -147,6 +148,7 @@
     <Compile Include="Systems\DrawCanvasSystem.cs" />
     <Compile Include="Systems\RoadAndWallMapperSystem.cs" />
     <Compile Include="Systems\RoadToolSystem.cs" />
+    <Compile Include="Systems\StartupDialogSystem.cs" />
     <Compile Include="Systems\StateSystem.cs" />
     <Compile Include="Systems\XNAInputSystem.cs" />
     <Compile Include="Systems\Interface\ActionSystemInterface.cs" />
