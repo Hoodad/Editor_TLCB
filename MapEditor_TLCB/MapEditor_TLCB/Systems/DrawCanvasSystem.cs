@@ -22,7 +22,6 @@ namespace MapEditor_TLCB.Systems
 			m_spriteBatch = new SpriteBatch(p_graphicsDevice);
 			m_graphicsDevice = p_graphicsDevice;
 			m_canvasRender = p_canvasRender;
-			m_manager = p_manager;
 		}
 
 		protected override void ProcessEntities(Dictionary<int, Entity> entities)
@@ -63,7 +62,6 @@ namespace MapEditor_TLCB.Systems
 					}
 				}
 			}
-			m_canvasWindow.Refresh();
 		}
 
 		public override void Initialize()
@@ -71,25 +69,6 @@ namespace MapEditor_TLCB.Systems
 			m_transformMapper = new ComponentMapper<Transform>(world);
 			m_tilemapMapper = new ComponentMapper<Tilemap>(world);
 			m_tilemapRenderMapper = new ComponentMapper<TilemapRender>(world);
-
-			ContentSystem contentSystem = ((ContentSystem)world.SystemManager.GetSystem<ContentSystem>()[0]);
-			Viewport viewport = contentSystem.GetViewport();
-			m_canvasWindow = new CanvasWindow(m_manager);
-			m_canvasWindow.Init();
-			m_canvasWindow.Left = 0;
-			m_canvasWindow.Top = 0;
-			m_canvasWindow.Width = m_manager.Window.Width;
-			m_canvasWindow.Height = m_manager.Window.Height;
-			m_canvasWindow.Parent = null;
-			m_canvasWindow.BorderVisible = false;
-			//m_canvasWindow.CanFocus = false;
-			//m_canvasWindow.Focused = true;
-			m_canvasWindow.Passive = true;
-			m_canvasWindow.CanvasTexture = m_canvasRender;
-			RoadToolSystem roadSys = ((RoadToolSystem)world.SystemManager.GetSystem<RoadToolSystem>()[0]);
-			m_canvasWindow.MouseMove += new MouseEventHandler(roadSys.canvasWindow_MouseMove);
-			
-			m_manager.Add(m_canvasWindow);
 		}
 
 		protected override void Begin()
@@ -125,7 +104,5 @@ namespace MapEditor_TLCB.Systems
 		ComponentMapper<Transform> m_transformMapper;
 		ComponentMapper<Tilemap> m_tilemapMapper;
 		ComponentMapper<TilemapRender> m_tilemapRenderMapper;
-		CanvasWindow m_canvasWindow;
-		Manager m_manager;
 	}
 }

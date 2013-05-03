@@ -92,6 +92,7 @@ namespace MapEditor_TLCB
 		public void InitializeAllSystem()
 		{
 			SystemManager systemManager = world.SystemManager;
+			systemManager.SetSystem(new CanvasControlSystem(manager, canvasRender), ExecutionType.Update);
 			world.SystemManager.SetSystem(new DrawCanvasSystem(textures, GraphicsDevice,
 				canvasRender, manager), ExecutionType.Draw); // Canvas window is furthest back.
 			systemManager.SetSystem(new ActionSystem(), ExecutionType.Update);
@@ -107,7 +108,6 @@ namespace MapEditor_TLCB
 			systemManager.SetSystem(new CurrentToolSystem(manager, GraphicsDevice, Content), ExecutionType.Update);
 			systemManager.SetSystem(new StartupDialogSystem(manager), ExecutionType.Update);
 			world.SystemManager.SetSystem(new RadialMenuSystem(GraphicsDevice, Content), ExecutionType.Update);
-			systemManager.SetSystem(new CanvasControlSystem(), ExecutionType.Update);
 
 			world.SystemManager.InitializeAll();
 		}
