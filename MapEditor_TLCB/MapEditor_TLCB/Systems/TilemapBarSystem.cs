@@ -44,12 +44,11 @@ namespace MapEditor_TLCB.Systems
 
 			tilemap = new TilemapContainer(manager);
 			tilemap.gridImage = contentSystem.LoadTexture("TileSheets/grid");
-			tilemap.tilemapImage = contentSystem.LoadTexture("TileSheets/tilemap_garden");
 			tilemap.tileSelectorImage = contentSystem.LoadTexture("TileSelector_v3");
 			tilemap.Parent = tilemapWindow;
 			tilemap.windowParent = tilemapWindow;
-			tilemap.Width = tilemap.tilemapImage.Width;
-			tilemap.Height = tilemap.tilemapImage.Height;
+			tilemap.Width = 960;
+			tilemap.Height = 960;
 			tilemap.Parent = tilemapWindow;
 			tilemap.gridColor = Color.Black;
 			tilemap.CanFocus = false;
@@ -60,6 +59,14 @@ namespace MapEditor_TLCB.Systems
 
 		public override void Process()
 		{
+			StartupDialogSystem dialogSystem = (StartupDialogSystem)(world.SystemManager.GetSystem<StartupDialogSystem>()[0]);
+
+			if (dialogSystem.HasChangedTileMap())
+			{
+				tilemap.tilemapImage = dialogSystem.tilemap;
+				tilemap.Refresh();
+			}
+            
 		}
 		public void OnClick(object sender, TomShane.Neoforce.Controls.EventArgs e)
 		{

@@ -11,7 +11,7 @@ namespace MapEditor_TLCB.CustomControls
 {
 	class TilemapContainer : Container
 	{
-		public Texture2D tilemapImage;
+		public Texture2D tilemapImage = null;
 		public Texture2D tileSelectorImage;
 		public Texture2D gridImage;
 		public Color gridColor;
@@ -34,7 +34,10 @@ namespace MapEditor_TLCB.CustomControls
 
 		protected override void DrawControl(TomShane.Neoforce.Controls.Renderer renderer, Microsoft.Xna.Framework.Rectangle rect, Microsoft.Xna.Framework.GameTime gameTime)
 		{
-			renderer.Draw(tilemapImage, rect, Color.White);
+			if (tilemapImage != null)
+			{
+				renderer.Draw(tilemapImage, rect, Color.White);
+			}
 			renderer.Draw(gridImage, rect, gridColor);
 			renderer.Draw(tileSelectorImage, selectorRect, Color.White);
 		}
@@ -87,12 +90,12 @@ namespace MapEditor_TLCB.CustomControls
 			base.Init();
 			// Calculate the tile size and see if the maximum window size is not able to contain the whole 
 			// tilemap.
-			float aspect = (float)(p_windowSize.X) / (float)(tilemapImage.Width);
+			float aspect = (float)(p_windowSize.X) / (float)(960);
 			if (aspect > 1.0f)
 				aspect = 1.0f;
 			tileSize.X = (int)(32 * aspect);
 
-			aspect = (float)(p_windowSize.Y) / (float)(tilemapImage.Height);
+			aspect = (float)(p_windowSize.Y) / (float)(960);
 			if (aspect > 1.0f)
 				aspect = 1.0f;
 			tileSize.Y = (int)(32 * aspect);
