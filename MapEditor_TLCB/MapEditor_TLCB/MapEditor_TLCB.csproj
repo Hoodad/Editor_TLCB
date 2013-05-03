@@ -140,6 +140,7 @@
     <Compile Include="RoadMapper.cs" />
     <Compile Include="Serializer.cs" />
     <Compile Include="Systems\ActionSystem.cs" />
+    <Compile Include="Systems\CanvasControlSystem.cs" />
     <Compile Include="Systems\ContentSystem.cs" />
     <Compile Include="Systems\CurrentToolSystem.cs" />
     <Compile Include="Systems\RadialMenuSystem.cs" />
