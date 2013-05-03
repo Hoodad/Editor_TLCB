@@ -19,10 +19,10 @@ namespace MapEditor_TLCB.Systems
         Button redoBtn;
         RadioButton viewMode;
 
-        ScrollBar sbVert;
-        ScrollBar sbHorz;
+        // ScrollBar sbVert;
+        // ScrollBar sbHorz;
 
-        UndoTreeContext undoTreeContext;
+        UndoTreeContainer undoTreeContainer;
         GraphicsDevice m_gd;
 
 
@@ -78,7 +78,7 @@ namespace MapEditor_TLCB.Systems
             viewMode.Top = 24;
             viewMode.Text = "Tree view";
 
-            sbVert = new ScrollBar(manager, Orientation.Vertical);
+            /*sbVert = new ScrollBar(manager, Orientation.Vertical);
             sbVert.Init();
             sbVert.Detached = false;
             sbVert.Anchor = Anchors.Top | Anchors.Right | Anchors.Bottom;
@@ -98,20 +98,20 @@ namespace MapEditor_TLCB.Systems
             sbHorz.PageSize = 0;
             sbHorz.Value = 0;
             sbHorz.Visible = true;
-            undoTreeWindow.Add(sbHorz);
+            undoTreeWindow.Add(sbHorz);*/
 
-            undoTreeContext = new UndoTreeContext(manager, undoTreeWindow, m_gd);
-            undoTreeContext.Init();
-            undoTreeContext.Width = undoTreeWindow.Width;
-            undoTreeContext.Height = undoTreeWindow.Height;
-            undoTreeContext.Parent = undoTreeWindow;
-            undoTreeContext.CanFocus = false;
-            undoTreeContext.Click += new TomShane.Neoforce.Controls.EventHandler(OnClick);
+            undoTreeContainer = new UndoTreeContainer(manager, undoTreeWindow, m_gd);
+            undoTreeContainer.Init();
+            undoTreeContainer.Width = undoTreeWindow.Width;
+            undoTreeContainer.Height = undoTreeWindow.Height;
+            undoTreeContainer.Parent = undoTreeWindow;
+            undoTreeContainer.CanFocus = false;
+            undoTreeContainer.Click += new TomShane.Neoforce.Controls.EventHandler(OnClick);
 		}
 
 		public override void Process()
 		{
-            undoTreeContext.Update((float)world.Delta/1000.0f);
+            undoTreeContainer.Update((float)world.Delta/1000.0f);
 		}
 
 

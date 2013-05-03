@@ -7,34 +7,32 @@ using TomShane.Neoforce.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-
 namespace MapEditor_TLCB.UndoTree
 {
 
-    class UndoTreeContext : Container
+    class UndoTreeContainer : Container
     {        
-        
-        InvariableIndexList<ActionNode> m_nodes;
         public int m_startId = 0;
         public bool m_treestate = true;
-        public int m_currentNode;
+
         private Window m_windowParent;
-        private LineRenderer m_lineRenderer;
         private GraphicsDevice m_gd;
+        public UndoTree m_undoTree;
 
         float tck = 0.0f;
 
 
-        public UndoTreeContext(Manager p_manager, Window p_parent, GraphicsDevice p_gd)
+        public UndoTreeContainer(Manager p_manager, Window p_parent, GraphicsDevice p_gd)
             : base(p_manager)
         {
             m_windowParent = p_parent;
             m_gd = p_gd;
-            m_lineRenderer = new LineRenderer(m_gd);
+            m_undoTree = new UndoTree(p_gd);
         }
 
         public void Update(float p_dt)
         {
+            m_undoTree.update(p_dt);
             tck += 200.0f*p_dt;
             Refresh();            
             m_windowParent.Refresh();
@@ -51,15 +49,9 @@ namespace MapEditor_TLCB.UndoTree
                 -m_windowParent.ScrollBarValue.Vertical);
 
 
-         //  if ((float)tck >= Manager.Window.Width)
-         //  {
-         //      offset.X *= ((float)tck-(float)m_windowParent.Width);
-         //      offset.Y *= tck*0.1f-Manager.Window.Height;
-         //  }
-
-
-            Vector2 t = offset+new Vector2(0.0f, 100);
-            m_lineRenderer.Draw(renderer.SpriteBatch,t,t+new Vector2(tck,tck*0.1f),Color.CornflowerBlue,2.0f);
+            m_undoTree.draw(renderer.SpriteBatch,Vector2.Zero);
+            
+            // resizing
             Width = Math.Max(OriginWidth,(int)tck);
             Height = Math.Max(OriginHeight, (int)(tck*0.1f));
             //m_windowParent.Width = (int)tck;

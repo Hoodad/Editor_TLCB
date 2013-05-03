@@ -154,7 +154,8 @@
     <Compile Include="Systems\ToolbarSystem.cs" />
     <Compile Include="Systems\UndoTreeSystem.cs" />
     <Compile Include="UndoTree\ActionNode.cs" />
-    <Compile Include="UndoTree\UndoTreeContext.cs" />
+    <Compile Include="CustomControls\UndoTreeContainer.cs" />
+    <Compile Include="UndoTree\UndoTree.cs" />
     <Compile Include="WallMapper.cs" />
   </ItemGroup>
   <ItemGroup>
