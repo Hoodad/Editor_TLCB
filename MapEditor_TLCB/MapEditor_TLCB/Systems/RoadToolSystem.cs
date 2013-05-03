@@ -102,8 +102,6 @@ namespace MapEditor_TLCB.Systems
 
 						if (singlesTilemap.getState(mapPos[0], mapPos[1]) != m_toolSys.GetCurrentDrawTileIndex())
 						{
-
-
 							ModifyTile changeTile = new ModifyTile(world.SystemManager);
 							changeTile.col = mapPos[0];
 							changeTile.row = mapPos[1];
