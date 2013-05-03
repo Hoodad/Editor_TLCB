@@ -8,6 +8,12 @@ namespace MapEditor_TLCB.Common
 {
     class InvariableIndexList<T>
     {
+        public InvariableIndexList()
+        {
+            m_list=new List<T>();
+	        m_freeIndices=new Stack<int>();
+        }
+
         public int add(T p_valueRef)
         {
             int index = -1;

@@ -47,9 +47,20 @@ namespace MapEditor_TLCB.Systems
 			undoTreeWindow.Visible = true;
 			undoTreeWindow.CloseButtonVisible = false;
             undoTreeWindow.AutoScroll = false;
+
+
 			//toolbarWindow.BorderVisible = false;
 			//toolbar.Movable = false;
 			manager.Add(undoTreeWindow);
+
+
+
+            undoTreeContainer = new UndoTreeContainer(manager, undoTreeWindow, m_gd);
+            undoTreeContainer.Init();
+            undoTreeContainer.Width = undoTreeWindow.Width;
+            undoTreeContainer.Height = undoTreeWindow.Height;
+            undoTreeContainer.Parent = undoTreeWindow;
+            undoTreeContainer.CanFocus = false;
 
             undoBtn = new Button(manager);
             undoBtn.Init();
@@ -59,6 +70,7 @@ namespace MapEditor_TLCB.Systems
             undoBtn.Left = 0;
             undoBtn.Top = 0;
             undoBtn.Text = "Undo";
+            undoBtn.Click += new TomShane.Neoforce.Controls.EventHandler(UndoBehaviour);
 
             redoBtn = new Button(manager);
             redoBtn.Init();
@@ -68,6 +80,7 @@ namespace MapEditor_TLCB.Systems
             redoBtn.Left = undoTreeWindow.Width / 2;
             redoBtn.Top = 0;
             redoBtn.Text = "Redo";
+            redoBtn.Click += new TomShane.Neoforce.Controls.EventHandler(RedoBehaviour);
 
             viewMode = new RadioButton(manager);
             viewMode.Init();
@@ -76,7 +89,9 @@ namespace MapEditor_TLCB.Systems
             viewMode.Height = 24;
             viewMode.Left = 0;
             viewMode.Top = 24;
+            viewMode.Checked = true;
             viewMode.Text = "Tree view";
+            viewMode.Click += new TomShane.Neoforce.Controls.EventHandler(ViewModeBehaviour);
 
             /*sbVert = new ScrollBar(manager, Orientation.Vertical);
             sbVert.Init();
@@ -100,13 +115,8 @@ namespace MapEditor_TLCB.Systems
             sbHorz.Visible = true;
             undoTreeWindow.Add(sbHorz);*/
 
-            undoTreeContainer = new UndoTreeContainer(manager, undoTreeWindow, m_gd);
-            undoTreeContainer.Init();
-            undoTreeContainer.Width = undoTreeWindow.Width;
-            undoTreeContainer.Height = undoTreeWindow.Height;
-            undoTreeContainer.Parent = undoTreeWindow;
-            undoTreeContainer.CanFocus = false;
-            undoTreeContainer.Click += new TomShane.Neoforce.Controls.EventHandler(OnClick);
+       
+            // undoTreeContainer.Click += new TomShane.Neoforce.Controls.EventHandler(OnClick);
 		}
 
 		public override void Process()
@@ -118,6 +128,31 @@ namespace MapEditor_TLCB.Systems
         public void OnClick(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
 
+        }
+
+        public void UndoBehaviour(object sender, TomShane.Neoforce.Controls.EventArgs e)
+        {
+            undoTreeContainer.m_undoTree.undo();
+        }
+
+        public void RedoBehaviour(object sender, TomShane.Neoforce.Controls.EventArgs e)
+        {
+            undoTreeContainer.m_undoTree.redo();
+        }
+
+        public void ViewModeBehaviour(object sender, TomShane.Neoforce.Controls.EventArgs e)
+        {
+            RadioButton rb = sender as RadioButton;
+            if (undoTreeContainer.m_undoTree.getMode() == UndoTree.UndoTree.Mode.LIST)
+            {
+                undoTreeContainer.m_undoTree.setMode(UndoTree.UndoTree.Mode.TREE); // checked
+                rb.Checked = true;
+            }
+            else
+            {
+                undoTreeContainer.m_undoTree.setMode(UndoTree.UndoTree.Mode.LIST); // unchecked
+                rb.Checked = false;
+            }
         }
 	}
 }

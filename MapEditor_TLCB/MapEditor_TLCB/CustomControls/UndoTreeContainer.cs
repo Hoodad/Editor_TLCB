@@ -52,10 +52,12 @@ namespace MapEditor_TLCB.UndoTree
             m_undoTree.draw(renderer.SpriteBatch,Vector2.Zero);
             
             // resizing
+            /*
             Width = Math.Max(OriginWidth,(int)tck);
             Height = Math.Max(OriginHeight, (int)(tck*0.1f));
             //m_windowParent.Width = (int)tck;
             m_windowParent.MovableArea = new Rectangle(0,0,(int)tck,(int)(tck*0.1f));
+             * */
         }
 
         protected override void OnMouseMove(TomShane.Neoforce.Controls.MouseEventArgs e)
@@ -75,6 +77,8 @@ namespace MapEditor_TLCB.UndoTree
             //
             Refresh();
         }
+
+
 
     }
 }
