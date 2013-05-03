@@ -42,7 +42,88 @@ namespace MapEditor_TLCB.UndoTree
         {
             Vector2 offset = p_offset;
             m_lineRenderer.Draw(p_spriteBatch, Vector2.Zero,-Vector2.UnitY, Color.CornflowerBlue, 2.0f);
-            
+
+            /*
+            // position
+            Queue<DataNode> batch = new Queue<DataNode>();
+            List<int> columnPerRowCounter = new List<int>(); // "global siblings"
+            batch.Enqueue(m_start);
+            do
+            {
+                DataNode currentRender = batch.Dequeue();
+                int level = currentRender.m_level;
+                // retrieve current object
+                Transform obj = currentRender.m_visualRepr;
+                Material objMaterial = obj.GetChild(0).renderer.material;
+                currentRender.m_visualRepr.renderer.enabled = true;
+                currentRender.m_visualRepr.GetChild(0).renderer.enabled = true;
+                currentRender.m_visualRepr.GetChild(1).renderer.enabled = true;
+                // if click
+                if (obj == mouseHoverObj && mouseClick)
+                    m_currentNode = currentRender;
+                // "render"
+                if (m_treestate)
+                {
+                    obj.position = Vector3.Lerp(obj.position, new Vector3(currentRender.m_siblingId * m_nodeWidth,
+                                               currentRender.m_level * m_nodeHeight,
+                                               0.5f),
+                                               10.0f * Time.deltaTime);
+                }
+                else
+                {
+                    obj.position = Vector3.Lerp(obj.position, new Vector3(m_start.m_visualRepr.position.x,
+                                               currentRender.m_level * m_nodeHeight,
+                                               0.5f),
+                                               10.0f * Time.deltaTime);
+                }
+
+                objMaterial.color = m_normalNodeColor;
+                // draw line to parent
+                if (currentRender.m_parent != null)
+                {
+                    LineRenderer line = obj.GetComponent<LineRenderer>();
+                    setLine(line, new Vector3(0.0f, 0.0f, 0.1f), new Vector3(0.0f, 0.0f, 0.1f) + currentRender.m_parent.m_visualRepr.position - obj.transform.position);
+                }
+
+                // process children and add to batch
+                if (columnPerRowCounter.Count <= level) columnPerRowCounter.Insert(level, 0);
+                int localSibling = 0;
+                currentRender.m_activeBranch = false;
+                foreach (DataNode d in currentRender.m_children)
+                {
+                    // set as active branch if a child is activebranch or currentaction
+                    if (d.m_activeBranch || m_currentNode == d)
+                    {
+                        currentRender.m_activeBranch = true;
+                    }
+                    //
+                    batch.Enqueue(d);
+                    if (d.m_parent != null)
+                        d.m_siblingId = Mathf.Max(d.m_parent.m_siblingId + localSibling,
+                                                    columnPerRowCounter[level]);  // for alignment purposes   
+                    else
+                        d.m_siblingId = columnPerRowCounter[level];
+                    columnPerRowCounter[level] += d.m_siblingId - columnPerRowCounter[level] + 1;
+                    localSibling++;
+                }
+
+
+                // visualize active branch
+                if (currentRender.m_activeBranch)
+                {
+                    objMaterial.color = m_activebranchNodeColor;
+                }
+                else if (!m_treestate && m_currentNode != currentRender)
+                {
+                    currentRender.m_visualRepr.renderer.enabled = false;
+                    currentRender.m_visualRepr.GetChild(0).renderer.enabled = false;
+                    currentRender.m_visualRepr.GetChild(1).renderer.enabled = false;
+                    //currentRender.m_visualRepr.position = new Vector3(m_start.m_visualRepr.position.x, m_start.m_visualRepr.position.y, currentRender.m_visualRepr.position.z + 1);
+                }
+
+            } while (batch.Count > 0);
+            */
+
         }
 
         // set render mode
@@ -71,6 +152,8 @@ namespace MapEditor_TLCB.UndoTree
                 nodeId = m_nodes.add(new ActionNode(actionId, m_currentNodeId, currentNodeRef.m_level + 1));
                 // then add new node index as child to parent
                 currentNodeRef.m_children.Add(nodeId);
+                // set starting position(render) for node
+                m_nodes[nodeId].m_renderPos = currentNodeRef.m_renderPos;
             }
             else // first node
             {

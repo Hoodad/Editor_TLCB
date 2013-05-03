@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 namespace MapEditor_TLCB.UndoTree
 {
@@ -13,6 +14,7 @@ namespace MapEditor_TLCB.UndoTree
             m_level = p_level;
             m_parentId = p_parentId;
             m_children = new List<int>();
+            m_renderPos = Vector2.Zero;
         }
         public int m_actionId; ///< action reference
         public List<int> m_children;
@@ -20,5 +22,7 @@ namespace MapEditor_TLCB.UndoTree
         public int m_level; ///< level this node has in tree
         public int m_siblingId = 0; ///< id amongst siblings
         public bool m_activeBranch = false; ///< whether this node is part of the active action branch
+        // for representation
+        public Vector2 m_renderPos;
     }
 }
