@@ -92,6 +92,8 @@ namespace MapEditor_TLCB
 		public void InitializeAllSystem()
 		{
 			SystemManager systemManager = world.SystemManager;
+			world.SystemManager.SetSystem(new DrawCanvasSystem(textures, GraphicsDevice,
+				canvasRender, manager), ExecutionType.Draw); // Canvas window is furthest back.
 			systemManager.SetSystem(new ActionSystem(), ExecutionType.Update);
 			systemManager.SetSystem(new ContentSystem(Content,graphics), ExecutionType.Update);
 			systemManager.SetSystem(new ToolbarSystem(manager), ExecutionType.Update);
@@ -107,7 +109,6 @@ namespace MapEditor_TLCB
 			world.SystemManager.SetSystem(new RadialMenuSystem(GraphicsDevice, Content), ExecutionType.Update);
 			systemManager.SetSystem(new CanvasControlSystem(), ExecutionType.Update);
 
-			world.SystemManager.SetSystem(new DrawCanvasSystem(textures, spriteBatch, GraphicsDevice, canvasRender), ExecutionType.Draw);
 			world.SystemManager.InitializeAll();
 		}
 
@@ -238,7 +239,7 @@ namespace MapEditor_TLCB
 			GraphicsDevice.Clear(Color.Gray);
 			world.SystemManager.UpdateSynchronous(ExecutionType.Draw);
 
-			spriteBatch.Draw(canvasRender, Vector2.Zero, Color.White);
+			//spriteBatch.Draw(canvasRender, Vector2.Zero, Color.White);
 
 			RadialMenuSystem radial = (RadialMenuSystem)world.SystemManager.GetSystem<RadialMenuSystem>()[0];
 			radial.Render(spriteBatch);

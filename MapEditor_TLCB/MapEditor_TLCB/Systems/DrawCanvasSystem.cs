@@ -6,21 +6,23 @@ using Artemis;
 using MapEditor_TLCB.Components;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using TomShane.Neoforce.Controls;
+using MapEditor_TLCB.CustomControls;
 
 namespace MapEditor_TLCB.Systems
 {
 	class DrawCanvasSystem: EntitySystem
 	{
 		public DrawCanvasSystem(Dictionary<string, Texture2D> p_textures,
-			SpriteBatch p_spriteBatch, GraphicsDevice p_graphicsDevice,
-			RenderTarget2D p_canvasRender)
+			GraphicsDevice p_graphicsDevice, RenderTarget2D p_canvasRender,
+			Manager p_manager)
 			: base(typeof(Tilemap), typeof(Transform), typeof(TilemapRender))
 		{
 			m_textures = p_textures;
-			//m_spriteBatch = p_spriteBatch;
 			m_spriteBatch = new SpriteBatch(p_graphicsDevice);
 			m_graphicsDevice = p_graphicsDevice;
 			m_canvasRender = p_canvasRender;
+			m_manager = p_manager;
 		}
 
 		protected override void ProcessEntities(Dictionary<int, Entity> entities)
@@ -61,6 +63,7 @@ namespace MapEditor_TLCB.Systems
 					}
 				}
 			}
+			m_canvasWindow.Refresh();
 		}
 
 		public override void Initialize()
@@ -68,6 +71,23 @@ namespace MapEditor_TLCB.Systems
 			m_transformMapper = new ComponentMapper<Transform>(world);
 			m_tilemapMapper = new ComponentMapper<Tilemap>(world);
 			m_tilemapRenderMapper = new ComponentMapper<TilemapRender>(world);
+
+			ContentSystem contentSystem = ((ContentSystem)world.SystemManager.GetSystem<ContentSystem>()[0]);
+			Viewport viewport = contentSystem.GetViewport();
+			m_canvasWindow = new CanvasWindow(m_manager);
+			m_canvasWindow.Init();
+			m_canvasWindow.Left = 0;
+			m_canvasWindow.Top = 0;
+			m_canvasWindow.Width = m_manager.Window.Width;
+			m_canvasWindow.Height = m_manager.Window.Height;
+			m_canvasWindow.Parent = null;
+			m_canvasWindow.BorderVisible = false;
+			m_canvasWindow.CanFocus = false;
+			m_canvasWindow.Focused = true;
+			m_canvasWindow.Passive = true;
+			m_canvasWindow.CanvasTexture = m_canvasRender;
+			m_canvasWindow.Click += new TomShane.Neoforce.Controls.EventHandler(canvasWindow_Click);
+			m_manager.Add(m_canvasWindow);
 		}
 
 		protected override void Begin()
@@ -96,6 +116,11 @@ namespace MapEditor_TLCB.Systems
 			m_graphicsDevice.SetRenderTarget(null);
 		}
 
+		public void canvasWindow_Click(object sender, TomShane.Neoforce.Controls.EventArgs e)
+		{
+
+		}
+
 		Dictionary<string, Texture2D> m_textures;
 		SpriteBatch m_spriteBatch;
 		GraphicsDevice m_graphicsDevice;
@@ -103,5 +128,7 @@ namespace MapEditor_TLCB.Systems
 		ComponentMapper<Transform> m_transformMapper;
 		ComponentMapper<Tilemap> m_tilemapMapper;
 		ComponentMapper<TilemapRender> m_tilemapRenderMapper;
+		CanvasWindow m_canvasWindow;
+		Manager m_manager;
 	}
 }

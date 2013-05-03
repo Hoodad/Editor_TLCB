@@ -121,6 +121,7 @@
     <Compile Include="Actions\ChangeColor.cs" />
     <Compile Include="Actions\Interface\ActionInterface.cs" />
     <Compile Include="ActionsSerialized.cs" />
+    <Compile Include="CustomControls\CanvasWindow.cs" />
     <Compile Include="CustomControls\CurrentToolContainer.cs" />
     <Compile Include="CustomControls\NotificationBarContainer.cs" />
     <Compile Include="Components\Tilemap.cs" />
