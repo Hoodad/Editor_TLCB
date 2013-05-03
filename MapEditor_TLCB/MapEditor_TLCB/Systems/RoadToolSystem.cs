@@ -7,6 +7,7 @@ using MapEditor_TLCB.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MapEditor_TLCB.CustomControls;
+using TomShane.Neoforce.Controls;
 
 namespace MapEditor_TLCB.Systems
 {
@@ -78,6 +79,57 @@ namespace MapEditor_TLCB.Systems
 				
 				if (Mouse.GetState().LeftButton == ButtonState.Pressed)
 				{
+					//if (currentTool == Tool.ROAD_TOOL)
+					//{
+					//	int[] mapPos = roadTilemap.getTilePosition(mousePos);
+					//	roadTilemap.setState(mapPos[0], mapPos[1], 0);
+					//}
+					//else if (currentTool == Tool.PAINT_TOOL)
+					//{
+					//	int[] mapPos = roadTilemap.getTilePosition(mousePos);
+					//	singlesTilemap.setState(mapPos[0], mapPos[1], m_toolSys.GetCurrentDrawTileIndex());
+					//	roadTilemap.setState(mapPos[0], mapPos[1], -1);
+					//}
+					//else if (currentTool == Tool.ERASE_TOOL)
+					//{
+					//	int[] mapPos = roadTilemap.getTilePosition(mousePos);
+					//	singlesTilemap.setState(mapPos[0], mapPos[1], -1);
+					//	roadTilemap.setState(mapPos[0], mapPos[1], -1);
+					//}
+				}
+
+				generateWallmapFromRoadmap(wallTilemap, roadTilemap);
+
+				RoadAndWallMapperSystem mapperSystem =
+					(RoadAndWallMapperSystem)world.SystemManager.GetSystem<
+					RoadAndWallMapperSystem>()[0];
+				// Write to the resulting tilemap
+				updateTilemapUsingRoadmap(mainTilemap, roadTilemap, 
+					mapperSystem.getRoadMapper());
+				updateTilemapUsingWallmap(mainTilemap, wallTilemap, roadTilemap, 
+					mapperSystem.getWallMapper());
+				updateTilemapUsingSingles(mainTilemap, singlesTilemap);
+			}
+		}
+
+		public void canvasWindow_MouseMove(object sender, MouseEventArgs e)
+		{
+			if (e.State.LeftButton == ButtonState.Pressed)
+			{
+				Tool currentTool = m_toolSys.GetCurrentTool();
+				if (mainTilemap != null && roadTilemap != null && wallTilemap != null &&
+					canvasTransform != null)
+				{
+					Vector2 mousePos = new Vector2(e.Position.X, e.Position.Y);
+					Entity camera = world.TagManager.GetEntity("mainCamera");
+					if (camera != null)
+					{
+						Transform camTransform = camera.GetComponent<Transform>();
+						if (camTransform != null)
+						{
+							mousePos = Vector2.Transform(mousePos, Matrix.Invert(camTransform.getMatrix()));
+						}
+					}
 					if (currentTool == Tool.ROAD_TOOL)
 					{
 						int[] mapPos = roadTilemap.getTilePosition(mousePos);
@@ -96,18 +148,6 @@ namespace MapEditor_TLCB.Systems
 						roadTilemap.setState(mapPos[0], mapPos[1], -1);
 					}
 				}
-
-				generateWallmapFromRoadmap(wallTilemap, roadTilemap);
-
-				RoadAndWallMapperSystem mapperSystem =
-					(RoadAndWallMapperSystem)world.SystemManager.GetSystem<
-					RoadAndWallMapperSystem>()[0];
-				// Write to the resulting tilemap
-				updateTilemapUsingRoadmap(mainTilemap, roadTilemap, 
-					mapperSystem.getRoadMapper());
-				updateTilemapUsingWallmap(mainTilemap, wallTilemap, roadTilemap, 
-					mapperSystem.getWallMapper());
-				updateTilemapUsingSingles(mainTilemap, singlesTilemap);
 			}
 		}
 

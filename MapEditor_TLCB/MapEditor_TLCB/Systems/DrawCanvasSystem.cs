@@ -82,11 +82,13 @@ namespace MapEditor_TLCB.Systems
 			m_canvasWindow.Height = m_manager.Window.Height;
 			m_canvasWindow.Parent = null;
 			m_canvasWindow.BorderVisible = false;
-			m_canvasWindow.CanFocus = false;
-			m_canvasWindow.Focused = true;
+			//m_canvasWindow.CanFocus = false;
+			//m_canvasWindow.Focused = true;
 			m_canvasWindow.Passive = true;
 			m_canvasWindow.CanvasTexture = m_canvasRender;
-			m_canvasWindow.Click += new TomShane.Neoforce.Controls.EventHandler(canvasWindow_Click);
+			RoadToolSystem roadSys = ((RoadToolSystem)world.SystemManager.GetSystem<RoadToolSystem>()[0]);
+			m_canvasWindow.MouseMove += new MouseEventHandler(roadSys.canvasWindow_MouseMove);
+			
 			m_manager.Add(m_canvasWindow);
 		}
 
@@ -114,11 +116,6 @@ namespace MapEditor_TLCB.Systems
 		{
 			m_spriteBatch.End();
 			m_graphicsDevice.SetRenderTarget(null);
-		}
-
-		public void canvasWindow_Click(object sender, TomShane.Neoforce.Controls.EventArgs e)
-		{
-
 		}
 
 		Dictionary<string, Texture2D> m_textures;

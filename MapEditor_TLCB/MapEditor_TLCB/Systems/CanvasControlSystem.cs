@@ -6,8 +6,6 @@ using Artemis;
 using MapEditor_TLCB.Components;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
-using TomShane.Neoforce.Controls;
-using MapEditor_TLCB.CustomControls;
 
 namespace MapEditor_TLCB.Systems
 {
@@ -57,7 +55,5 @@ namespace MapEditor_TLCB.Systems
 		}
 
 		private MouseState previousState;
-		//CanvasWindow m_canvasWindow;
-		//Manager m_manager;
 	}
 }
