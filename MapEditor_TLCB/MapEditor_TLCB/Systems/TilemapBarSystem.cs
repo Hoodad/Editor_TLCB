@@ -38,6 +38,7 @@ namespace MapEditor_TLCB.Systems
 			tilemapWindow.CloseButtonVisible = false;
 			tilemapWindow.MaximumHeight = 960 + 54;
 			tilemapWindow.MaximumWidth = 960;
+			tilemapWindow.IconVisible = false;
             tilemapWindow.Click += new TomShane.Neoforce.Controls.EventHandler(OnWindowClickBehavior);
 			//tileMap.Movable = false;
 			manager.Add(tilemapWindow);

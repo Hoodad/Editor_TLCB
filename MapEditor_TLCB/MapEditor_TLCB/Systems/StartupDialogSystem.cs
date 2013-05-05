@@ -86,6 +86,7 @@ namespace MapEditor_TLCB.Systems
 			startupDialog.CloseButtonVisible = false;
 			startupDialog.Resizable = false;
 			startupDialog.Movable = false;
+			startupDialog.IconVisible = false;
 			manager.Add(startupDialog);
 
 			possibleMaps = new GroupPanel(manager);

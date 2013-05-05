@@ -32,6 +32,7 @@ namespace MapEditor_TLCB.Systems
 			undoTreeWindow.Visible = true;
 			undoTreeWindow.CloseButtonVisible = false;
             undoTreeWindow.Click += new TomShane.Neoforce.Controls.EventHandler(OnWindowClickBehavior);
+			undoTreeWindow.IconVisible = false;
 			//toolbarWindow.BorderVisible = false;
 			//toolbar.Movable = false;
 			manager.Add(undoTreeWindow);

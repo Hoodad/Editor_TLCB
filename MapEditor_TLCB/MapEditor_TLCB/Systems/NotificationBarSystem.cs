@@ -47,6 +47,7 @@ namespace MapEditor_TLCB.Systems
             notificationWindow.AutoScroll = false;
             notificationWindow.Resizable = true;
             notificationWindow.Click += new TomShane.Neoforce.Controls.EventHandler(OnWindowClickBehavior);
+			notificationWindow.IconVisible = false;
 			manager.Add(notificationWindow);
 
             NotificationBar data = new NotificationBar(m_device, m_content, originalWidth, 25);
