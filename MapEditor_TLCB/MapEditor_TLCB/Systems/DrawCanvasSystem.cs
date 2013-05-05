@@ -26,14 +26,16 @@ namespace MapEditor_TLCB.Systems
 
 		protected override void ProcessEntities(Dictionary<int, Entity> entities)
 		{
+			StartupDialogSystem dialogSystem = (StartupDialogSystem)(world.SystemManager.GetSystem<StartupDialogSystem>()[0]);
+
 			Color transparent = new Color(0.3f, 0.3f, 0.3f, 0.2f);
 			foreach (Entity e in entities.Values)
 			{
 				Transform transform = m_transformMapper.Get(e);
 				Tilemap tilemap = m_tilemapMapper.Get(e);
 				TilemapRender render = m_tilemapRenderMapper.Get(e);
-				
-				Texture2D texture = m_textures[render.theme];
+
+				Texture2D texture = dialogSystem.tilemap;
 				for (int y = 0; y < tilemap.getRows(); y++)
 				{
 					for (int x = 0; x < tilemap.getColumns(); x++)

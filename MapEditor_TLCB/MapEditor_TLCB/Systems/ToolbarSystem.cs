@@ -5,6 +5,7 @@ using System.Text;
 using Artemis;
 using TomShane.Neoforce.Controls;
 using Microsoft.Xna.Framework.Graphics;
+using MapEditor_TLCB.Components;
 
 namespace MapEditor_TLCB.Systems
 {
@@ -19,6 +20,7 @@ namespace MapEditor_TLCB.Systems
 		Button clearMap;
 		Button saveMap;
 		Button exportMap;
+		Button backToStartScreen;
 		Button exitButton;
 
 		public ToolbarSystem(Manager p_manager)
@@ -82,7 +84,7 @@ namespace MapEditor_TLCB.Systems
 			exportMap.Width = toolbarWindow.Width;
 			exportMap.Height = 24;
 			exportMap.Left = 0;
-			exportMap.Top = toolbarWindow.Height - 24 * 4;
+			exportMap.Top = toolbarWindow.Height - 24 * 5;
 
 			saveMap = new Button(manager);
 			saveMap.Init();
@@ -91,7 +93,7 @@ namespace MapEditor_TLCB.Systems
 			saveMap.Width = toolbarWindow.Width;
 			saveMap.Height = 24;
 			saveMap.Left = 0;
-			saveMap.Top = toolbarWindow.Height - 24 * 3;
+			saveMap.Top = toolbarWindow.Height - 24 * 4;
 
 			clearMap = new Button(manager);
 			clearMap.Init();
@@ -100,7 +102,18 @@ namespace MapEditor_TLCB.Systems
 			clearMap.Width = toolbarWindow.Width;
 			clearMap.Height = 24;
 			clearMap.Left = 0;
-			clearMap.Top = toolbarWindow.Height - 24 * 2;
+			clearMap.Top = toolbarWindow.Height - 24 * 3;
+			clearMap.Click += new TomShane.Neoforce.Controls.EventHandler(ClearMapBehavior);
+
+			backToStartScreen = new Button(manager);
+			backToStartScreen.Init();
+			backToStartScreen.Parent = toolbarWindow;
+			backToStartScreen.Text = "To Start Screen";
+			backToStartScreen.Width = toolbarWindow.Width;
+			backToStartScreen.Height = 24;
+			backToStartScreen.Left = 0;
+			backToStartScreen.Top = toolbarWindow.Height - 24 * 2;
+			backToStartScreen.Click += new TomShane.Neoforce.Controls.EventHandler(BackToStartScreenBehavior);
 			
 			exitButton = new Button(manager);
 			exitButton.Init();
@@ -143,5 +156,17 @@ namespace MapEditor_TLCB.Systems
             Notification n = new Notification("The toolbar enables you to select draw tools and handle the project.", NotificationType.INFO);
             noteSys.AddNotification(n);
         }
+		public void BackToStartScreenBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
+		{
+			((StartupDialogSystem)world.SystemManager.GetSystem<StartupDialogSystem>()[0]).ShowStartUpDialog();
+		}
+		public void ClearMapBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
+		{
+			Entity singleTilemap = world.TagManager.GetEntity("singlesTilemap");
+			Entity roadTilemap = world.TagManager.GetEntity("roadTilemap");
+
+			((Tilemap)roadTilemap.GetComponent<Tilemap>()).clear();
+			((Tilemap)singleTilemap.GetComponent<Tilemap>()).clear();
+		}
 	}
 }

@@ -29,7 +29,7 @@ namespace MapEditor_TLCB.Systems
 		public override void Initialize()
 		{
 			Viewport viewport = ((ContentSystem)world.SystemManager.GetSystem<ContentSystem>()[0]).GetViewport();
-
+			
 			//Notification Bar
             currentToolWindow = new Window(manager);
             currentToolWindow.Init();
@@ -41,8 +41,9 @@ namespace MapEditor_TLCB.Systems
             currentToolWindow.Left = viewport.Width-currentToolWindow.Width;
             currentToolWindow.CloseButtonVisible = false;
             currentToolWindow.AutoScroll = false;
-            currentToolWindow.Resizable = true;
+			currentToolWindow.Resizable = false;
             currentToolWindow.BorderVisible = false;
+			currentToolWindow.Movable = false;
             manager.Add(currentToolWindow);
 
             m_container = new CurrentToolContainer(manager, currentToolWindow, m_content);

@@ -56,6 +56,10 @@ namespace MapEditor_TLCB.Systems
 			tilemap = btn.tilemap;
 			requestToChangeTilemap = true;
 		}
+		public void ShowStartUpDialog()
+		{
+			startupDialog.ShowModal();
+		}
 		public bool IsVisible()
 		{
 			return startupDialog.Visible;
