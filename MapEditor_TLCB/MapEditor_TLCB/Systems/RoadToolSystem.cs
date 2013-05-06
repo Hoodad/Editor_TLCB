@@ -80,7 +80,7 @@ namespace MapEditor_TLCB.Systems
 					}
 				}
 
-                RadialMenuSystem rms = (RadialMenuSystem)(world.SystemManager.GetSystem<RadialMenuSystem>()[0]);
+				RadialMenuSystem rms = (RadialMenuSystem)(world.SystemManager.GetSystem<RadialMenuSystem>()[0]);
 
 				if (Mouse.GetState().LeftButton == ButtonState.Pressed && !rms.isRadialActive())
 				{

@@ -45,6 +45,7 @@ namespace MapEditor_TLCB.Systems
 			m_canvasWindow.StayOnBack = true;
 			m_canvasWindow.CanvasTexture = m_canvasRender;
 			RoadToolSystem roadSys = ((RoadToolSystem)world.SystemManager.GetSystem<RoadToolSystem>()[0]);
+			m_canvasWindow.MouseDown += new MouseEventHandler(roadSys.canvasWindow_MouseMove);
 			m_canvasWindow.MouseMove += new MouseEventHandler(roadSys.canvasWindow_MouseMove);
 			m_canvasWindow.MouseMove += new MouseEventHandler(canvasWindow_MouseMove);
 			m_canvasWindow.MouseScroll += new MouseEventHandler(canvasWindow_MouseScroll);
