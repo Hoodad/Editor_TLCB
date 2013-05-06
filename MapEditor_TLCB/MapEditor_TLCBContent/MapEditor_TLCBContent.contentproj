@@ -254,6 +254,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Arcadepix.spritefont">
+      <Name>Arcadepix</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="canvas_shadow_30px.png">
       <Name>canvas_shadow_30px</Name>
       <Importer>TextureImporter</Importer>
