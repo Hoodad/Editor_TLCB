@@ -167,7 +167,6 @@
     <Compile Include="WallMapper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="artemis.dll" />
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
   </ItemGroup>

@@ -39,12 +39,11 @@ namespace MapEditor_TLCB.Systems
 			toolbarWindow.Height = (int)((float)viewport.Height * 0.3f);
 			toolbarWindow.Top = 110;
 			toolbarWindow.Left = viewport.Width - toolbarWindow.Width;
-			//toolbarWindow.Visible = true;
 			toolbarWindow.Resizable = false;
 			toolbarWindow.CloseButtonVisible = false;
 			toolbarWindow.BorderVisible = false;
             toolbarWindow.Click += new TomShane.Neoforce.Controls.EventHandler(OnWindowClickBehavior);
-			//toolbar.Movable = false;
+			toolbarWindow.Movable = false;
 			manager.Add(toolbarWindow);
 
 			roadTool = new Button(manager);
