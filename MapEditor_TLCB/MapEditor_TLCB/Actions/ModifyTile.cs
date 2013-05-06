@@ -48,5 +48,10 @@ namespace MapEditor_TLCB.Actions
 		{
 			// Todo: Add support for serialize the data
 		}
+
+        public string GetInfo()
+        {
+            return "Tile edit (" + row+","+col + ")"; // could state be used here as well? what is it?
+        }
 	}
 }

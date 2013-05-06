@@ -47,8 +47,8 @@ namespace MapEditor_TLCB.UndoTree
         {
             //renderer.Draw(tilemapImage, rect, Color.White);
             //renderer.Draw(tileSelectorImage, selectorRect, Color.White);
-            Vector2 offset = new Vector2(-m_windowParent.ScrollBarValue.Horizontal,
-                -m_windowParent.ScrollBarValue.Vertical);
+            /*Vector2 offset = new Vector2(-m_windowParent.ScrollBarValue.Horizontal,
+                -m_windowParent.ScrollBarValue.Vertical);*/
 
             m_undoTree.draw(renderer.SpriteBatch, 
                 new Vector2(Parent.AbsoluteLeft, Parent.AbsoluteTop));
