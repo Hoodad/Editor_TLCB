@@ -28,6 +28,8 @@ namespace MapEditor_TLCB.Systems
 		{
 			StartupDialogSystem dialogSystem = (StartupDialogSystem)(world.SystemManager.GetSystem<StartupDialogSystem>()[0]);
 
+			m_spriteBatch.Draw(m_textures["canvas_shadow_10px"], new Vector2(-10.0f, -10.0f), new Color(0, 0, 0, 0.5f));
+
 			Color transparent = new Color(0.3f, 0.3f, 0.3f, 0.2f);
 			foreach (Entity e in entities.Values)
 			{
@@ -76,7 +78,7 @@ namespace MapEditor_TLCB.Systems
 		protected override void Begin()
 		{
 			m_graphicsDevice.SetRenderTarget(m_canvasRender);
-			m_graphicsDevice.Clear(Color.DarkGray);
+			m_graphicsDevice.Clear(Color.White);
 
 			Matrix cameraMatrix = Matrix.Identity;
 			Entity camera = world.TagManager.GetEntity("mainCamera");
