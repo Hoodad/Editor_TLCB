@@ -124,6 +124,8 @@
     <Compile Include="Actions\ModifyTile.cs" />
     <Compile Include="CustomControls\CanvasWindow.cs" />
     <Compile Include="CustomControls\CurrentToolContainer.cs" />
+    <Compile Include="Common\InvariableIndexList.cs" />
+    <Compile Include="Common\LineRenderer.cs" />
     <Compile Include="CustomControls\NotificationBarContainer.cs" />
     <Compile Include="Components\Tilemap.cs" />
     <Compile Include="Components\TilemapRender.cs" />
@@ -159,6 +161,9 @@
     <Compile Include="Systems\TilemapBarSystem.cs" />
     <Compile Include="Systems\ToolbarSystem.cs" />
     <Compile Include="Systems\UndoTreeSystem.cs" />
+    <Compile Include="UndoTree\ActionNode.cs" />
+    <Compile Include="CustomControls\UndoTreeContainer.cs" />
+    <Compile Include="UndoTree\UndoTree.cs" />
     <Compile Include="WallMapper.cs" />
   </ItemGroup>
   <ItemGroup>
