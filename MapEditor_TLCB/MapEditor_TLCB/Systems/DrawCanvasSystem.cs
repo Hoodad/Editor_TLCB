@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using TomShane.Neoforce.Controls;
 using MapEditor_TLCB.CustomControls;
+using Microsoft.Xna.Framework.Input;
 
 namespace MapEditor_TLCB.Systems
 {
@@ -99,6 +100,12 @@ namespace MapEditor_TLCB.Systems
 		{
 			m_spriteBatch.End();
 			m_graphicsDevice.SetRenderTarget(null);
+			if (Keyboard.GetState().IsKeyDown(Keys.F5))
+			{
+				System.IO.FileStream file = new System.IO.FileStream("asd.png", System.IO.FileMode.OpenOrCreate);
+				m_canvasRender.SaveAsPng(file, m_canvasRender.Width, m_canvasRender.Height);
+				file.Close();
+			}
 		}
 
 		Dictionary<string, Texture2D> m_textures;

@@ -65,6 +65,7 @@ namespace MapEditor_TLCB.Systems
 				
 					camTransform.position += mouseDiff;
 				}
+				limitCameraPosition(camTransform);
 			}
 			previousState = currentState;
 		}
@@ -91,6 +92,41 @@ namespace MapEditor_TLCB.Systems
 					camTransform.scale /= 1.15f;
 					Vector2 worldMousePosChanged = Vector2.Transform(mousePos, Matrix.Invert(camTransform.getMatrix()));
 					camTransform.position += (worldMousePosChanged - worldMousePos) * camTransform.scale;
+				}
+				limitCameraPosition(camTransform);
+			}
+		}
+
+		private void limitCameraPosition(Transform p_camTransform)
+		{
+			Entity mainTilemap = World.TagManager.GetEntity("mainTilemap");
+			if (mainTilemap != null)
+			{
+				Tilemap tilemap = mainTilemap.GetComponent<Tilemap>();
+				if (tilemap != null)
+				{
+					float camX = -p_camTransform.position.X / p_camTransform.scale;
+					float camY = -p_camTransform.position.Y / p_camTransform.scale;
+					float maxWidth = (float)tilemap.getColumns() * 32;
+					float maxHeight = (float)tilemap.getRows() * 32;
+					float canvasWidth = (float)m_canvasWindow.Width / p_camTransform.scale;
+					float canvasHeight = (float)m_canvasWindow.Height / p_camTransform.scale;
+					if (camX > maxWidth / 2)
+					{
+						p_camTransform.position.X = (-maxWidth / 2) * p_camTransform.scale;
+					}
+					else if (camX < -canvasWidth + maxWidth / 2)
+					{
+						p_camTransform.position.X = (canvasWidth - maxWidth / 2) * p_camTransform.scale;
+					}
+					if (camY > maxHeight / 2)
+					{
+						p_camTransform.position.Y = (-maxHeight / 2) * p_camTransform.scale;
+					}
+					else if (camY < -canvasHeight + maxHeight / 2)
+					{
+						p_camTransform.position.Y = (canvasHeight - maxHeight / 2) * p_camTransform.scale;
+					}
 				}
 			}
 		}
