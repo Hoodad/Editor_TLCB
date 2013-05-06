@@ -8,5 +8,6 @@ namespace MapEditor_TLCB.Actions.Interface
 	{
 		void PerformAction();
 		void AddAffectedSystems(SystemManager p_systemManager);
+        string GetInfo(); // Information string of what the action did
 	}
 }

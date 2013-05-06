@@ -53,5 +53,10 @@ namespace MapEditor_TLCB
 			/*m_affectedSystems.Add(((RenderingSystem)
 				p_systemManager.GetSystem<RenderingSystem>()[0]));*/
 		}
+
+        public string GetInfo()
+        {
+            return "Color change";
+        }
 	}
 }

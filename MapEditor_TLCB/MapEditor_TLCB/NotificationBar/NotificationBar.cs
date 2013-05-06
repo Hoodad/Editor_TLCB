@@ -246,7 +246,7 @@ namespace MapEditor_TLCB
                 }
                 else
                 {
-                    note = new Notification("Anton kills all with cool rocket launcher", NotificationType.INFO);
+                    note = new Notification("Anton kills all with cool rocket launcher. Also Jarl is best.", NotificationType.INFO);
                 }
                 addNotification(note);
             }
