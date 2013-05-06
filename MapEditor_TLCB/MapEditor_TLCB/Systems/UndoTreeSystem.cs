@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Artemis;
 using Microsoft.Xna.Framework;
 using MapEditor_TLCB.UndoTree;
+using Microsoft.Xna.Framework.Content;
 
 namespace MapEditor_TLCB.Systems
 {
@@ -24,12 +25,14 @@ namespace MapEditor_TLCB.Systems
 
         UndoTreeContainer undoTreeContainer;
         GraphicsDevice m_gd;
+        ContentManager m_content;
 
 
-		public UndoTreeSystem(Manager p_manager, GraphicsDevice p_gd)
+        public UndoTreeSystem(Manager p_manager, GraphicsDevice p_gd, ContentManager p_content)
 		{
 			manager = p_manager;
             m_gd = p_gd;
+            m_content = p_content;
 		}
 
 		public override void Initialize()
@@ -55,7 +58,7 @@ namespace MapEditor_TLCB.Systems
 
 
 
-            undoTreeContainer = new UndoTreeContainer(manager, undoTreeWindow, m_gd);
+            undoTreeContainer = new UndoTreeContainer(manager, undoTreeWindow, m_gd,m_content);
             undoTreeContainer.Init();
             undoTreeContainer.Width = undoTreeWindow.Width;
             undoTreeContainer.Height = undoTreeWindow.Height;

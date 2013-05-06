@@ -86,7 +86,7 @@ namespace MapEditor_TLCB
 			systemManager.SetSystem(new ActionSystem(), ExecutionType.Update);
 			systemManager.SetSystem(new ContentSystem(Content,graphics), ExecutionType.Update);
 			systemManager.SetSystem(new ToolbarSystem(manager), ExecutionType.Update);
-			systemManager.SetSystem(new UndoTreeSystem(manager, GraphicsDevice), ExecutionType.Update);
+			systemManager.SetSystem(new UndoTreeSystem(manager, GraphicsDevice, Content), ExecutionType.Update);
 			systemManager.SetSystem(new NotificationBarSystem(manager, GraphicsDevice, Content), ExecutionType.Update);
 			systemManager.SetSystem(new TilemapBarSystem(manager), ExecutionType.Update);
 			systemManager.SetSystem(new XNAInputSystem(), ExecutionType.Update);

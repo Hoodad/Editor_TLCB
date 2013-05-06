@@ -6,6 +6,7 @@ using MapEditor_TLCB.Common;
 using TomShane.Neoforce.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Content;
 
 namespace MapEditor_TLCB.UndoTree
 {
@@ -22,12 +23,13 @@ namespace MapEditor_TLCB.UndoTree
         float tck = 0.0f;
 
 
-        public UndoTreeContainer(Manager p_manager, Window p_parent, GraphicsDevice p_gd)
+        public UndoTreeContainer(Manager p_manager, Window p_parent, GraphicsDevice p_gd,
+            ContentManager p_content)
             : base(p_manager)
         {
             m_windowParent = p_parent;
             m_gd = p_gd;
-            m_undoTree = new UndoTree(p_gd);
+            m_undoTree = new UndoTree(p_gd,p_content);
         }
 
         public void Update(float p_dt)
@@ -48,8 +50,8 @@ namespace MapEditor_TLCB.UndoTree
             Vector2 offset = new Vector2(-m_windowParent.ScrollBarValue.Horizontal,
                 -m_windowParent.ScrollBarValue.Vertical);
 
-
-            m_undoTree.draw(renderer.SpriteBatch,Vector2.Zero);
+            m_undoTree.draw(renderer.SpriteBatch, 
+                new Vector2(Parent.AbsoluteLeft, Parent.AbsoluteTop));
             
             // resizing
             /*
