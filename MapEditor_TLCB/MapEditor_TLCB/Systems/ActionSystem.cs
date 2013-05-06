@@ -67,22 +67,45 @@ namespace MapEditor_TLCB
 
 		public void UndoLastPerformedAction()
 		{
-
-			if (performedActions.Count > 0)
-			{
-				performedActions[performedActions.Count - 1].action.PerformAction();
-				redoActions.Add(performedActions[performedActions.Count - 1]);
-				performedActions.RemoveAt(performedActions.Count - 1);
-			}
+			PerformAction(performedActions, redoActions);
 		}
 
 		public void RedoLastAction()
 		{
-			if (redoActions.Count > 0)
+			PerformAction(redoActions, performedActions);
+		}
+		private void PerformAction(List<EditorAction> p_originalActionOwner, List <EditorAction> p_newActionOwner)
+		{
+			bool hasPerformedAllAssociatedActions = false;
+
+			while (hasPerformedAllAssociatedActions == false)
 			{
-				redoActions[redoActions.Count - 1].action.PerformAction();
-				performedActions.Add(redoActions[redoActions.Count - 1]);
-				redoActions.RemoveAt(redoActions.Count - 1);
+				if (p_originalActionOwner.Count > 0)
+				{
+					EditorAction lastAction = p_originalActionOwner[p_originalActionOwner.Count - 1];
+					lastAction.action.PerformAction();
+
+					if (p_originalActionOwner.Count > 1)
+					{
+						EditorAction secondLastAction = p_originalActionOwner[p_originalActionOwner.Count - 2];
+
+						if (!AreActionsInSameGroup(lastAction, secondLastAction))
+						{
+							hasPerformedAllAssociatedActions = true;
+						}
+					}
+					else
+					{
+						hasPerformedAllAssociatedActions = true;
+					}
+
+					p_newActionOwner.Add(lastAction);
+					p_originalActionOwner.RemoveAt(p_originalActionOwner.Count - 1);
+				}
+				else
+				{
+					hasPerformedAllAssociatedActions = true;
+				}
 			}
 		}
 
@@ -165,6 +188,17 @@ namespace MapEditor_TLCB
 			performedActions = new List<EditorAction>();
 			queuedActions = new List<EditorAction>();
 			redoActions = new List<EditorAction>();
+		}
+		private bool AreActionsInSameGroup(EditorAction p_actionRed, EditorAction p_actionBlue)
+		{
+			if (p_actionRed.groupID != -1 && p_actionBlue.groupID != -1)
+			{
+				if (p_actionRed.groupID == p_actionBlue.groupID)
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 	}
 }

@@ -66,6 +66,7 @@ namespace MapEditor_TLCB.Systems
 			requestToShutdown = true;
 			confirmWindow.Visible = true;
 			confirmWindow.ShowModal();
+			cancelButton.Focused = true;
 		}
 		public bool ShouldShutDown()
 		{

@@ -117,6 +117,19 @@ namespace MapEditor_TLCB.Systems
 			}
 		}
 
+		public void canvasGroupBehavior(object sender, MouseEventArgs e)
+		{
+			if (e.State.LeftButton == ButtonState.Pressed)
+			{
+				ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
+				actionSys.StartGroupingActions();
+			}
+			else if (e.State.LeftButton == ButtonState.Released)
+			{
+				ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
+				actionSys.StopGroupingActions();
+			}
+		}
 		public void canvasWindow_MouseMove(object sender, MouseEventArgs e)
 		{
 			if (e.State.LeftButton == ButtonState.Pressed)
@@ -156,13 +169,16 @@ namespace MapEditor_TLCB.Systems
 
 						if (singlesTilemap.getState(mapPos[0], mapPos[1]) != m_toolSys.GetCurrentDrawTileIndex())
 						{
+							ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
+
+							//actionSys.StartGroupingActions();
+
 							ModifyTile changeTile = new ModifyTile(world.SystemManager);
 							changeTile.col = mapPos[0];
 							changeTile.row = mapPos[1];
 							changeTile.state = m_toolSys.GetCurrentDrawTileIndex();
 							changeTile.affectedTilemap = singlesTilemap;
 
-							ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
 							actionSys.QueAction(changeTile);
 
 							ModifyTile roadChangeTile = new ModifyTile(world.SystemManager);
@@ -171,6 +187,8 @@ namespace MapEditor_TLCB.Systems
 							roadChangeTile.state = -1;
 							roadChangeTile.affectedTilemap = roadTilemap;
 							actionSys.QueAction(roadChangeTile);
+
+							//actionSys.StopGroupingActions();
 
 						}
 					}
