@@ -111,21 +111,23 @@ namespace MapEditor_TLCB.Systems
 					float maxHeight = (float)tilemap.getRows() * 32;
 					float canvasWidth = (float)m_canvasWindow.Width / p_camTransform.scale;
 					float canvasHeight = (float)m_canvasWindow.Height / p_camTransform.scale;
-					if (camX > maxWidth / 2)
+					float camCenterX = camX + canvasWidth / 2.0f;
+					float camCenterY = camY + canvasHeight / 2.0f;
+					if (camCenterX > maxWidth)
 					{
-						p_camTransform.position.X = (-maxWidth / 2) * p_camTransform.scale;
+						p_camTransform.position.X = -(maxWidth - canvasWidth / 2.0f) * p_camTransform.scale;
 					}
-					else if (camX < -canvasWidth + maxWidth / 2)
+					else if (camCenterX < 0)
 					{
-						p_camTransform.position.X = (canvasWidth - maxWidth / 2) * p_camTransform.scale;
+						p_camTransform.position.X = (canvasWidth / 2.0f) * p_camTransform.scale;
 					}
-					if (camY > maxHeight / 2)
+					if (camCenterY > maxHeight)
 					{
-						p_camTransform.position.Y = (-maxHeight / 2) * p_camTransform.scale;
+						p_camTransform.position.Y = -(maxHeight - canvasHeight / 2.0f) * p_camTransform.scale;
 					}
-					else if (camY < -canvasHeight + maxHeight / 2)
+					else if (camCenterY < 0)
 					{
-						p_camTransform.position.Y = (canvasHeight - maxHeight / 2) * p_camTransform.scale;
+						p_camTransform.position.Y = (canvasHeight / 2.0f) * p_camTransform.scale;
 					}
 				}
 			}
