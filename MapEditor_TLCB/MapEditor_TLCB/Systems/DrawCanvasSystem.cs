@@ -29,7 +29,7 @@ namespace MapEditor_TLCB.Systems
 		{
 			StartupDialogSystem dialogSystem = (StartupDialogSystem)(world.SystemManager.GetSystem<StartupDialogSystem>()[0]);
 
-			m_spriteBatch.Draw(m_textures["canvas_shadow_10px"], new Vector2(-10.0f, -10.0f), new Color(0, 0, 0, 0.5f));
+			m_spriteBatch.Draw(m_textures["canvas_shadow_30px"], new Vector2(-30.0f, -30.0f), new Color(0, 0, 0, 0.5f));
 
 			Color transparent = new Color(0.3f, 0.3f, 0.3f, 0.2f);
 			foreach (Entity e in entities.Values)

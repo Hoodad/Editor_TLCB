@@ -165,6 +165,7 @@ namespace MapEditor_TLCB
 			textures.Add("debugBlock", Content.Load<Texture2D>("debugBlock"));
 			textures.Add("canvas_shadow", Content.Load<Texture2D>("canvas_shadow"));
 			textures.Add("canvas_shadow_10px", Content.Load<Texture2D>("canvas_shadow_10px"));
+			textures.Add("canvas_shadow_30px", Content.Load<Texture2D>("canvas_shadow_30px"));
 
 			InitializeAllSystem();
 			InitializeEntities();
