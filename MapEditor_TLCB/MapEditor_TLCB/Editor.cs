@@ -135,6 +135,7 @@ namespace MapEditor_TLCB
 			entity.Tag = "roadTilemap";
 			entity.AddComponent(new Tilemap(60, 31, 32, 32));
 			entity.AddComponent(new Transform(new Vector2(0, 0)));
+			entity.AddComponent(new TilemapRender("debugBlock", true));
 			entity.Refresh();
 			
 			entity = world.CreateEntity();
@@ -152,7 +153,7 @@ namespace MapEditor_TLCB
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
-			KeyDelta.initialize();
+            KeyDelta.initialize();
 
 			System.Windows.Forms.Form f = System.Windows.Forms.Form.FromHandle(Window.Handle) as System.Windows.Forms.Form;
 			if (f != null)
@@ -186,7 +187,7 @@ namespace MapEditor_TLCB
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Update(GameTime gameTime)
 		{
-			KeyDelta.update();
+            KeyDelta.update();
 			StateSystem stateSys = (StateSystem)world.SystemManager.GetSystem<StateSystem>()[0];
 			if (stateSys.ShouldShutDown())
 			{
