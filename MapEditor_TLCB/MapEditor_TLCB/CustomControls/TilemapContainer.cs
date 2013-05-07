@@ -16,13 +16,18 @@ namespace MapEditor_TLCB.CustomControls
 		public Texture2D gridImage;
 		public Color gridColor;
 		private Rectangle selectorRect;
+        private Rectangle highlightRect;
 		public Window windowParent;
 
 		private Point tileSize;
 
         private Point curr;
+        private Point currSize;
 
         private int currentIndex;
+
+        Vector2 downPos;
+        Vector2 currentPos;
 
 		public TilemapContainer(Manager p_manager)
 			: base(p_manager)
@@ -36,25 +41,50 @@ namespace MapEditor_TLCB.CustomControls
 		{
 			if (tilemapImage != null)
 			{
-				renderer.Draw(tilemapImage, rect, Color.White);
+				renderer.Draw(tilemapImage, rect, Color.Gray);
+                Rectangle source;
+                source.X = 32 * curr.X;
+                source.Width = currSize.X;
+                source.Y = 32 * curr.Y;
+                source.Height = currSize.Y;
+                renderer.Draw(tilemapImage, highlightRect, source, Color.White);
 			}
 			renderer.Draw(gridImage, rect, gridColor);
 			renderer.Draw(tileSelectorImage, selectorRect, Color.White);
 		}
 
-		protected override void OnMouseMove(TomShane.Neoforce.Controls.MouseEventArgs e)
+		/*protected override void OnMouseMove(TomShane.Neoforce.Controls.MouseEventArgs e)
 		{
-			//Debug.Print("Mouse " + e.Position.ToString());
-			//Debug.Print( "Scrollvalue {X "+windowParent.ScrollBarValue.Horizontal + ", Y "+ windowParent.ScrollBarValue.Vertical+"}");
-
-
             curr.X = (e.Position.X + 0) / tileSize.X;
             curr.Y = (e.Position.Y + 0) / tileSize.Y;
             currentIndex = curr.Y * 30 + curr.X;
 
+			//Debug.Print("Mouse " + e.Position.ToString());
+			//Debug.Print( "Scrollvalue {X "+windowParent.ScrollBarValue.Horizontal + ", Y "+ windowParent.ScrollBarValue.Vertical+"}");
+            if (e.State.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
+            {
+                selectorRect.X = (((int)downPos.X + 0) / tileSize.X);
+                selectorRect.Y = (((int)downPos.Y + 0) / tileSize.Y);
+                currentPos = new Vector2(e.Position.X, e.Position.Y);
 
-			selectorRect.X = ((e.Position.X+0) / tileSize.X);
-			selectorRect.Y = ((e.Position.Y+0) / tileSize.Y);
+                int sizeX = (int)((currentPos.X - downPos.X) / tileSize.X) + 1;
+                int sizeY = (int)((currentPos.Y - downPos.Y) / tileSize.Y) + 1;
+                selectorRect.Width = sizeX * tileSize.X;
+                selectorRect.Height = sizeY * tileSize.Y;
+            }
+            else
+            {
+                downPos = currentPos;
+                selectorRect.X = ((e.Position.X + 0) / tileSize.X);
+                selectorRect.Y = ((e.Position.Y + 0) / tileSize.Y);
+                selectorRect.Width = tileSize.X;
+                selectorRect.Height = tileSize.Y;
+            }
+
+			//selectorRect.X = ((e.Position.X+0) / tileSize.X);
+			//selectorRect.Y = ((e.Position.Y+0) / tileSize.Y);
+
+
             //curr.X = selectorRect.X;
             //curr.Y = selectorRect.Y;
 			//Debug.Print( "Resulting Tile {X: "+selectorRect.X +" Y: "+ selectorRect.Y+"}");
@@ -66,7 +96,32 @@ namespace MapEditor_TLCB.CustomControls
 			selectorRect.Y -= windowParent.ScrollBarValue.Vertical;		//
 
 			Refresh();
-		}
+		}*/
+        protected override void OnMouseMove(TomShane.Neoforce.Controls.MouseEventArgs e)
+        {
+            currentPos = new Vector2(e.Position.X, e.Position.Y);
+            if (e.State.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Released)
+            {
+                downPos = currentPos;
+                curr.X = (e.Position.X + 0) / tileSize.X;
+                curr.Y = (e.Position.Y + 0) / tileSize.Y;
+                currentIndex = curr.Y * 30 + curr.X;
+            }
+            currSize = new Point(32 * (int)((currentPos.X - downPos.X) / tileSize.X + 1), 32 * (int)((currentPos.Y - downPos.Y) / tileSize.Y + 1));
+
+            highlightRect.X = ((int)(downPos.X + 0) / tileSize.X);
+            highlightRect.Y = ((int)(downPos.Y + 0) / tileSize.Y);
+            highlightRect.Width = tileSize.X * (int)((currentPos.X - downPos.X) / tileSize.X + 1);
+            highlightRect.Height = tileSize.Y * (int)((currentPos.Y - downPos.Y) / tileSize.Y + 1);
+            highlightRect.X *= tileSize.X;
+            highlightRect.Y *= tileSize.Y;
+            highlightRect.X += 6;
+            highlightRect.Y += 28;
+            highlightRect.X -= windowParent.ScrollBarValue.Horizontal;
+            highlightRect.Y -= windowParent.ScrollBarValue.Vertical;
+
+            Refresh();
+        }
         public Texture2D GetTilemapTexture()
         {
             return tilemapImage;
@@ -106,5 +161,27 @@ namespace MapEditor_TLCB.CustomControls
 			selectorRect.Width = tileSize.X;
 			selectorRect.Height = tileSize.Y;
 		}
+        public void setDownPos(Vector2 p_downPos)
+        {
+            downPos = new Vector2(tileSize.X * (int)(p_downPos.X / tileSize.X), tileSize.Y * (int)(p_downPos.Y / tileSize.Y));
+
+            curr.X = (int)((p_downPos.X + 0) / tileSize.X);
+            curr.Y = (int)((p_downPos.Y + 0) / tileSize.Y);
+            currentIndex = curr.Y * 30 + curr.X;
+        }
+        public void setSelectorRect()
+        {
+            selectorRect.X = ((int)(downPos.X + 0) / tileSize.X);
+            selectorRect.Y = ((int)(downPos.Y + 0) / tileSize.Y);
+            selectorRect.Width = tileSize.X * (int)((currentPos.X - downPos.X) / tileSize.X + 1);
+            selectorRect.Height = tileSize.Y * (int)((currentPos.Y - downPos.Y) / tileSize.Y + 1);
+            selectorRect.X *= tileSize.X;
+            selectorRect.Y *= tileSize.Y;
+            selectorRect.X += 6;
+            selectorRect.Y += 28;
+            selectorRect.X -= windowParent.ScrollBarValue.Horizontal;
+            selectorRect.Y -= windowParent.ScrollBarValue.Vertical;
+            downPos = currentPos;
+        }
 	}
 }

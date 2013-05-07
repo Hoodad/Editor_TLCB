@@ -54,6 +54,8 @@ namespace MapEditor_TLCB.Systems
 			tilemap.gridColor = Color.Black;
 			tilemap.CanFocus = false;
 			tilemap.Click += new TomShane.Neoforce.Controls.EventHandler(OnClick);
+            tilemap.DoubleClicks = false;
+            tilemap.MouseDown += new TomShane.Neoforce.Controls.MouseEventHandler(OnMouseDown);
 			tilemap.Init(contentSystem.GetViewportSize());
 
 		}
@@ -69,10 +71,21 @@ namespace MapEditor_TLCB.Systems
 			}
             
 		}
+        public void OnMouseDown(object sender, TomShane.Neoforce.Controls.MouseEventArgs e)
+        {
+            CurrentToolSystem toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
+            tilemap.setDownPos(new Vector2(e.Position.X, e.Position.Y));
+        }
+        public void OnMouseMove(object sender, TomShane.Neoforce.Controls.EventArgs e)
+        {
+            CurrentToolSystem toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
+            toolSys.SetCurrentTool(CustomControls.Tool.PAINT_TOOL);
+        }
 		public void OnClick(object sender, TomShane.Neoforce.Controls.EventArgs e)
 		{
             CurrentToolSystem toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
             toolSys.SetCurrentTool(CustomControls.Tool.PAINT_TOOL);
+            tilemap.setSelectorRect();
 		}
         public void OnWindowClickBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
