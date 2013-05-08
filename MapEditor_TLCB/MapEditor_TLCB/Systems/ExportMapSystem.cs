@@ -8,12 +8,12 @@ using MapEditor_TLCB.Components;
 
 namespace MapEditor_TLCB.Systems
 {
-	class SaveMapSystem : EntitySystem
+	class ExportMapSystem : EntitySystem
 	{
 		bool requestedToSaveMap = false;
 		string completePath;
 
-		public SaveMapSystem()
+		public ExportMapSystem()
 		{
 			completePath = "";
 		}
@@ -60,7 +60,8 @@ namespace MapEditor_TLCB.Systems
 				string resultingRow="";
 				for (int col = 0; col < p_tileMap.getColumns(); col++)
 				{
-					resultingRow += p_tileMap.getState(col, row) + ",";
+					int state = p_tileMap.getState(col, row)+1;
+					resultingRow += state + ",";
 				}
 				sb.AppendLine(resultingRow);
 			}
