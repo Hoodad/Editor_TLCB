@@ -8,6 +8,8 @@ namespace MapEditor_TLCB
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
+		
+		[STAThreadAttribute] // Needed in order to open dialogs using windows forms
 		static void Main(string[] args)
 		{
 			bool useFullscreen = false;

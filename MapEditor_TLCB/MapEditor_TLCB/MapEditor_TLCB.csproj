@@ -153,6 +153,7 @@
     <Compile Include="Systems\DrawCanvasSystem.cs" />
     <Compile Include="Systems\RoadAndWallMapperSystem.cs" />
     <Compile Include="Systems\RoadToolSystem.cs" />
+    <Compile Include="Systems\SaveMapSystem.cs" />
     <Compile Include="Systems\StartupDialogSystem.cs" />
     <Compile Include="Systems\StateSystem.cs" />
     <Compile Include="Systems\XNAInputSystem.cs" />
