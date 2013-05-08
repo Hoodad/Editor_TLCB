@@ -12,6 +12,7 @@ namespace MapEditor_TLCB.Systems
 	class StartupDialogSystem : EntitySystem
 	{
 		private Manager manager;
+		private HalfTransparentOverlay overlay;
 		private Window startupDialog;
 		private GroupPanel recentMaps;
 		private GroupPanel possibleMaps;
@@ -68,6 +69,11 @@ namespace MapEditor_TLCB.Systems
 		{
 			return hasChangedTilemap;
 		}
+		void startupDialog_VisibleChanged(object p_sender, TomShane.Neoforce.Controls.EventArgs p_args)
+		{
+			overlay.Visible = startupDialog.Visible;
+		}
+
 		public override void Initialize()
 		{
 			int yOffset = 0;
@@ -75,6 +81,13 @@ namespace MapEditor_TLCB.Systems
 
 			ContentSystem contentSystem = ((ContentSystem)world.SystemManager.GetSystem<ContentSystem>()[0]);
 			Viewport viewport = contentSystem.GetViewport();
+
+			overlay = new HalfTransparentOverlay(manager);
+			overlay.Init();
+			overlay.Width = manager.ScreenWidth;
+			overlay.Height = manager.ScreenHeight;
+			overlay.BackGroundTexture = contentSystem.LoadTexture("white_dot");
+			manager.Add(overlay);
 
 			startupDialog = new Window(manager);
 			startupDialog.Init();
@@ -87,6 +100,7 @@ namespace MapEditor_TLCB.Systems
 			startupDialog.Resizable = false;
 			startupDialog.Movable = false;
 			startupDialog.IconVisible = false;
+			startupDialog.VisibleChanged +=new TomShane.Neoforce.Controls.EventHandler(startupDialog_VisibleChanged);
 			manager.Add(startupDialog);
 
 			possibleMaps = new GroupPanel(manager);
