@@ -25,6 +25,8 @@ namespace MapEditor_TLCB.Systems
 				TilemapValidate valid = m_validateMapper.Get(e);
 
 				valid.pathsValid = validatePaths(tilemap);
+				valid.playerValid = validatePlayer(tilemap);
+
 				if (e.Tag == "mainTilemap")
 				{
 					if(valid.pathsValid) {
@@ -110,6 +112,25 @@ namespace MapEditor_TLCB.Systems
 				return false;
 
 			if(walkables.Count == 0)
+				return true;
+			return false;
+		}
+
+		private bool validatePlayer(Tilemap p_tilemap)
+		{
+			int numPlayers = 0;
+			for (int y = 0; y < p_tilemap.getRows(); y++)
+			{
+				for (int x = 0; x < p_tilemap.getColumns(); x++)
+				{
+					if (p_tilemap.getState(x, y) == 270)
+					{
+						numPlayers ++;
+					}
+				}
+			}
+
+			if(numPlayers == 1)
 				return true;
 			return false;
 		}
