@@ -170,6 +170,8 @@ namespace MapEditor_TLCB.Systems
 		}
 		public void SaveMapBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
 		{
+			Button btn = (Button)sender;
+			btn.Focused = false;
 			System.Windows.Forms.SaveFileDialog saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
 			saveFileDialog1.InitialDirectory = Convert.ToString(Environment.SpecialFolder.MyDocuments);
 			saveFileDialog1.Filter = "Map files (*.datmap)|*.datmap";
@@ -181,10 +183,7 @@ namespace MapEditor_TLCB.Systems
 		private void SuccessfullyPressedSave(object sender, System.EventArgs e)
 		{
 			System.Windows.Forms.SaveFileDialog dialog = (System.Windows.Forms.SaveFileDialog)(sender);
-			dialog.
-
-			string completeFilePath = dialog.FileName;
-			((SaveMapSystem)world.SystemManager.GetSystem<SaveMapSystem>()[0]).RequestToSaveMap(completeFilePath);
+			((SaveMapSystem)world.SystemManager.GetSystem<SaveMapSystem>()[0]).RequestToSaveMap(dialog.FileName);
 		}
 	}
 }
