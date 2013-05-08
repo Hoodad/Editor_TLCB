@@ -100,6 +100,14 @@ namespace MapEditor_TLCB.Components
 				}
 			}
 		}
+
+		public bool isWalkable(int p_x, int p_y)
+		{
+			int state = getState(p_x, p_y);
+			if(state >= 90 && state < 30*17)
+				return true;
+			return false;
+		}
 		
 		private int columns;
 		private int rows;

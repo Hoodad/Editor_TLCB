@@ -107,6 +107,7 @@ namespace MapEditor_TLCB
 			systemManager.SetSystem(new StartupDialogSystem(manager), ExecutionType.Update);
 			systemManager.SetSystem(new RadialMenuSystem(GraphicsDevice, Content), ExecutionType.Update);
 			systemManager.SetSystem(new SaveMapSystem(), ExecutionType.Update); //Have to be run after tilemaphandling systems
+			systemManager.SetSystem(new MapValidationSystem(manager), ExecutionType.Update);
 			
 			world.SystemManager.SetSystem(new DrawCanvasSystem(textures, GraphicsDevice,
 				canvasRender, manager), ExecutionType.Draw);
@@ -125,6 +126,7 @@ namespace MapEditor_TLCB
 			entity.AddComponent(new Tilemap(60, 31, 32, 32));
 			entity.AddComponent(new Transform(new Vector2(0, 0)));
 			entity.AddComponent(new TilemapRender("tilemap_garden", false));
+			entity.AddComponent(new TilemapValidate());
 			entity.Refresh();
 			
 			entity = world.CreateEntity();

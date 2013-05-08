@@ -27,7 +27,7 @@ namespace MapEditor_TLCB.CustomControls
         Texture2D m_tileMapIcon;
         Rectangle m_tileMapIconRectangle;
 
-        int m_currentDrawTileIndex;
+        IntPair m_currentDrawTileIndex;
 
         public CurrentToolContainer(Manager p_manager, Window p_parent, ContentManager p_content)
 			: base(p_manager)
@@ -40,7 +40,9 @@ namespace MapEditor_TLCB.CustomControls
 
             m_currentTool = Tool.ROAD_TOOL;
 
-            m_currentDrawTileIndex = 0;
+            m_currentDrawTileIndex = new IntPair();
+            m_currentDrawTileIndex.i1 = 0;
+            m_currentDrawTileIndex.i2 = 0;
 		}
         
 		protected override void DrawControl(TomShane.Neoforce.Controls.Renderer renderer, Microsoft.Xna.Framework.Rectangle rect, Microsoft.Xna.Framework.GameTime gameTime)
@@ -92,14 +94,15 @@ namespace MapEditor_TLCB.CustomControls
         }*/
         public void SetCurrentDrawTileIndex(IntPair p_index)
         {
-            Vector2 curr = new Vector2(p_index.i1 - 30 * (p_index.i1 / 30), p_index.i1 / 30);
-            m_currentDrawTileIndex = p_index.i1;
-            m_tileMapIconRectangle.X = (int)(32 * curr.X);
-            m_tileMapIconRectangle.Width = 32;
-            m_tileMapIconRectangle.Y = (int)(32 * curr.Y);
-            m_tileMapIconRectangle.Height = 32;
+            Vector2 min = new Vector2(p_index.i1 - 30 * (p_index.i1 / 30), p_index.i1 / 30);
+            Vector2 max = new Vector2(p_index.i2 - 30 * (p_index.i2 / 30), p_index.i2 / 30);
+            m_currentDrawTileIndex = p_index;
+            m_tileMapIconRectangle.X = (int)(32 * min.X);
+            m_tileMapIconRectangle.Width = 32*(int)(max.X-min.X+1);
+            m_tileMapIconRectangle.Y = (int)(32 * min.Y);
+            m_tileMapIconRectangle.Height = 32*(int)(max.Y-min.Y+1);
         }
-        public int GetCurrentDrawTileIndex()
+        public IntPair GetCurrentDrawTileIndex()
         {
             return m_currentDrawTileIndex;
         }

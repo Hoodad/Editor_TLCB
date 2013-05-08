@@ -122,10 +122,12 @@
     <Compile Include="Actions\Interface\ActionInterface.cs" />
     <Compile Include="ActionsSerialized.cs" />
     <Compile Include="Actions\ModifyTile.cs" />
+    <Compile Include="Components\TilemapValidate.cs" />
     <Compile Include="CustomControls\CanvasWindow.cs" />
     <Compile Include="CustomControls\CurrentToolContainer.cs" />
     <Compile Include="Common\InvariableIndexList.cs" />
     <Compile Include="Common\LineRenderer.cs" />
+    <Compile Include="CustomControls\HalfTransparentOverlay.cs" />
     <Compile Include="CustomControls\NotificationBarContainer.cs" />
     <Compile Include="Components\Tilemap.cs" />
     <Compile Include="Components\TilemapRender.cs" />
@@ -149,6 +151,7 @@
     <Compile Include="Systems\CanvasControlSystem.cs" />
     <Compile Include="Systems\ContentSystem.cs" />
     <Compile Include="Systems\CurrentToolSystem.cs" />
+    <Compile Include="Systems\MapValidationSystem.cs" />
     <Compile Include="Systems\RadialMenuSystem.cs" />
     <Compile Include="Systems\DrawCanvasSystem.cs" />
     <Compile Include="Systems\RoadAndWallMapperSystem.cs" />

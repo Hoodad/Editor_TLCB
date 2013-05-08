@@ -47,6 +47,7 @@ namespace MapEditor_TLCB.CustomControls
 
 		protected override void DrawControl(TomShane.Neoforce.Controls.Renderer renderer, Microsoft.Xna.Framework.Rectangle rect, Microsoft.Xna.Framework.GameTime gameTime)
 		{
+            Rectangle selectRect = adjustToScroll();
 			if (tilemapImage != null)
 			{
 				renderer.Draw(tilemapImage, rect, Color.Gray);
@@ -55,10 +56,12 @@ namespace MapEditor_TLCB.CustomControls
                 source.Width = currSize.X;
                 source.Y = 32 * curr.Y;
                 source.Height = currSize.Y;
-                renderer.Draw(tilemapImage, highlightRect, source, Color.White);
+
+                Rectangle highlight = adjustToScroll2();
+                renderer.Draw(tilemapImage, highlight, source, Color.White);
 			}
 			renderer.Draw(gridImage, rect, gridColor);
-			renderer.Draw(tileSelectorImage, selectorRect, Color.White);
+            renderer.Draw(tileSelectorImage, selectRect, Color.White);
 		}
 
 		/*protected override void OnMouseMove(TomShane.Neoforce.Controls.MouseEventArgs e)
@@ -125,8 +128,8 @@ namespace MapEditor_TLCB.CustomControls
             highlightRect.Y *= tileSize.Y;
             highlightRect.X += 6;
             highlightRect.Y += 28;
-            highlightRect.X -= windowParent.ScrollBarValue.Horizontal;
-            highlightRect.Y -= windowParent.ScrollBarValue.Vertical;
+            //highlightRect.X -= windowParent.ScrollBarValue.Horizontal;
+            //highlightRect.Y -= windowParent.ScrollBarValue.Vertical;
 
             Refresh();
         }
@@ -190,11 +193,23 @@ namespace MapEditor_TLCB.CustomControls
             selectorRect.Y *= tileSize.Y;
             selectorRect.X += 6;
             selectorRect.Y += 28;
-            selectorRect.X -= windowParent.ScrollBarValue.Horizontal;
-            selectorRect.Y -= windowParent.ScrollBarValue.Vertical;
             downPos = currentPos;
             marked = curr;
             markedSize = currSize;
+        }
+        public Rectangle adjustToScroll()
+        {
+            Rectangle rect = selectorRect;
+            rect.X -= windowParent.ScrollBarValue.Horizontal;
+            rect.Y -= windowParent.ScrollBarValue.Vertical;
+            return rect;
+        }
+        public Rectangle adjustToScroll2()
+        {
+            Rectangle rect = highlightRect;
+            rect.X -= windowParent.ScrollBarValue.Horizontal;
+            rect.Y -= windowParent.ScrollBarValue.Vertical;
+            return rect;
         }
 	}
 }

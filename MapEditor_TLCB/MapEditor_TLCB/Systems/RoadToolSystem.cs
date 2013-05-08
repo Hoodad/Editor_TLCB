@@ -82,27 +82,6 @@ namespace MapEditor_TLCB.Systems
 
 				RadialMenuSystem rms = (RadialMenuSystem)(world.SystemManager.GetSystem<RadialMenuSystem>()[0]);
 
-				if (Mouse.GetState().LeftButton == ButtonState.Pressed && !rms.isRadialActive())
-				{
-					//if (currentTool == Tool.ROAD_TOOL)
-					//{
-					//	int[] mapPos = roadTilemap.getTilePosition(mousePos);
-					//	roadTilemap.setState(mapPos[0], mapPos[1], 0);
-					//}
-					//else if (currentTool == Tool.PAINT_TOOL)
-					//{
-					//	int[] mapPos = roadTilemap.getTilePosition(mousePos);
-					//	singlesTilemap.setState(mapPos[0], mapPos[1], m_toolSys.GetCurrentDrawTileIndex());
-					//	roadTilemap.setState(mapPos[0], mapPos[1], -1);
-					//}
-					//else if (currentTool == Tool.ERASE_TOOL)
-					//{
-					//	int[] mapPos = roadTilemap.getTilePosition(mousePos);
-					//	singlesTilemap.setState(mapPos[0], mapPos[1], -1);
-					//	roadTilemap.setState(mapPos[0], mapPos[1], -1);
-					//}
-				}
-
 				generateWallmapFromRoadmap(wallTilemap, roadTilemap);
 
 				RoadAndWallMapperSystem mapperSystem =
@@ -161,35 +140,47 @@ namespace MapEditor_TLCB.Systems
 						{
 							ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
 							actionSys.QueAction(changeTile);
+							overWriteSinglesWithWalls(mapPos);
 						}
 					}
 					else if (currentTool == Tool.PAINT_TOOL)
 					{
 						int[] mapPos = roadTilemap.getTilePosition(mousePos);
 
-						if (singlesTilemap.getState(mapPos[0], mapPos[1]) != m_toolSys.GetCurrentDrawTileIndex())
+						IntPair indexPair = m_toolSys.GetCurrentDrawTileIndex();
+						Vector2 min = new Vector2(indexPair.i1 - 30 * (indexPair.i1 / 30), indexPair.i1 / 30);
+						Vector2 max = new Vector2(indexPair.i2 - 30 * (indexPair.i2 / 30), indexPair.i2 / 30);
+
+						for (int i = (int)min.X; i <= max.X; i++)
 						{
-							ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
+							for (int j = (int)min.Y; j <= max.Y; j++)
+							{
+								int index = j * 30 + i;
+								if (singlesTilemap.getState(mapPos[0]+i-(int)min.X, mapPos[1]+j-(int)min.Y) != index)
+								{
+									ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
 
-							//actionSys.StartGroupingActions();
+									//actionSys.StartGroupingActions();
 
-							ModifyTile changeTile = new ModifyTile(world.SystemManager);
-							changeTile.col = mapPos[0];
-							changeTile.row = mapPos[1];
-							changeTile.state = m_toolSys.GetCurrentDrawTileIndex();
-							changeTile.affectedTilemap = singlesTilemap;
+									ModifyTile changeTile = new ModifyTile(world.SystemManager);
+									changeTile.col = mapPos[0] + i - (int)min.X;
+									changeTile.row = mapPos[1] + j - (int)min.Y;
+									changeTile.state = index;
+									changeTile.affectedTilemap = singlesTilemap;
 
-							actionSys.QueAction(changeTile);
+									actionSys.QueAction(changeTile);
 
-							ModifyTile roadChangeTile = new ModifyTile(world.SystemManager);
-							roadChangeTile.col = changeTile.col;
-							roadChangeTile.row = changeTile.row;
-							roadChangeTile.state = -1;
-							roadChangeTile.affectedTilemap = roadTilemap;
-							actionSys.QueAction(roadChangeTile);
+									ModifyTile roadChangeTile = new ModifyTile(world.SystemManager);
+									roadChangeTile.col = changeTile.col;
+									roadChangeTile.row = changeTile.row;
+									roadChangeTile.state = -1;
+									roadChangeTile.affectedTilemap = roadTilemap;
+									actionSys.QueAction(roadChangeTile);
 
-							//actionSys.StopGroupingActions();
+									//actionSys.StopGroupingActions();
 
+								}
+							}
 						}
 					}
 					else if (currentTool == Tool.ERASE_TOOL)
@@ -199,6 +190,70 @@ namespace MapEditor_TLCB.Systems
 						roadTilemap.setState(mapPos[0], mapPos[1], -1);
 					}
 				}
+			}
+		}
+
+		private void overWriteSinglesWithWalls(int[] p_mapPos)
+		{
+			ModifyTile[] changeSingles = new ModifyTile[9];
+			changeSingles[0] = new ModifyTile(world.SystemManager);
+			changeSingles[0].col = p_mapPos[0] - 1;
+			changeSingles[0].row = p_mapPos[1] - 1;
+			changeSingles[0].state = -1;
+			changeSingles[0].affectedTilemap = singlesTilemap;
+
+			changeSingles[1] = new ModifyTile(world.SystemManager);
+			changeSingles[1].col = p_mapPos[0];
+			changeSingles[1].row = p_mapPos[1] - 1;
+			changeSingles[1].state = -1;
+			changeSingles[1].affectedTilemap = singlesTilemap;
+
+			changeSingles[2] = new ModifyTile(world.SystemManager);
+			changeSingles[2].col = p_mapPos[0] + 1;
+			changeSingles[2].row = p_mapPos[1] - 1;
+			changeSingles[2].state = -1;
+			changeSingles[2].affectedTilemap = singlesTilemap;
+
+			changeSingles[3] = new ModifyTile(world.SystemManager);
+			changeSingles[3].col = p_mapPos[0] + 1;
+			changeSingles[3].row = p_mapPos[1];
+			changeSingles[3].state = -1;
+			changeSingles[3].affectedTilemap = singlesTilemap;
+			
+			changeSingles[4] = new ModifyTile(world.SystemManager);
+			changeSingles[4].col = p_mapPos[0] + 1;
+			changeSingles[4].row = p_mapPos[1] + 1;
+			changeSingles[4].state = -1;
+			changeSingles[4].affectedTilemap = singlesTilemap;
+			
+			changeSingles[5] = new ModifyTile(world.SystemManager);
+			changeSingles[5].col = p_mapPos[0];
+			changeSingles[5].row = p_mapPos[1] + 1;
+			changeSingles[5].state = -1;
+			changeSingles[5].affectedTilemap = singlesTilemap;
+			
+			changeSingles[6] = new ModifyTile(world.SystemManager);
+			changeSingles[6].col = p_mapPos[0] - 1;
+			changeSingles[6].row = p_mapPos[1] + 1;
+			changeSingles[6].state = -1;
+			changeSingles[6].affectedTilemap = singlesTilemap;
+			
+			changeSingles[7] = new ModifyTile(world.SystemManager);
+			changeSingles[7].col = p_mapPos[0] - 1;
+			changeSingles[7].row = p_mapPos[1];
+			changeSingles[7].state = -1;
+			changeSingles[7].affectedTilemap = singlesTilemap;
+			
+			changeSingles[8] = new ModifyTile(world.SystemManager);
+			changeSingles[8].col = p_mapPos[0];
+			changeSingles[8].row = p_mapPos[1];
+			changeSingles[8].state = -1;
+			changeSingles[8].affectedTilemap = singlesTilemap;
+
+			ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
+			for (int i = 0; i < 9; i++)
+			{
+				actionSys.QueAction(changeSingles[i]);
 			}
 		}
 
@@ -228,7 +283,7 @@ namespace MapEditor_TLCB.Systems
 					}
 					else if (p_roadMap.getState(x, y) == -1)
 					{
-						p_tilemap.setState(x, y, -1);
+						p_tilemap.setState(x, y, 31);
 					}
 				}
 			}
