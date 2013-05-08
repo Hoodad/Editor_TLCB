@@ -40,7 +40,6 @@ namespace MapEditor_TLCB.Systems
 			tilemapWindow.MaximumWidth = 960;
 			tilemapWindow.IconVisible = false;
             tilemapWindow.Click += new TomShane.Neoforce.Controls.EventHandler(OnWindowClickBehavior);
-			//tileMap.Movable = false;
 			manager.Add(tilemapWindow);
 
 			tilemap = new TilemapContainer(manager);
@@ -56,6 +55,7 @@ namespace MapEditor_TLCB.Systems
 			tilemap.Click += new TomShane.Neoforce.Controls.EventHandler(OnClick);
             tilemap.DoubleClicks = false;
             tilemap.MouseDown += new TomShane.Neoforce.Controls.MouseEventHandler(OnMouseDown);
+            //tilemap.va += new TomShane.Neoforce.Controls.MouseEventHandler(OnScroll);
 			tilemap.Init(contentSystem.GetViewportSize());
 
 		}
@@ -72,6 +72,11 @@ namespace MapEditor_TLCB.Systems
             
 		}
         public void OnMouseDown(object sender, TomShane.Neoforce.Controls.MouseEventArgs e)
+        {
+            CurrentToolSystem toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
+            tilemap.setDownPos(new Vector2(e.Position.X, e.Position.Y));
+        }
+        public void OnScroll(object sender, TomShane.Neoforce.Controls.MouseEventArgs e)
         {
             CurrentToolSystem toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
             tilemap.setDownPos(new Vector2(e.Position.X, e.Position.Y));

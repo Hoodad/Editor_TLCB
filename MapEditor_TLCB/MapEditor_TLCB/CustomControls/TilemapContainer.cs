@@ -47,6 +47,7 @@ namespace MapEditor_TLCB.CustomControls
 
 		protected override void DrawControl(TomShane.Neoforce.Controls.Renderer renderer, Microsoft.Xna.Framework.Rectangle rect, Microsoft.Xna.Framework.GameTime gameTime)
 		{
+            Rectangle selectRect = adjustToScroll();
 			if (tilemapImage != null)
 			{
 				renderer.Draw(tilemapImage, rect, Color.Gray);
@@ -58,7 +59,7 @@ namespace MapEditor_TLCB.CustomControls
                 renderer.Draw(tilemapImage, highlightRect, source, Color.White);
 			}
 			renderer.Draw(gridImage, rect, gridColor);
-			renderer.Draw(tileSelectorImage, selectorRect, Color.White);
+            renderer.Draw(tileSelectorImage, selectRect, Color.White);
 		}
 
 		/*protected override void OnMouseMove(TomShane.Neoforce.Controls.MouseEventArgs e)
@@ -190,11 +191,16 @@ namespace MapEditor_TLCB.CustomControls
             selectorRect.Y *= tileSize.Y;
             selectorRect.X += 6;
             selectorRect.Y += 28;
-            selectorRect.X -= windowParent.ScrollBarValue.Horizontal;
-            selectorRect.Y -= windowParent.ScrollBarValue.Vertical;
             downPos = currentPos;
             marked = curr;
             markedSize = currSize;
+        }
+        public Rectangle adjustToScroll()
+        {
+            Rectangle rect = selectorRect;
+            rect.X -= windowParent.ScrollBarValue.Horizontal;
+            rect.Y -= windowParent.ScrollBarValue.Vertical;
+            return rect;
         }
 	}
 }
