@@ -147,30 +147,41 @@ namespace MapEditor_TLCB.Systems
 					{
 						int[] mapPos = roadTilemap.getTilePosition(mousePos);
 
-						if (singlesTilemap.getState(mapPos[0], mapPos[1]) != m_toolSys.GetCurrentDrawTileIndex())
-						{
-							ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
+                        IntPair indexPair = m_toolSys.GetCurrentDrawTileIndex();
+                        Vector2 min = new Vector2(indexPair.i1 - 30 * (indexPair.i1 / 30), indexPair.i1 / 30);
+                        Vector2 max = new Vector2(indexPair.i2 - 30 * (indexPair.i2 / 30), indexPair.i2 / 30);
 
-							//actionSys.StartGroupingActions();
+                        for (int i = (int)min.X; i <= max.X; i++)
+                        {
+                            for (int j = (int)min.Y; j <= max.Y; j++)
+                            {
+                                int index = j * 30 + i;
+                                if (singlesTilemap.getState(mapPos[0]+i-(int)min.X, mapPos[1]+j-(int)min.Y) != index)
+                                {
+                                    ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
 
-							ModifyTile changeTile = new ModifyTile(world.SystemManager);
-							changeTile.col = mapPos[0];
-							changeTile.row = mapPos[1];
-							changeTile.state = m_toolSys.GetCurrentDrawTileIndex();
-							changeTile.affectedTilemap = singlesTilemap;
+                                    //actionSys.StartGroupingActions();
 
-							actionSys.QueAction(changeTile);
+                                    ModifyTile changeTile = new ModifyTile(world.SystemManager);
+                                    changeTile.col = mapPos[0] + i - (int)min.X;
+                                    changeTile.row = mapPos[1] + j - (int)min.Y;
+                                    changeTile.state = index;
+                                    changeTile.affectedTilemap = singlesTilemap;
 
-							ModifyTile roadChangeTile = new ModifyTile(world.SystemManager);
-							roadChangeTile.col = changeTile.col;
-							roadChangeTile.row = changeTile.row;
-							roadChangeTile.state = -1;
-							roadChangeTile.affectedTilemap = roadTilemap;
-							actionSys.QueAction(roadChangeTile);
+                                    actionSys.QueAction(changeTile);
 
-							//actionSys.StopGroupingActions();
+                                    ModifyTile roadChangeTile = new ModifyTile(world.SystemManager);
+                                    roadChangeTile.col = changeTile.col;
+                                    roadChangeTile.row = changeTile.row;
+                                    roadChangeTile.state = -1;
+                                    roadChangeTile.affectedTilemap = roadTilemap;
+                                    actionSys.QueAction(roadChangeTile);
 
-						}
+                                    //actionSys.StopGroupingActions();
+
+                                }
+                            }
+                        }
 					}
 					else if (currentTool == Tool.ERASE_TOOL)
 					{
