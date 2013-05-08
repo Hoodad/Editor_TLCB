@@ -84,6 +84,7 @@ namespace MapEditor_TLCB.Systems
 			exportMap.Height = 24;
 			exportMap.Left = 0;
 			exportMap.Top = toolbarWindow.Height - 24 * 5;
+			exportMap.Click += new TomShane.Neoforce.Controls.EventHandler(ExportMapBehavior);
 
 			saveMap = new Button(manager);
 			saveMap.Init();
@@ -166,6 +167,23 @@ namespace MapEditor_TLCB.Systems
 
 			((Tilemap)roadTilemap.GetComponent<Tilemap>()).clear();
 			((Tilemap)singleTilemap.GetComponent<Tilemap>()).clear();
+		}
+		public void ExportMapBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
+		{
+			Button btn = (Button)sender;
+			btn.Focused = false;
+			System.Windows.Forms.SaveFileDialog saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+			saveFileDialog1.InitialDirectory = Convert.ToString(Environment.SpecialFolder.MyDocuments);
+			saveFileDialog1.Filter = "Map files (*.datmap)|*.datmap";
+			saveFileDialog1.FilterIndex = 1;
+			saveFileDialog1.Title = "Export your map";
+			saveFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(SuccessfullyPressedSave);
+			saveFileDialog1.ShowDialog();
+		}
+		private void SuccessfullyPressedSave(object sender, System.EventArgs e)
+		{
+			System.Windows.Forms.SaveFileDialog dialog = (System.Windows.Forms.SaveFileDialog)(sender);
+			((ExportMapSystem)world.SystemManager.GetSystem<ExportMapSystem>()[0]).RequestToSaveMap(dialog.FileName);
 		}
 	}
 }
