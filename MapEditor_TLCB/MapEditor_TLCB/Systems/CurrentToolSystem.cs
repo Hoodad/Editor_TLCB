@@ -77,7 +77,7 @@ namespace MapEditor_TLCB.Systems
 		{
 			return m_container.GetCurrentTool();
 		}
-        public int GetCurrentDrawTileIndex()
+        public IntPair GetCurrentDrawTileIndex()
         {
             return m_container.GetCurrentDrawTileIndex();
         }
