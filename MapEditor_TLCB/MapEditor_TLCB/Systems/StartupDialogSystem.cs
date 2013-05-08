@@ -72,6 +72,11 @@ namespace MapEditor_TLCB.Systems
 		void startupDialog_VisibleChanged(object p_sender, TomShane.Neoforce.Controls.EventArgs p_args)
 		{
 			overlay.Visible = startupDialog.Visible;
+			if (startupDialog.Visible == true)
+			{
+				overlay.BringToFront();
+				startupDialog.BringToFront();
+			}
 		}
 
 		public override void Initialize()

@@ -93,7 +93,7 @@ namespace MapEditor_TLCB.Systems
 			}
 			
 			m_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend,
-				null, null, null, null, cameraMatrix);
+				SamplerState.PointWrap, null, null, null, cameraMatrix);
 		}
 
 		protected override void End()
