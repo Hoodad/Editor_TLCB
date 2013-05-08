@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace MapEditor_TLCB.UndoTree
+namespace MapEditor_TLCB.Actions
 {
     class ActionNode
     {
@@ -21,7 +21,8 @@ namespace MapEditor_TLCB.UndoTree
         public int m_parentId;
         public int m_level; ///< level this node has in tree
         public int m_siblingId = 0; ///< id amongst siblings
-        public bool m_activeBranch = false; ///< whether this node is part of the active action branch
+        //public bool m_activeBranch = false; ///< whether this node is part of the active action branch
+        public int m_activeBranch = 2; // using int for now. 0=false, 1=evaluation, 2=true. make tick down each time not having active branch child
         // for representation
         public Vector2 m_renderPos;
     }

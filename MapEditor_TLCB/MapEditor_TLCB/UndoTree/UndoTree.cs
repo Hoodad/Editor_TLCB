@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MapEditor_TLCB.Actions.Interface;
 using Microsoft.Xna.Framework.Content;
 
-namespace MapEditor_TLCB.UndoTree
+namespace MapEditor_TLCB.Actions
 {
     class UndoTree
     {
@@ -32,8 +32,10 @@ namespace MapEditor_TLCB.UndoTree
         Mode m_mode;
         Zoom m_zoom;
 
-        private float m_nodeOrigWidth = 120.0f;
-        private float m_nodeOrigHeight = 25.0f;
+        public Rectangle m_renderArea;
+
+        private float m_nodeOrigWidth = 90.0f;
+        private float m_nodeOrigHeight = 30.0f;
         private float m_nodeMiniWidth = 10.0f;
         private float m_nodeMiniHeight = 10.0f;
 
@@ -44,6 +46,10 @@ namespace MapEditor_TLCB.UndoTree
         private Vector2 scrollInputBuffer=Vector2.Zero;
         private Vector2 m_renderOffset = new Vector2(30, 100);
         private Vector2 m_lineRenderOffset;
+
+        Color m_activeBranchCol = new Color(58, 174, 163);
+        Color m_currentNodeCol = new Color(58, 255, 163);
+        Color m_inactiveNodeCol = Color.White;
 
         // stats
         int maxSiblings = 0;
@@ -61,7 +67,7 @@ namespace MapEditor_TLCB.UndoTree
             m_gd = p_gd;
             m_nodes = new InvariableIndexList<ActionNode>();
             m_actions = new InvariableIndexList<ActionInterface>();
-            m_lineRenderer = new LineRenderer(m_gd);
+            m_lineRenderer = new LineRenderer(m_gd,p_content);
             m_currentNodeId = addAction(null);
             m_startNodeId = m_currentNodeId;
 
@@ -71,29 +77,8 @@ namespace MapEditor_TLCB.UndoTree
             m_nodeWidth=m_nodeOrigWidth;
             m_nodeHeight=m_nodeOrigHeight;
 
-            // TEST RUN:
-            addAction(new ChangeColor(Color.Red,null));
-            addAction(null);
-            for (int i = 0; i < 40; i++)
-            {
-                undo();
-                addAction(null);
-                addAction(null);
-                addAction(null);
-                if (i == 5)
-                {
-                    for (int x=0;x<100;x++)
-                        addAction(null);
-                }
-                undo();
-                undo();
-                addAction(null);
-                addAction(null);
-            }
-            // TEST RUN ^
-
             // create resources
-            m_nodeBoxTex = p_content.Load<Texture2D>("textbox");
+            m_nodeBoxTex = p_content.Load<Texture2D>("node");
             m_font = p_content.Load<SpriteFont>("Arcadepix");
         }
 
@@ -101,28 +86,20 @@ namespace MapEditor_TLCB.UndoTree
         {
             // update sub sizes dependant on any changes
             m_lineRenderOffset = new Vector2(m_nodeWidth / 2, m_nodeHeight / 2);
-            m_nodeMargin = new Vector2(m_nodeWidth * 1.4f, m_nodeHeight * 1.6f);
+            m_nodeMargin = new Vector2(m_nodeWidth * 1.1f, m_nodeHeight * 1.5f);
             // position
             Queue<int> batch = new Queue<int>();
             m_renderBatch.Clear();
             List<int> columnPerRowCounter = new List<int>(); // "global siblings"
             batch.Enqueue(m_startNodeId);
-            m_renderBatch.Add(m_startNodeId);
             maxSiblings = 0; maxLevel = 0; // reset for count
             do
             {
-                ActionNode currentProcNode = m_nodes[batch.Dequeue()];
+                int currentId = batch.Dequeue();
+                ActionNode currentProcNode = m_nodes[currentId];
                 int level = currentProcNode.m_level;
                 if (level > maxLevel) maxLevel = level;
-                // retrieve current object
-                //          >>>>>>>>>>>>>>>>>>>>>   Transform obj = currentRender.m_visualRepr;
-                //          >>>>>>>>>>>>>>>>>>>>>   Material objMaterial = obj.GetChild(0).renderer.material;
-                //          >>>>>>>>>>>>>>>>>>>>>   currentRender.m_visualRepr.renderer.enabled = true;
-                //          >>>>>>>>>>>>>>>>>>>>>   currentRender.m_visualRepr.GetChild(0).renderer.enabled = true;
-                //          >>>>>>>>>>>>>>>>>>>>>   currentRender.m_visualRepr.GetChild(1).renderer.enabled = true;
-                // if click
-                // if (obj == mouseHoverObj && mouseClick)
-                //     m_currentNode = currentRender;
+
 
                 // Move nodes to correct position
                 Vector2 goal;
@@ -134,7 +111,7 @@ namespace MapEditor_TLCB.UndoTree
                 else
                 {
                     goal = new Vector2(m_nodes[m_startNodeId].m_renderPos.X,
-                                               currentProcNode.m_level * m_nodeHeight * 2);
+                                               currentProcNode.m_level * m_nodeMargin.Y);
                 }
                 currentProcNode.m_renderPos = Vector2.Lerp(currentProcNode.m_renderPos,
                                                          goal,
@@ -142,24 +119,22 @@ namespace MapEditor_TLCB.UndoTree
 
 
 
-                // objMaterial.color = m_normalNodeColor;
-
 
                 // process children and add to batch
                 if (columnPerRowCounter.Count <= level) columnPerRowCounter.Insert(level, 0);
                 int localSibling = 0;
-                currentProcNode.m_activeBranch = false;
+                bool noactivecildren = true;
                 foreach (int childId in currentProcNode.m_children)
                 {
                     ActionNode childNode = m_nodes[childId];
                     // set as active branch if a child is activebranch or currentaction
-                    if (childNode.m_activeBranch || m_currentNodeId == childId)
+                    if (childNode.m_activeBranch>0 || m_currentNodeId == childId)
                     {
-                        currentProcNode.m_activeBranch = true;
+                        currentProcNode.m_activeBranch = 2;
+                        noactivecildren = false;
                     }
                     //
                     batch.Enqueue(childId);
-                    m_renderBatch.Add(childId);
                     if (childNode.m_parentId != -1)
                         childNode.m_siblingId = Math.Max(m_nodes[childNode.m_parentId].m_siblingId + localSibling,
                                                          columnPerRowCounter[level]);  // for alignment purposes   
@@ -171,21 +146,18 @@ namespace MapEditor_TLCB.UndoTree
                     if (localSibling > maxSiblings) maxSiblings = localSibling;
                     if (columnPerRowCounter[level] > maxSiblings) maxSiblings = columnPerRowCounter[level];
                 }
+                if (noactivecildren && currentProcNode.m_activeBranch>0) currentProcNode.m_activeBranch -= 1;
 
 
-                // visualize active branch
-                /*
-                if (currentRender.m_activeBranch)
+                // render cull
+                Vector2 renderpos = currentProcNode.m_renderPos + scrollOffset + m_renderOffset;
+                if (renderpos.X < m_renderArea.X + m_renderArea.Width + m_nodeWidth && renderpos.X > m_renderArea.X - m_nodeWidth &&
+                    renderpos.Y < m_renderArea.Y + m_renderArea.Height + m_nodeHeight && renderpos.Y > m_renderArea.Y - m_nodeHeight)
                 {
-                    objMaterial.color = m_activebranchNodeColor;
+                    if (currentProcNode.m_activeBranch>0 || m_mode == Mode.TREE)
+                        m_renderBatch.Add(currentId);
                 }
-                else if (!m_treestate && m_currentNode != currentRender)
-                {
-                    currentRender.m_visualRepr.renderer.enabled = false;
-                    currentRender.m_visualRepr.GetChild(0).renderer.enabled = false;
-                    currentRender.m_visualRepr.GetChild(1).renderer.enabled = false;
-                    //currentRender.m_visualRepr.position = new Vector3(m_start.m_visualRepr.position.x, m_start.m_visualRepr.position.y, currentRender.m_visualRepr.position.z + 1);
-                }*/
+
             } while (batch.Count > 0);
             // calculate width and height of whole tree in pixels
             m_totalSize = new Vector2((float)maxSiblings, (float)maxLevel) * m_nodeMargin;
@@ -197,6 +169,7 @@ namespace MapEditor_TLCB.UndoTree
         {
             Vector2 offset = p_offset;
 
+
             // render all lines(render first so they're behind the boxes)
             foreach (int i in m_renderBatch)
             {
@@ -207,9 +180,10 @@ namespace MapEditor_TLCB.UndoTree
                     int parentId = currentRender.m_parentId;
                     if (parentId != -1 && parentId < m_nodes.getSize() && m_nodes[parentId] != null)
                     {
-                        m_lineRenderer.Draw(p_spriteBatch, scrollOffset+m_lineRenderOffset+m_renderOffset + currentRender.m_renderPos,
-                            scrollOffset+m_lineRenderOffset+m_renderOffset + m_nodes[parentId].m_renderPos, 
-                            Color.CornflowerBlue, 2.0f);
+                        Color tint = m_inactiveNodeCol;
+                        if (currentRender.m_activeBranch > 0) tint = m_activeBranchCol;
+                        if (i == m_currentNodeId) tint = m_currentNodeCol;
+                        drawLine(p_spriteBatch, m_nodes[parentId].m_renderPos, currentRender.m_renderPos, tint);
                     }
                 }
             }
@@ -221,7 +195,10 @@ namespace MapEditor_TLCB.UndoTree
                 {
                     ActionNode currentRender = m_nodes[i];
                     ActionInterface action=null;
-                    drawNode(p_spriteBatch, scrollOffset+m_renderOffset+currentRender.m_renderPos,Color.LightGreen );
+                    Color tint = m_inactiveNodeCol;
+                    if (currentRender.m_activeBranch>0) tint = m_activeBranchCol;
+                    if (i == m_currentNodeId) tint = m_currentNodeCol;
+                    drawNode(p_spriteBatch, scrollOffset + m_renderOffset + currentRender.m_renderPos, tint);
                     // draw action info as well
                     if (m_zoom != Zoom.MINI)
                     {
@@ -232,8 +209,11 @@ namespace MapEditor_TLCB.UndoTree
                             Vector2 strSz = m_font.MeasureString(info);
                             float scale = Math.Min(1.0f, m_nodeWidth / strSz.X);
                             strSz *= scale;
-                            p_spriteBatch.DrawString(m_font, info, scrollOffset + m_renderOffset + currentRender.m_renderPos, Color.White,
-                                0, new Vector2(-m_nodeWidth + strSz.X, -m_nodeHeight + strSz.Y) * 0.5f,
+                            Vector2 intpos = scrollOffset + m_renderOffset + currentRender.m_renderPos;
+                            intpos.X = (int)intpos.X; intpos.Y = (int)intpos.Y;
+                            //
+                            p_spriteBatch.DrawString(m_font, info, intpos, Color.White,
+                                0, new Vector2((int)((-m_nodeWidth + strSz.X) * 0.5f), (int)((-m_nodeHeight + strSz.Y) * 0.5f) ),
                                 scale, SpriteEffects.None, 0);
                         }
                     }
@@ -249,6 +229,35 @@ namespace MapEditor_TLCB.UndoTree
             p_spriteBatch.Draw(m_nodeBoxTex, 
                 new Rectangle((int)p_pos.X, (int)p_pos.Y, (int)m_nodeWidth, (int)m_nodeHeight), 
                 p_tint);
+        }
+
+        void drawLine(SpriteBatch p_spriteBatch,Vector2 p_end, Vector2 p_start, Color p_color)
+        {
+            Vector2[] pos = new Vector2[10];
+            pos[0]=p_start;
+            // start curve
+            Vector2 yoffset = new Vector2(0.0f, 1.0f);
+
+            pos[1] = new Vector2(MathHelper.Lerp(p_start.X, p_end.X, 0.02f), MathHelper.Lerp(p_start.Y, p_end.Y, 0.2f));
+            pos[2] = new Vector2(MathHelper.Lerp(p_start.X, p_end.X, 0.1f), MathHelper.Lerp(p_start.Y, p_end.Y, 0.35f));
+            pos[3] = new Vector2(MathHelper.Lerp(p_start.X, p_end.X, 0.2f), MathHelper.Lerp(p_start.Y, p_end.Y, 0.43f));
+            // middles
+            pos[4]=new Vector2(MathHelper.Lerp(p_start.X, p_end.X,0.35f),MathHelper.Lerp(p_start.Y, p_end.Y,0.48f));
+            pos[5] = new Vector2(MathHelper.Lerp(p_start.X, p_end.X, 0.65f), MathHelper.Lerp(p_start.Y, p_end.Y, 0.52f));
+            // end curve
+            pos[6] = new Vector2(MathHelper.Lerp(p_start.X, p_end.X, 1.0f-0.2f), MathHelper.Lerp(p_start.Y, p_end.Y, 1.0f-0.43f));
+            pos[7] = new Vector2(MathHelper.Lerp(p_start.X, p_end.X, 1.0f-0.1f), MathHelper.Lerp(p_start.Y, p_end.Y, 1.0f-0.35f));
+            pos[8] = new Vector2(MathHelper.Lerp(p_start.X, p_end.X, 1.0f-0.02f), MathHelper.Lerp(p_start.Y, p_end.Y, 1.0f-0.2f));
+
+
+            pos[9]=p_end;
+            for (int i = 1; i < 10; i++)
+            {
+                m_lineRenderer.Draw(p_spriteBatch,
+                    scrollOffset + m_lineRenderOffset + m_renderOffset + pos[i-1],
+                    scrollOffset + m_lineRenderOffset + m_renderOffset + pos[i],
+                    p_color, 1.0f, true);
+            }
         }
 
         // set render mode

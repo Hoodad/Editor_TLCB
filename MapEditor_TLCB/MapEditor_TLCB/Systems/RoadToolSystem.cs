@@ -139,7 +139,7 @@ namespace MapEditor_TLCB.Systems
 						if (roadTilemap.getState(mapPos[0], mapPos[1]) != 0)
 						{
 							ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
-							actionSys.QueAction(changeTile);
+							actionSys.EnqueueAction(changeTile);
 							overWriteSinglesWithWalls(mapPos);
 						}
 					}
@@ -168,14 +168,14 @@ namespace MapEditor_TLCB.Systems
                                     changeTile.state = index;
                                     changeTile.affectedTilemap = singlesTilemap;
 
-                                    actionSys.QueAction(changeTile);
+                                    actionSys.EnqueueAction(changeTile);
 
                                     ModifyTile roadChangeTile = new ModifyTile(world.SystemManager);
                                     roadChangeTile.col = changeTile.col;
                                     roadChangeTile.row = changeTile.row;
                                     roadChangeTile.state = -1;
                                     roadChangeTile.affectedTilemap = roadTilemap;
-                                    actionSys.QueAction(roadChangeTile);
+                                    actionSys.EnqueueAction(roadChangeTile);
 
                                     //actionSys.StopGroupingActions();
 
@@ -253,7 +253,7 @@ namespace MapEditor_TLCB.Systems
 			ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
 			for (int i = 0; i < 9; i++)
 			{
-				actionSys.QueAction(changeSingles[i]);
+				actionSys.EnqueueAction(changeSingles[i]);
 			}
 		}
 
