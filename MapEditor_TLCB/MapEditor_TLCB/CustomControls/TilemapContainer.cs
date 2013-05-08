@@ -56,7 +56,9 @@ namespace MapEditor_TLCB.CustomControls
                 source.Width = currSize.X;
                 source.Y = 32 * curr.Y;
                 source.Height = currSize.Y;
-                renderer.Draw(tilemapImage, highlightRect, source, Color.White);
+
+                Rectangle highlight = adjustToScroll2();
+                renderer.Draw(tilemapImage, highlight, source, Color.White);
 			}
 			renderer.Draw(gridImage, rect, gridColor);
             renderer.Draw(tileSelectorImage, selectRect, Color.White);
@@ -126,8 +128,8 @@ namespace MapEditor_TLCB.CustomControls
             highlightRect.Y *= tileSize.Y;
             highlightRect.X += 6;
             highlightRect.Y += 28;
-            highlightRect.X -= windowParent.ScrollBarValue.Horizontal;
-            highlightRect.Y -= windowParent.ScrollBarValue.Vertical;
+            //highlightRect.X -= windowParent.ScrollBarValue.Horizontal;
+            //highlightRect.Y -= windowParent.ScrollBarValue.Vertical;
 
             Refresh();
         }
@@ -198,6 +200,13 @@ namespace MapEditor_TLCB.CustomControls
         public Rectangle adjustToScroll()
         {
             Rectangle rect = selectorRect;
+            rect.X -= windowParent.ScrollBarValue.Horizontal;
+            rect.Y -= windowParent.ScrollBarValue.Vertical;
+            return rect;
+        }
+        public Rectangle adjustToScroll2()
+        {
+            Rectangle rect = highlightRect;
             rect.X -= windowParent.ScrollBarValue.Horizontal;
             rect.Y -= windowParent.ScrollBarValue.Vertical;
             return rect;
