@@ -11,8 +11,10 @@ namespace MapEditor_TLCB.Components
 		public TilemapValidate()
 		{
 			pathsValid = false;
+			playerValid = false;
 		}
 
 		public bool pathsValid;
+		public bool playerValid;
 	}
 }

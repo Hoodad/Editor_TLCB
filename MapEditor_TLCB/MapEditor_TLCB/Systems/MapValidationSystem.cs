@@ -4,14 +4,17 @@ using System.Linq;
 using System.Text;
 using Artemis;
 using MapEditor_TLCB.Components;
+using TomShane.Neoforce.Controls;
+using Microsoft.Xna.Framework;
 
 namespace MapEditor_TLCB.Systems
 {
 	class MapValidationSystem: EntitySystem
 	{
-		public MapValidationSystem()
+		public MapValidationSystem(Manager p_manager)
 			: base(typeof(Tilemap), typeof(TilemapValidate))
 		{
+			m_manager = p_manager;
 		}
 
 		protected override void ProcessEntities(Dictionary<int, Entity> entities)
@@ -22,6 +25,22 @@ namespace MapEditor_TLCB.Systems
 				TilemapValidate valid = m_validateMapper.Get(e);
 
 				valid.pathsValid = validatePaths(tilemap);
+				if (e.Tag == "mainTilemap")
+				{
+					if(valid.pathsValid) {
+						m_pathsValidLabel.TextColor = Color.DarkGreen;
+					}
+					else {
+						m_pathsValidLabel.TextColor = Color.DarkRed;
+					}
+					
+					if(valid.playerValid) {
+						m_playerValidLabel.TextColor = Color.DarkGreen;
+					}
+					else {
+						m_playerValidLabel.TextColor = Color.DarkRed;
+					}
+				}
 			}
 		}
 
@@ -87,6 +106,8 @@ namespace MapEditor_TLCB.Systems
 					}
 				}
 			}
+			else
+				return false;
 
 			if(walkables.Count == 0)
 				return true;
@@ -97,9 +118,40 @@ namespace MapEditor_TLCB.Systems
 		{
 			m_tilemapMapper = new ComponentMapper<Tilemap>(world);
 			m_validateMapper = new ComponentMapper<TilemapValidate>(world);
+
+			m_validateControl = new Window(m_manager);
+			m_validateControl.Init();
+			m_validateControl.Width = 150;
+			m_validateControl.Height = 50;
+			m_validateControl.Text = "Validation";
+			m_validateControl.Center();
+			m_validateControl.Top = 0;
+			m_validateControl.BorderVisible = false;
+			m_validateControl.Resizable = false;
+			m_manager.Add(m_validateControl);
+
+			m_pathsValidLabel = new Label(m_manager);
+			m_pathsValidLabel.Init();
+			m_pathsValidLabel.Parent = m_validateControl;
+			m_pathsValidLabel.Text = "Paths";
+			m_pathsValidLabel.Left = 10;
+			m_pathsValidLabel.Top = 5;
+			m_pathsValidLabel.TextColor = Color.DarkRed;
+
+			m_playerValidLabel = new Label(m_manager);
+			m_playerValidLabel.Init();
+			m_playerValidLabel.Parent = m_validateControl;
+			m_playerValidLabel.Text = "Player";
+			m_playerValidLabel.Left = 10;
+			m_playerValidLabel.Top = 20;
+			m_playerValidLabel.TextColor = Color.DarkRed;
 		}
 
 		ComponentMapper<Tilemap> m_tilemapMapper;
 		ComponentMapper<TilemapValidate> m_validateMapper;
+		Manager m_manager;
+		Window m_validateControl;
+		Label m_pathsValidLabel;
+		Label m_playerValidLabel;
 	}
 }

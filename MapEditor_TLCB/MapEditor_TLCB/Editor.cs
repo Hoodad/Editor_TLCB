@@ -106,7 +106,7 @@ namespace MapEditor_TLCB
 			systemManager.SetSystem(new CurrentToolSystem(manager, GraphicsDevice, Content), ExecutionType.Update);
 			systemManager.SetSystem(new StartupDialogSystem(manager), ExecutionType.Update);
 			world.SystemManager.SetSystem(new RadialMenuSystem(GraphicsDevice, Content), ExecutionType.Update);
-			systemManager.SetSystem(new MapValidationSystem(), ExecutionType.Update);
+			systemManager.SetSystem(new MapValidationSystem(manager), ExecutionType.Update);
 			
 			world.SystemManager.SetSystem(new DrawCanvasSystem(textures, GraphicsDevice,
 				canvasRender, manager), ExecutionType.Draw);
