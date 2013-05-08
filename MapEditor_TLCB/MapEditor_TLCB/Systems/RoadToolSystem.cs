@@ -195,7 +195,7 @@ namespace MapEditor_TLCB.Systems
 
 		private void overWriteSinglesWithWalls(int[] p_mapPos)
 		{
-			ModifyTile[] changeSingles = new ModifyTile[8];
+			ModifyTile[] changeSingles = new ModifyTile[9];
 			changeSingles[0] = new ModifyTile(world.SystemManager);
 			changeSingles[0].col = p_mapPos[0] - 1;
 			changeSingles[0].row = p_mapPos[1] - 1;
@@ -243,9 +243,15 @@ namespace MapEditor_TLCB.Systems
 			changeSingles[7].row = p_mapPos[1];
 			changeSingles[7].state = -1;
 			changeSingles[7].affectedTilemap = singlesTilemap;
+			
+			changeSingles[8] = new ModifyTile(world.SystemManager);
+			changeSingles[8].col = p_mapPos[0];
+			changeSingles[8].row = p_mapPos[1];
+			changeSingles[8].state = -1;
+			changeSingles[8].affectedTilemap = singlesTilemap;
 
 			ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
-			for (int i = 0; i < 8; i++)
+			for (int i = 0; i < 9; i++)
 			{
 				actionSys.QueAction(changeSingles[i]);
 			}
