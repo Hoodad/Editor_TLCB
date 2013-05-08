@@ -69,7 +69,7 @@ namespace MapEditor_TLCB.Systems
                 m_container.SetCurrentDrawTileIndex(tbs.GetTilemapContainer().GetCurrentIndex());
             }
         }
-        public void SetCurrentDrawToolIndex(int p_index)
+        public void SetCurrentDrawToolIndex(IntPair p_index)
         {
             m_container.SetCurrentDrawTileIndex(p_index);
         }

@@ -9,6 +9,12 @@ using System.Diagnostics;
 
 namespace MapEditor_TLCB.CustomControls
 {
+    struct IntPair
+    {
+        public int i1;
+        public int i2;
+    }
+
 	class TilemapContainer : Container
 	{
 		public Texture2D tilemapImage = null;
@@ -23,6 +29,8 @@ namespace MapEditor_TLCB.CustomControls
 
         private Point curr;
         private Point currSize;
+        private Point marked;
+        private Point markedSize;
 
         private int currentIndex;
 
@@ -129,15 +137,18 @@ namespace MapEditor_TLCB.CustomControls
         public Rectangle GetTilemapSourceRectangle()
         {
             Rectangle rect;
-            rect.X = 32 * curr.X;
-            rect.Width = 32;
-            rect.Y = 32 * curr.Y;
-            rect.Height = 32;
+            rect.X = 32 * marked.X;
+            rect.Width = markedSize.X;
+            rect.Y = 32 * marked.Y;
+            rect.Height = markedSize.Y;
             return rect;
         }
-        public int GetCurrentIndex()
+        public IntPair GetCurrentIndex()
         {
-            return currentIndex;
+            IntPair ip;
+            ip.i1 = currentIndex;
+            ip.i2 = currentIndex + (int)(currSize.Y / 32 - 1) * 30 + (int)(currSize.X / 32 - 1);
+            return ip;
         }
 
 		public void Init(Point p_windowSize)
@@ -182,6 +193,8 @@ namespace MapEditor_TLCB.CustomControls
             selectorRect.X -= windowParent.ScrollBarValue.Horizontal;
             selectorRect.Y -= windowParent.ScrollBarValue.Vertical;
             downPos = currentPos;
+            marked = curr;
+            markedSize = currSize;
         }
 	}
 }

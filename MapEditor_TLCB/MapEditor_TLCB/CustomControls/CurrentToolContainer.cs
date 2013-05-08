@@ -90,10 +90,10 @@ namespace MapEditor_TLCB.CustomControls
         {
             m_tileMapIconRectangle = p_rectangle;
         }*/
-        public void SetCurrentDrawTileIndex(int p_index)
+        public void SetCurrentDrawTileIndex(IntPair p_index)
         {
-            Vector2 curr = new Vector2(p_index - 30 * (p_index / 30), p_index / 30);
-            m_currentDrawTileIndex = p_index;
+            Vector2 curr = new Vector2(p_index.i1 - 30 * (p_index.i1 / 30), p_index.i1 / 30);
+            m_currentDrawTileIndex = p_index.i1;
             m_tileMapIconRectangle.X = (int)(32 * curr.X);
             m_tileMapIconRectangle.Width = 32;
             m_tileMapIconRectangle.Y = (int)(32 * curr.Y);

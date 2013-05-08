@@ -13,6 +13,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
+
+
 namespace MapEditor_TLCB.Systems
 {
 	class RadialMenuSystem : EntitySystem
@@ -162,7 +164,11 @@ namespace MapEditor_TLCB.Systems
         {
             CurrentToolSystem toolSys = (CurrentToolSystem)world.SystemManager.GetSystem<CurrentToolSystem>()[0];
             toolSys.SetCurrentTool(CustomControls.Tool.PAINT_TOOL);
-            toolSys.SetCurrentDrawToolIndex((int)p_toolIndex);
+
+            MapEditor_TLCB.CustomControls.IntPair pair;
+            pair.i1 = (int)p_toolIndex;
+            pair.i2 = (int)p_toolIndex;
+            toolSys.SetCurrentDrawToolIndex(pair);
         }
 	}
 }
