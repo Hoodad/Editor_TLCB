@@ -61,8 +61,8 @@ namespace MapEditor_TLCB.Systems
 						}
 						else if(!render.overlay)
 						{
-							m_spriteBatch.Draw(texture, transform.position + mapPosition,
-								new Rectangle(1 * 32, 1 * 32, 32, 32), Color.White);
+							//m_spriteBatch.Draw(texture, transform.position + mapPosition,
+							//	new Rectangle(0 * 32, 0 * 32, 32, 32), Color.White);
 						}
 					}
 				}
