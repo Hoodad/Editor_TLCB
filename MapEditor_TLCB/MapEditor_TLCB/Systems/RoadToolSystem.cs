@@ -197,8 +197,22 @@ namespace MapEditor_TLCB.Systems
 					else if (currentTool == Tool.ERASE_TOOL)
 					{
 						int[] mapPos = roadTilemap.getTilePosition(mousePos);
-						singlesTilemap.setState(mapPos[0], mapPos[1], -1);
-						roadTilemap.setState(mapPos[0], mapPos[1], -1);
+
+						ModifyTile roadModify = new ModifyTile(world.SystemManager);
+						roadModify.affectedTilemap = roadTilemap;
+						roadModify.col = mapPos[0];
+						roadModify.row = mapPos[1];
+						roadModify.state = -1;
+
+						ModifyTile singlesModify = new ModifyTile(world.SystemManager);
+						singlesModify.affectedTilemap = singlesTilemap;
+						singlesModify.col = mapPos[0];
+						singlesModify.row = mapPos[1];
+						singlesModify.state = -1;
+
+						ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
+						actionSys.QueAction(roadModify);
+						actionSys.QueAction(singlesModify);
 					}
 				}
 			}
