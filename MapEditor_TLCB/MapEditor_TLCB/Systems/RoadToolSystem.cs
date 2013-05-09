@@ -18,6 +18,7 @@ namespace MapEditor_TLCB.Systems
 	{
 		public RoadToolSystem(): base(typeof(Tilemap))
 		{
+			m_lmbPressed = false;
 		}
 
 		public override void Initialize()
@@ -98,20 +99,22 @@ namespace MapEditor_TLCB.Systems
 
 		public void canvasGroupBehavior(object sender, MouseEventArgs e)
 		{
-			if (e.State.LeftButton == ButtonState.Pressed)
+			if (e.State.LeftButton == ButtonState.Pressed && !m_lmbPressed)
 			{
+				m_lmbPressed = true;
 				ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
 				actionSys.StartGroupingActions();
 			}
-			else if (e.State.LeftButton == ButtonState.Released)
+			else if (e.State.LeftButton == ButtonState.Released && m_lmbPressed)
 			{
+				m_lmbPressed = false;
 				ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
 				actionSys.StopGroupingActions();
 			}
 		}
 		public void canvasWindow_MouseMove(object sender, MouseEventArgs e)
 		{
-			if (e.State.LeftButton == ButtonState.Pressed)
+			if (m_lmbPressed)
 			{
 				Tool currentTool = m_toolSys.GetCurrentTool();
 				if (mainTilemap != null && roadTilemap != null && wallTilemap != null &&
@@ -250,11 +253,11 @@ namespace MapEditor_TLCB.Systems
 			changeSingles[8].state = -1;
 			changeSingles[8].affectedTilemap = singlesTilemap;
 
-			ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
-			for (int i = 0; i < 9; i++)
-			{
-				actionSys.QueAction(changeSingles[i]);
-			}
+			//ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
+			//for (int i = 0; i < 9; i++)
+			//{
+			//	actionSys.QueAction(changeSingles[i]);
+			//}
 		}
 
 		private void updateTilemapUsingSingles(Tilemap p_mainTilemap, Tilemap p_singlesTilemap)
@@ -364,5 +367,6 @@ namespace MapEditor_TLCB.Systems
 		Tilemap wallTilemap;
 		ComponentMapper<Tilemap> m_tilemapMapper;
 		CurrentToolSystem m_toolSys;
+		bool m_lmbPressed;
 	}
 }
