@@ -137,6 +137,7 @@ namespace MapEditor_TLCB.Systems
 		private bool validatePlayer(Tilemap p_tilemap)
 		{
 			int numPlayers = 0;
+			bool connectedToRoad = false;
 			for (int y = 0; y < p_tilemap.getRows(); y++)
 			{
 				for (int x = 0; x < p_tilemap.getColumns(); x++)
@@ -144,11 +145,13 @@ namespace MapEditor_TLCB.Systems
 					if (p_tilemap.getState(x, y) == 270)
 					{
 						numPlayers ++;
+						if(p_tilemap.connectedTo(x, y, 3 * 30, 5 * 30))
+							connectedToRoad = true;
 					}
 				}
 			}
 
-			if(numPlayers == 1)
+			if(numPlayers == 1 && connectedToRoad)
 				return true;
 			return false;
 		}
