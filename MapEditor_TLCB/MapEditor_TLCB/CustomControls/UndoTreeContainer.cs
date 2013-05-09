@@ -7,8 +7,9 @@ using TomShane.Neoforce.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using MapEditor_TLCB.Actions;
 
-namespace MapEditor_TLCB.UndoTree
+namespace MapEditor_TLCB.CustomControls
 {
 
     class UndoTreeContainer : Container

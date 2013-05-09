@@ -103,7 +103,15 @@ namespace MapEditor_TLCB.Systems
 			{
 				m_lmbPressed = true;
 				ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
-				actionSys.StartGroupingActions();
+                string actionstring = "Tool"; Tool currentTool = m_toolSys.GetCurrentTool();
+                switch (currentTool)
+                {
+                    case Tool.ROAD_TOOL: actionstring = "Road House"; break;
+                    case Tool.ERASE_TOOL: actionstring = "Erase"; break;
+                    case Tool.PAINT_TOOL: actionstring = "Paint"; break;
+                    default: actionstring = "W-T-F!!!!!!"; break;
+                }
+				actionSys.StartGroupingActions(actionstring);
 			}
 			else if (e.State.LeftButton == ButtonState.Released && m_lmbPressed)
 			{
@@ -142,7 +150,7 @@ namespace MapEditor_TLCB.Systems
 						if (roadTilemap.getState(mapPos[0], mapPos[1]) != 0)
 						{
 							ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
-							actionSys.QueAction(changeTile);
+							actionSys.EnqueueAction(changeTile);
 							overWriteSinglesWithWalls(mapPos);
 						}
 					}
@@ -171,14 +179,14 @@ namespace MapEditor_TLCB.Systems
 									changeTile.state = index;
 									changeTile.affectedTilemap = singlesTilemap;
 
-									actionSys.QueAction(changeTile);
+                                    actionSys.EnqueueAction(changeTile);
 
 									ModifyTile roadChangeTile = new ModifyTile(world.SystemManager);
 									roadChangeTile.col = changeTile.col;
 									roadChangeTile.row = changeTile.row;
 									roadChangeTile.state = -1;
 									roadChangeTile.affectedTilemap = roadTilemap;
-									actionSys.QueAction(roadChangeTile);
+                                    actionSys.EnqueueAction(roadChangeTile);
 
 									//actionSys.StopGroupingActions();
 
@@ -203,8 +211,8 @@ namespace MapEditor_TLCB.Systems
 						singlesModify.state = -1;
 
 						ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
-						actionSys.QueAction(roadModify);
-						actionSys.QueAction(singlesModify);
+						actionSys.EnqueueAction(roadModify);
+						actionSys.EnqueueAction(singlesModify);
 					}
 				}
 			}
@@ -270,7 +278,7 @@ namespace MapEditor_TLCB.Systems
 			ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
 			for (int i = 0; i < 9; i++)
 			{
-				actionSys.QueAction(changeSingles[i]);
+				actionSys.EnqueueAction(changeSingles[i]);
 			}
 		}
 

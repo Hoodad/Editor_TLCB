@@ -25,24 +25,38 @@ namespace MapEditor_TLCB
 				groupID = p_ID;
 			}
 		}
-		private List<EditorAction> queuedActions;
-		private List<EditorAction> performedActions;
-		private List<EditorAction> redoActions;
+        private List<ActionInterface> queuedActions;
+		// private List<EditorAction> queuedActions;
+		// private List<EditorAction> performedActions;
+		// private List<EditorAction> redoActions;              Changed to undo tree structure
+        private UndoTree actionTree;
+
+
 		private bool grouping;
+        private string currentGroupName;
 
 		static int groupCount = 0;
+        private bool faultyStopCalled = false;
 
 		public ActionSystem()
 			: base()
 		{
-			queuedActions = new List<EditorAction>();
-			performedActions = new List<EditorAction>();
-			redoActions = new List<EditorAction>();
+			//queuedActions = new List<EditorAction>();
+			//performedActions = new List<EditorAction>();
+			//redoActions = new List<EditorAction>();
+            queuedActions = new List<ActionInterface>();
 			grouping = false;
 		}
 
+        public override void Initialize()
+        {
+            UndoTreeSystem undotreesystem = ((UndoTreeSystem)world.SystemManager.GetSystem<UndoTreeSystem>()[0]);
+            actionTree = undotreesystem.undoTreeContainer.m_undoTree; // <-- "super ugly, maybe fix, or not, whatever" -Jarl
+        }
+
 		public override void Process()
 		{
+            /* grouping disabled for now
 			if (queuedActions.Count > 0)
 			{
 				foreach (EditorAction editorAction in queuedActions)
@@ -53,27 +67,52 @@ namespace MapEditor_TLCB
 				queuedActions.Clear();
 				redoActions.Clear();
 			}
+             * */ 
+            
+            // if a faulty stop was encountered
+            // do a second check to make sure there are no
+            // buffered actions remaining
+            if (faultyStopCalled)
+            {
+                StopGroupingActions();
+                faultyStopCalled = false;
+            }
 		}
 
-		public void QueAction(ActionInterface p_action)
+		public void EnqueueAction(ActionInterface p_action)
 		{
+            /*
 			int groupID = -1;
 			if (grouping)
 			{
 				groupID = groupCount;
 			}
 			queuedActions.Add(new EditorAction(p_action, groupID));
+             * */
+
+            p_action.PerformAction();
+            // if (grouping)                        Does not work properly right now due to derpy events
+                queuedActions.Add(p_action);
+            /*else
+                actionTree.addAction(p_action);*/
 		}
 
 		public void UndoLastPerformedAction()
 		{
-			PerformAction(performedActions, redoActions);
+			// PerformAction(performedActions, redoActions);
+            List<ActionInterface> actions = actionTree.undo();
+            foreach (ActionInterface action in actions)
+                if (action!=null) action.PerformAction();
 		}
 
 		public void RedoLastAction()
 		{
-			PerformAction(redoActions, performedActions);
+			// PerformAction(redoActions, performedActions);
+            List<ActionInterface> actions = actionTree.redo();
+            foreach (ActionInterface action in actions)
+                if (action != null) action.PerformAction();
 		}
+        /*
 		private void PerformAction(List<EditorAction> p_originalActionOwner, List <EditorAction> p_newActionOwner)
 		{
 			bool hasPerformedAllAssociatedActions = false;
@@ -108,26 +147,43 @@ namespace MapEditor_TLCB
 				}
 			}
 		}
+         * */
 
-		public void StartGroupingActions()
+		public void StartGroupingActions(string p_groupName)
 		{
-			if (grouping)
-			{
-				Debug.Print("Warning, Action System was asked to START grouping actions while it was already grouping actions");
-			}
+            if (grouping)
+            {
+                Debug.Print("Warning, Action System was asked to START grouping actions while it was already grouping actions");
+            }
+            else
+            {
+                currentGroupName = p_groupName;
+            }
 			grouping = true;
 		}
 		public void StopGroupingActions()
 		{
-			if (!grouping)
-			{
-				Debug.Print("Warning, Action System was asked to STOP grouping actions while it was already STOPPED");
-			}
-			else
-			{
-				groupCount++;
-				grouping = false;
-			}
+            if (queuedActions.Count > 0)
+            {
+                if (!grouping)
+                {
+                    Debug.Print("Warning, Action System was asked to STOP grouping actions while it was already STOPPED");
+                }
+                else
+                {
+                    groupCount++;
+                    grouping = false;
+                    actionTree.addActionGroup(currentGroupName, queuedActions);
+                    currentGroupName = "Invalid";
+                    queuedActions.Clear();
+                    faultyStopCalled = false;
+                }
+            }
+            else
+            {
+                faultyStopCalled = true;
+                Debug.Print("Warning, Action System was asked to STOP grouping actions with no actions in group");
+            }
 		}
 
 		public void LoadSerialiazedActions()
@@ -186,9 +242,9 @@ namespace MapEditor_TLCB
 		}
 		public void ClearAllActions()
 		{
-			performedActions = new List<EditorAction>();
-			queuedActions = new List<EditorAction>();
-			redoActions = new List<EditorAction>();
+			//performedActions = new List<EditorAction>();
+			//queuedActions = new List<EditorAction>();
+			//redoActions = new List<EditorAction>();
 		}
 		private bool AreActionsInSameGroup(EditorAction p_actionRed, EditorAction p_actionBlue)
 		{

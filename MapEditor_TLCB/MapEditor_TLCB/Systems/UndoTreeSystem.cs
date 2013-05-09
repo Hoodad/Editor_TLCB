@@ -6,8 +6,9 @@ using TomShane.Neoforce.Controls;
 using Microsoft.Xna.Framework.Graphics;
 using Artemis;
 using Microsoft.Xna.Framework;
-using MapEditor_TLCB.UndoTree;
 using Microsoft.Xna.Framework.Content;
+using MapEditor_TLCB.CustomControls;
+using MapEditor_TLCB.Actions;
 
 namespace MapEditor_TLCB.Systems
 {
@@ -24,13 +25,14 @@ namespace MapEditor_TLCB.Systems
         ScrollBar sbHorz;
         private const int scrollMax = 100;
 
-        UndoTreeContainer undoTreeContainer;
+        public UndoTreeContainer undoTreeContainer;
         GraphicsDevice m_gd;
         ContentManager m_content;
 
         private int m_scrollWheelValue = 0;
         private int m_previousScrollWheelValue = 0;
 
+        private ActionSystem m_actionsystem;
 
         public UndoTreeSystem(Manager p_manager, GraphicsDevice p_gd, ContentManager p_content)
         {
@@ -42,6 +44,7 @@ namespace MapEditor_TLCB.Systems
         public override void Initialize()
         {
             ContentSystem contentSystem = ((ContentSystem)world.SystemManager.GetSystem<ContentSystem>()[0]);
+            m_actionsystem = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
             Viewport viewport = contentSystem.GetViewport();
 
             undoTreeWindow = new Window(manager);
@@ -148,6 +151,7 @@ namespace MapEditor_TLCB.Systems
 
         public override void Process()
         {
+            undoTreeContainer.m_undoTree.m_renderArea = undoTreeWindow.ClientRect;
             undoTreeContainer.Update((float)world.Delta / 1000.0f);
         }
         public void OnWindowClickBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
@@ -159,25 +163,25 @@ namespace MapEditor_TLCB.Systems
 
         public void UndoBehaviour(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
-            undoTreeContainer.m_undoTree.undo();
+            m_actionsystem.UndoLastPerformedAction();
         }
 
         public void RedoBehaviour(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
-            undoTreeContainer.m_undoTree.redo();
+            m_actionsystem.RedoLastAction();
         }
 
         public void ViewModeBehaviour(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
             RadioButton rb = sender as RadioButton;
-            if (undoTreeContainer.m_undoTree.getMode() == UndoTree.UndoTree.Mode.LIST)
+            if (undoTreeContainer.m_undoTree.getMode() == UndoTree.Mode.LIST)
             {
-                undoTreeContainer.m_undoTree.setMode(UndoTree.UndoTree.Mode.TREE); // checked
+                undoTreeContainer.m_undoTree.setMode(UndoTree.Mode.TREE); // checked
                 rb.Checked = true;
             }
             else
             {
-                undoTreeContainer.m_undoTree.setMode(UndoTree.UndoTree.Mode.LIST); // unchecked
+                undoTreeContainer.m_undoTree.setMode(UndoTree.Mode.LIST); // unchecked
                 rb.Checked = false;
             }
         }
@@ -185,14 +189,14 @@ namespace MapEditor_TLCB.Systems
         public void ZoomModeBehaviour(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
             RadioButton rb = sender as RadioButton;
-            if (undoTreeContainer.m_undoTree.getZoom() == UndoTree.UndoTree.Zoom.MINI)
+            if (undoTreeContainer.m_undoTree.getZoom() == UndoTree.Zoom.MINI)
             {
-                undoTreeContainer.m_undoTree.setZoom(UndoTree.UndoTree.Zoom.NORMAL); // unchecked
+                undoTreeContainer.m_undoTree.setZoom(UndoTree.Zoom.NORMAL); // unchecked
                 rb.Checked = false;
             }
             else
             {
-                undoTreeContainer.m_undoTree.setZoom(UndoTree.UndoTree.Zoom.MINI); // checked
+                undoTreeContainer.m_undoTree.setZoom(UndoTree.Zoom.MINI); // checked
                 rb.Checked = true;
             }
         }
