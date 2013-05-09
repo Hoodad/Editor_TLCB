@@ -146,7 +146,7 @@ namespace MapEditor_TLCB
         }
         public void update(float p_dt)
         {
-            if ((Keyboard.GetState().IsKeyDown(Keys.Up) || Mouse.GetState().RightButton == ButtonState.Pressed) && !m_altDown)
+            if ((Keyboard.GetState().IsKeyDown(Keys.Up) /*|| Mouse.GetState().RightButton == ButtonState.Pressed*/) && !m_altDown)
             {
                 m_altDown = true;
                 m_active = !m_active;
