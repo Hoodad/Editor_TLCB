@@ -211,8 +211,8 @@ namespace MapEditor_TLCB.Systems
 						singlesModify.state = -1;
 
 						ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
-						actionSys.QueAction(roadModify);
-						actionSys.QueAction(singlesModify);
+						actionSys.EnqueueAction(roadModify);
+						actionSys.EnqueueAction(singlesModify);
 					}
 				}
 			}
