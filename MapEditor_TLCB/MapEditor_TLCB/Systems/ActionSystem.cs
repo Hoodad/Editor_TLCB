@@ -101,16 +101,22 @@ namespace MapEditor_TLCB
 		{
 			// PerformAction(performedActions, redoActions);
             List<ActionInterface> actions = actionTree.undo();
-            foreach (ActionInterface action in actions)
-                if (action!=null) action.PerformAction();
+            if (actions != null)
+            {
+                foreach (ActionInterface action in actions)
+                    if (action != null) action.PerformAction();
+            }
 		}
 
 		public void RedoLastAction()
 		{
 			// PerformAction(redoActions, performedActions);
             List<ActionInterface> actions = actionTree.redo();
-            foreach (ActionInterface action in actions)
-                if (action != null) action.PerformAction();
+            if (actions != null)
+            {
+                foreach (ActionInterface action in actions)
+                    if (action != null) action.PerformAction();
+            }
 		}
         /*
 		private void PerformAction(List<EditorAction> p_originalActionOwner, List <EditorAction> p_newActionOwner)
