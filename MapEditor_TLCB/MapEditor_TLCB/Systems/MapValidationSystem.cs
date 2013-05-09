@@ -108,10 +108,20 @@ namespace MapEditor_TLCB.Systems
 					}
 				}
 			}
-			else
+			else {
 				return false;
+			}
 
-			if(walkables.Count == 0)
+			int walkableWithoutPills = 0;
+			foreach (int[] p in walkables)
+			{
+				int state = p_tilemap.getState(p[0], p[1]);
+				if(state >= 6 * 30) {
+					walkableWithoutPills++;
+				}
+			}
+
+			if(walkables.Count - walkableWithoutPills == 0)
 				return true;
 			return false;
 		}
