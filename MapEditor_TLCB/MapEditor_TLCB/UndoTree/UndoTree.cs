@@ -202,10 +202,14 @@ namespace MapEditor_TLCB.Actions
                     // draw action info as well
                     if (m_zoom != Zoom.MINI)
                     {
-                        if (currentRender.m_actionId != -1) action = m_actions[currentRender.m_actionId];
+                        if (currentRender.m_actionIds[0] != -1) action = m_actions[currentRender.m_actionIds[0]];
                         if (action != null)
                         {
-                            string info = action.GetInfo();
+                            string info = "";
+                            if (currentRender.m_actionIds.Count > 1)
+                                info = currentRender.m_info; // action group info
+                            else
+                                info = action.GetInfo();    // single action info
                             Vector2 strSz = m_font.MeasureString(info);
                             float scale = Math.Min(1.0f, m_nodeWidth / strSz.X);
                             strSz *= scale;
@@ -292,8 +296,7 @@ namespace MapEditor_TLCB.Actions
             return m_zoom;
         }
 
-        // have internal storage of actions for now for simplicity
-        // may want to have just one storage for them later
+        // add a single action
         public int addAction(ActionInterface p_action)
         {
             int nodeId = -1;                
@@ -318,28 +321,76 @@ namespace MapEditor_TLCB.Actions
             return nodeId;
         }
 
-        // Step down to child
-        public ActionInterface redo()
+        // add a group of actions
+        public int addActionGroup(string p_groupName,List<ActionInterface> p_actions)
         {
+            int nodeId = -1;
+            // store actions in list
+            List<int> actionIds = new List<int>();
+            foreach (ActionInterface n in p_actions)
+            {
+                int actionId = m_actions.add(n);
+                actionIds.Add(actionId);
+            }
+            //
+            if (m_currentNodeId >= 0)
+            {
+                ActionNode currentNodeRef = m_nodes[m_currentNodeId];
+                // and add its id to tree list
+                ActionNode groupNode = new ActionNode(actionIds, m_currentNodeId, currentNodeRef.m_level + 1);
+                groupNode.m_info = p_groupName;
+                nodeId = m_nodes.add(groupNode);
+                // then add new node index as child to parent
+                currentNodeRef.m_children.Add(nodeId);
+                // set starting position(render) for node
+                groupNode.m_renderPos = currentNodeRef.m_renderPos;
+            }
+            else // first node
+            {
+                ActionNode groupNode = new ActionNode(actionIds, m_currentNodeId, 0);
+                groupNode.m_info = p_groupName;
+                nodeId = m_nodes.add(groupNode);
+            }
+            m_currentNodeId = nodeId;
+            return nodeId;
+        }
+
+        // Step down to child
+        public List<ActionInterface> redo()
+        {
+            // step
             ActionNode currentNodeRef = m_nodes[m_currentNodeId];
             if (currentNodeRef.m_children.Count > 0)
             {
                 m_currentNodeId = currentNodeRef.m_children[0];
             }
+            // change current node
             currentNodeRef = m_nodes[m_currentNodeId];
-            return m_actions[currentNodeRef.m_actionId];
+            // build a list from the indices for returning
+            List<ActionInterface> actions = new List<ActionInterface>();
+            foreach (int n in currentNodeRef.m_actionIds)
+                actions.Add(m_actions[n]);
+            // return
+            return actions;
         }
 
         // step up to parent
-        public ActionInterface undo()
+        public List<ActionInterface> undo()
         {
+            // step
             ActionNode currentNodeRef = m_nodes[m_currentNodeId];
             if (currentNodeRef.m_parentId>=0)
             {
                 m_currentNodeId = currentNodeRef.m_parentId;
             }
+            // build a list from the indices for returning
+            List<ActionInterface> actions = new List<ActionInterface>();
+            foreach (int n in currentNodeRef.m_actionIds)
+                actions.Add(m_actions[n]);
+            // change current node
             currentNodeRef = m_nodes[m_currentNodeId];
-            return m_actions[currentNodeRef.m_actionId];
+            // return
+            return actions;
         }
 
         public void setCurrent(int p_id)

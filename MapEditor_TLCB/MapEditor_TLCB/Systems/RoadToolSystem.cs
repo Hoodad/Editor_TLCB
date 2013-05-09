@@ -101,7 +101,15 @@ namespace MapEditor_TLCB.Systems
 			if (e.State.LeftButton == ButtonState.Pressed)
 			{
 				ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
-				actionSys.StartGroupingActions();
+                string actionstring = "Tool"; Tool currentTool = m_toolSys.GetCurrentTool();
+                switch (currentTool)
+                {
+                    case Tool.ROAD_TOOL: actionstring = "Road House"; break;
+                    case Tool.ERASE_TOOL: actionstring = "Erase"; break;
+                    case Tool.PAINT_TOOL: actionstring = "Paint"; break;
+                    default: actionstring = "W-T-F!!!!!!"; break;
+                }
+				actionSys.StartGroupingActions(actionstring);
 			}
 			else if (e.State.LeftButton == ButtonState.Released)
 			{
