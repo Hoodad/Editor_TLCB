@@ -26,6 +26,7 @@ namespace MapEditor_TLCB.Systems
 
 				valid.pathsValid = validatePaths(tilemap);
 				valid.playerValid = validatePlayer(tilemap);
+				valid.switchesValid = validateSwitches(tilemap);
 
 				if (e.Tag == "mainTilemap")
 				{
@@ -41,6 +42,13 @@ namespace MapEditor_TLCB.Systems
 					}
 					else {
 						m_playerValidLabel.TextColor = Color.DarkRed;
+					}
+					
+					if(valid.switchesValid) {
+						m_switchesValidLabel.TextColor = Color.DarkGreen;
+					}
+					else {
+						m_switchesValidLabel.TextColor = Color.DarkRed;
 					}
 				}
 			}
@@ -145,6 +153,39 @@ namespace MapEditor_TLCB.Systems
 			return false;
 		}
 
+		private bool validateSwitches(Tilemap p_tilemap)
+		{
+			int[] numSwitches = new int[8]{0,0,0,0,0,0,0,0};
+			int[] numBlockades = new int[8]{0,0,0,0,0,0,0,0};
+
+			for (int y = 0; y < p_tilemap.getRows(); y++)
+			{
+				for (int x = 0; x < p_tilemap.getColumns(); x++)
+				{
+					int state = p_tilemap.getState(x, y);
+					if (state >= 6 * 30 && state < 6 * 30 + 8)
+					{
+						numSwitches[state - 6 * 30] += 1;
+					}
+					else if (state >= 7 * 30 && state < 7 * 30 + 8)
+					{
+						numBlockades[state - 7 * 30] += 1;
+					}
+				}
+			}
+
+			for (int i = 0; i < 8; i++)
+			{
+				if (numSwitches[i] > 0 || numBlockades[i] > 0)
+				{
+					if(numSwitches[i] == 0 || numBlockades[i] == 0)
+						return false;
+				}
+			}
+
+			return true;
+		}
+
 		public override void Initialize()
 		{
 			m_tilemapMapper = new ComponentMapper<Tilemap>(world);
@@ -176,6 +217,14 @@ namespace MapEditor_TLCB.Systems
 			m_playerValidLabel.Left = 10;
 			m_playerValidLabel.Top = 20;
 			m_playerValidLabel.TextColor = Color.DarkRed;
+
+			m_switchesValidLabel = new Label(m_manager);
+			m_switchesValidLabel.Init();
+			m_switchesValidLabel.Parent = m_validateControl;
+			m_switchesValidLabel.Text = "Switches";
+			m_switchesValidLabel.Left = 10;
+			m_switchesValidLabel.Top = 35;
+			m_switchesValidLabel.TextColor = Color.DarkRed;
 		}
 
 		ComponentMapper<Tilemap> m_tilemapMapper;
@@ -184,5 +233,6 @@ namespace MapEditor_TLCB.Systems
 		Window m_validateControl;
 		Label m_pathsValidLabel;
 		Label m_playerValidLabel;
+		Label m_switchesValidLabel;
 	}
 }

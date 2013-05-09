@@ -12,9 +12,11 @@ namespace MapEditor_TLCB.Components
 		{
 			pathsValid = false;
 			playerValid = false;
+			switchesValid = false;
 		}
 
 		public bool pathsValid;
 		public bool playerValid;
+		public bool switchesValid;
 	}
 }
