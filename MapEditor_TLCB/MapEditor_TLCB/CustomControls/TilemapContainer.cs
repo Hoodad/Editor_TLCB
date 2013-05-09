@@ -31,10 +31,12 @@ namespace MapEditor_TLCB.CustomControls
 
         private Point curr;
         private Point currSize;
+
         private Point marked;
         private Point markedSize;
 
         private int currentIndex;
+        private int markedIndex;
 
         private bool showAddToRadial = false;
 
@@ -190,8 +192,8 @@ namespace MapEditor_TLCB.CustomControls
         public IntPair GetCurrentIndex()
         {
             IntPair ip;
-            ip.i1 = currentIndex;
-            ip.i2 = currentIndex + (int)(currSize.Y / 32 - 1) * 30 + (int)(currSize.X / 32 - 1);
+            ip.i1 = markedIndex;
+            ip.i2 = markedIndex + (int)(markedSize.Y / 32 - 1) * 30 + (int)(markedSize.X / 32 - 1);
             return ip;
         }
 
@@ -236,6 +238,7 @@ namespace MapEditor_TLCB.CustomControls
             selectorRect.Y += 28;
             downPos = currentPos;
             marked = curr;
+            markedIndex = currentIndex;
             markedSize = currSize;
         }
         public Rectangle adjustToScroll()
@@ -274,9 +277,6 @@ namespace MapEditor_TLCB.CustomControls
                 if (p_pos.X < dest.X + dest.Width && p_pos.Y < dest.Y + dest.Height)
                     return true;
             return false;
-        }
-        public void addSelectionToRadial()
-        {
         }
 	}
 }

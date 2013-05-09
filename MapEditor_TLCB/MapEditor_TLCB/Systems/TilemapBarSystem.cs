@@ -104,14 +104,17 @@ namespace MapEditor_TLCB.Systems
             {
                 if (!tilemap.addToRadialTextVisible())
                 {
+                    tilemap.setSelectorRect();
                     CurrentToolSystem toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
                     toolSys.SetCurrentTool(CustomControls.Tool.PAINT_TOOL);
-                    tilemap.setSelectorRect();
                 }
                 else
                 {
-                    if (tilemap.pointInAddToRadialText(new Vector2(ev.Position.X-tilemapWindow.AbsoluteLeft, ev.Position.Y-tilemapWindow.AbsoluteTop)))
-                        tilemap.addSelectionToRadial();
+                    if (tilemap.pointInAddToRadialText(new Vector2(ev.Position.X - tilemapWindow.AbsoluteLeft, ev.Position.Y - tilemapWindow.AbsoluteTop)))
+                    {
+                        RadialMenuSystem radial = (RadialMenuSystem)world.SystemManager.GetSystem<RadialMenuSystem>()[0];
+                        radial.addCustomSelection(tilemap.GetCurrentIndex());
+                    }
                     tilemap.toggleAddToRadialText(Vector2.Zero);
                 }
             }

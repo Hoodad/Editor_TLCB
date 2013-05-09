@@ -26,7 +26,7 @@ namespace MapEditor_TLCB
         private SpriteFont m_font;
 
         private float rot = 0.0f;
-        private int arrowTarget = 0;
+        private int arrowTarget = -1;
 
         bool m_leftDown = false;
         bool m_rightDown = false;
@@ -48,6 +48,11 @@ namespace MapEditor_TLCB
             m_items = p_items;
             m_parent = p_parent;
             m_hotKey = Keys.None;
+        }
+
+        public void addItem(RadialMenuItem p_item)
+        {
+            m_items.Add(p_item);
         }
 
         public RadialMenu getParent()
@@ -307,6 +312,8 @@ namespace MapEditor_TLCB
             dir.Y = y;
 
             float rotPerObj = spawnArea / (m_items.Count - 1);
+            if (m_items.Count < 2)
+                rotPerObj = 0;
 
             sin = (float)Math.Sin(rotPerObj);
             cos = (float)Math.Cos(rotPerObj);
