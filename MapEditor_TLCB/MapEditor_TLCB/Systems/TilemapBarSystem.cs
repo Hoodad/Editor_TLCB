@@ -7,6 +7,8 @@ using TomShane.Neoforce.Controls;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using MapEditor_TLCB.CustomControls;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Content;
 
 namespace MapEditor_TLCB.Systems
 {
@@ -17,9 +19,12 @@ namespace MapEditor_TLCB.Systems
 
 		TilemapContainer tilemap;
 
-		public TilemapBarSystem(Manager p_manager)
+        ContentManager m_content;
+
+		public TilemapBarSystem(Manager p_manager, ContentManager p_content)
 		{
 			manager = p_manager;
+            m_content = p_content;
 		}
 
 		public override void Initialize()
@@ -42,7 +47,7 @@ namespace MapEditor_TLCB.Systems
             tilemapWindow.Click += new TomShane.Neoforce.Controls.EventHandler(OnWindowClickBehavior);
 			manager.Add(tilemapWindow);
 
-			tilemap = new TilemapContainer(manager);
+            tilemap = new TilemapContainer(manager, m_content);
 			tilemap.gridImage = contentSystem.LoadTexture("TileSheets/grid");
 			tilemap.tileSelectorImage = contentSystem.LoadTexture("TileSelector_v3");
 			tilemap.Parent = tilemapWindow;
@@ -73,8 +78,14 @@ namespace MapEditor_TLCB.Systems
 		}
         public void OnMouseDown(object sender, TomShane.Neoforce.Controls.MouseEventArgs e)
         {
-            CurrentToolSystem toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
-            tilemap.setDownPos(new Vector2(e.Position.X, e.Position.Y));
+            if (e.Button == MouseButton.Left)
+            {
+                if (!tilemap.addToRadialTextVisible())
+                {
+                    CurrentToolSystem toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
+                    tilemap.setDownPos(new Vector2(e.Position.X, e.Position.Y));
+                }
+            }
         }
         public void OnScroll(object sender, TomShane.Neoforce.Controls.MouseEventArgs e)
         {
@@ -88,9 +99,29 @@ namespace MapEditor_TLCB.Systems
         }
 		public void OnClick(object sender, TomShane.Neoforce.Controls.EventArgs e)
 		{
-            CurrentToolSystem toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
-            toolSys.SetCurrentTool(CustomControls.Tool.PAINT_TOOL);
-            tilemap.setSelectorRect();
+            TomShane.Neoforce.Controls.MouseEventArgs ev = (TomShane.Neoforce.Controls.MouseEventArgs)(e);
+            if (ev.Button == MouseButton.Left)
+            {
+                if (!tilemap.addToRadialTextVisible())
+                {
+                    tilemap.setSelectorRect();
+                    CurrentToolSystem toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
+                    toolSys.SetCurrentTool(CustomControls.Tool.PAINT_TOOL);
+                }
+                else
+                {
+                    if (tilemap.pointInAddToRadialText(new Vector2(ev.Position.X - tilemapWindow.AbsoluteLeft, ev.Position.Y - tilemapWindow.AbsoluteTop)))
+                    {
+                        RadialMenuSystem radial = (RadialMenuSystem)world.SystemManager.GetSystem<RadialMenuSystem>()[0];
+                        radial.addCustomSelection(tilemap.GetCurrentIndex());
+                    }
+                    tilemap.toggleAddToRadialText(Vector2.Zero);
+                }
+            }
+            else if (ev.Button == MouseButton.Right)
+            {
+                tilemap.toggleAddToRadialText(new Vector2(ev.Position.X-tilemapWindow.AbsoluteLeft, ev.Position.Y-tilemapWindow.AbsoluteTop));
+            }
 		}
         public void OnWindowClickBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {

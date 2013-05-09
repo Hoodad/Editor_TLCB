@@ -146,7 +146,7 @@ namespace MapEditor_TLCB
         }
         public void update(float p_dt)
         {
-            if ((Keyboard.GetState().IsKeyDown(Keys.Up) || Mouse.GetState().RightButton == ButtonState.Pressed) && !m_altDown)
+            if ((Keyboard.GetState().IsKeyDown(Keys.Up) || Mouse.GetState().MiddleButton == ButtonState.Pressed) && !m_altDown)
             {
                 m_altDown = true;
                 m_active = !m_active;
@@ -156,7 +156,7 @@ namespace MapEditor_TLCB
                 m_position.X = m_originalPosition.X = Mouse.GetState().X;
                 m_position.Y = m_originalPosition.Y = Mouse.GetState().Y;
             }
-            else if (!Keyboard.GetState().IsKeyDown(Keys.Up) && Mouse.GetState().RightButton != ButtonState.Pressed)
+            else if (!Keyboard.GetState().IsKeyDown(Keys.Up) && Mouse.GetState().MiddleButton != ButtonState.Pressed)
             {
                 m_altDown = false;
             }
@@ -277,6 +277,10 @@ namespace MapEditor_TLCB
                     }
                 }
             }
+        }
+        public RadialMenu getRadialMenu(int p_id)
+        {
+            return m_menus[p_id];
         }
         public void draw1(SpriteBatch p_sb)
         {

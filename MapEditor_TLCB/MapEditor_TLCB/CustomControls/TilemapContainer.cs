@@ -6,6 +6,8 @@ using TomShane.Neoforce.Controls;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Input;
 
 namespace MapEditor_TLCB.CustomControls
 {
@@ -29,20 +31,33 @@ namespace MapEditor_TLCB.CustomControls
 
         private Point curr;
         private Point currSize;
+
         private Point marked;
         private Point markedSize;
 
         private int currentIndex;
+        private int markedIndex;
+
+        private bool showAddToRadial = false;
 
         Vector2 downPos;
         Vector2 currentPos;
 
-		public TilemapContainer(Manager p_manager)
+        SpriteFont m_font;
+
+        Vector2 addToRadialTextPos;
+
+        Texture2D whiteDot;
+
+		public TilemapContainer(Manager p_manager, ContentManager p_content)
 			: base(p_manager)
 		{
 			gridColor = Color.White;
 
             currentIndex = 0;
+
+            m_font = p_content.Load<SpriteFont>("Arial10");
+            whiteDot = p_content.Load<Texture2D>("white_dot");
 		}
 
 		protected override void DrawControl(TomShane.Neoforce.Controls.Renderer renderer, Microsoft.Xna.Framework.Rectangle rect, Microsoft.Xna.Framework.GameTime gameTime)
@@ -58,10 +73,38 @@ namespace MapEditor_TLCB.CustomControls
                 source.Height = currSize.Y;
 
                 Rectangle highlight = adjustToScroll2();
-                renderer.Draw(tilemapImage, highlight, source, Color.White);
+
+                if (!showAddToRadial)
+                    renderer.Draw(tilemapImage, highlight, source, Color.White);
 			}
 			renderer.Draw(gridImage, rect, gridColor);
             renderer.Draw(tileSelectorImage, selectRect, Color.White);
+            if (showAddToRadial)
+            {
+                string s = "Add Selection to Radial Menu";
+                Rectangle dest;
+                dest.X = (int)addToRadialTextPos.X-2;
+                dest.Y = (int)addToRadialTextPos.Y-2;
+                dest.Width = (int)m_font.MeasureString(s).X+4;
+                dest.Height = (int)m_font.MeasureString(s).Y+4;
+
+                float mouseX = Mouse.GetState().X - windowParent.AbsoluteLeft;
+                float mouseY = Mouse.GetState().Y - windowParent.AbsoluteTop;
+
+                Microsoft.Xna.Framework.Color drawColor = Color.White;
+
+                if (mouseX > dest.X && mouseY > dest.Y)
+                    if (mouseX < dest.X + dest.Width && mouseY < dest.Y + dest.Height)
+                        drawColor = Color.Green;
+
+                renderer.Draw(whiteDot, dest, Color.Black);
+                dest.X = (int)addToRadialTextPos.X ;
+                dest.Y = (int)addToRadialTextPos.Y;
+                dest.Width = (int)m_font.MeasureString(s).X;
+                dest.Height = (int)m_font.MeasureString(s).Y;
+                renderer.Draw(whiteDot, dest, drawColor);
+                renderer.DrawString(m_font, s, (int)addToRadialTextPos.X, (int)addToRadialTextPos.Y, Color.Black);
+            }
 		}
 
 		/*protected override void OnMouseMove(TomShane.Neoforce.Controls.MouseEventArgs e)
@@ -149,8 +192,8 @@ namespace MapEditor_TLCB.CustomControls
         public IntPair GetCurrentIndex()
         {
             IntPair ip;
-            ip.i1 = currentIndex;
-            ip.i2 = currentIndex + (int)(currSize.Y / 32 - 1) * 30 + (int)(currSize.X / 32 - 1);
+            ip.i1 = markedIndex;
+            ip.i2 = markedIndex + (int)(markedSize.Y / 32 - 1) * 30 + (int)(markedSize.X / 32 - 1);
             return ip;
         }
 
@@ -195,6 +238,7 @@ namespace MapEditor_TLCB.CustomControls
             selectorRect.Y += 28;
             downPos = currentPos;
             marked = curr;
+            markedIndex = currentIndex;
             markedSize = currSize;
         }
         public Rectangle adjustToScroll()
@@ -210,6 +254,29 @@ namespace MapEditor_TLCB.CustomControls
             rect.X -= windowParent.ScrollBarValue.Horizontal;
             rect.Y -= windowParent.ScrollBarValue.Vertical;
             return rect;
+        }
+        public void toggleAddToRadialText(Vector2 p_pos)
+        {
+            showAddToRadial = !showAddToRadial;
+            addToRadialTextPos = p_pos;
+        }
+        public bool addToRadialTextVisible()
+        {
+            return showAddToRadial;
+        }
+        public bool pointInAddToRadialText(Vector2 p_pos)
+        {
+            string s = "Add Selection to Radial Menu";
+            Rectangle dest;
+            dest.X = (int)addToRadialTextPos.X-2;
+            dest.Y = (int)addToRadialTextPos.Y-2;
+            dest.Width = (int)m_font.MeasureString(s).X+4;
+            dest.Height = (int)m_font.MeasureString(s).Y+4;
+
+            if (p_pos.X > dest.X && p_pos.Y > dest.Y)
+                if (p_pos.X < dest.X + dest.Width && p_pos.Y < dest.Y + dest.Height)
+                    return true;
+            return false;
         }
 	}
 }

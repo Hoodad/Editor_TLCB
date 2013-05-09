@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using MapEditor_TLCB.CustomControls;
 
 
 
@@ -25,6 +26,10 @@ namespace MapEditor_TLCB.Systems
 		ContentManager m_content;
 
         List<EventData> m_events;
+
+        Texture2D m_tilemap;
+
+        int customID;
 
 		public RadialMenuSystem(GraphicsDevice p_device, ContentManager p_content)
 		{
@@ -54,7 +59,9 @@ namespace MapEditor_TLCB.Systems
 
             Texture2D road = m_content.Load<Texture2D>("RoadToolIcon");
 
-            Texture2D tilemap = m_content.Load<Texture2D>("TileSheets/tilemap_garden");
+            m_tilemap = m_content.Load<Texture2D>("TileSheets/tilemap_garden");
+
+            Texture2D question = m_content.Load<Texture2D>("Question");
 
             m_events = new List<EventData>();
             int start = 3 * 30;
@@ -62,9 +69,17 @@ namespace MapEditor_TLCB.Systems
             for (int i = 0; i < 6; i++)
             {
                 for (int j = 0; j < 3; j++)
-                    m_events.Add(new EventData(setToolCallback, start + i + j * 30));
+                {
+                    IntPair pair;
+                    pair.i1 = start + i + j * 30;
+                    pair.i2 = start + i + j * 30;
+                    m_events.Add(new EventData(setToolCallback, pair));
+                }
             }
-            m_events.Add(new EventData(setToolCallback, start + 7));
+            IntPair pair2;
+            pair2.i1 = start + 7;
+            pair2.i2 = start + 7;
+            m_events.Add(new EventData(setToolCallback, pair2));
 
 			EventData tempEvent = new EventData(null, null);
 
@@ -86,33 +101,38 @@ namespace MapEditor_TLCB.Systems
 
             //ROAD TILES MENU
             List<RadialMenuItem> roadTileList = new List<RadialMenuItem>();
-            roadTileList.Add(new RadialMenuItem("Upper Left", tilemap, m_events[0], new Rectangle(0, 96, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Vertical", tilemap, m_events[1], new Rectangle(0, 128, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Lower Left", tilemap, m_events[2], new Rectangle(0, 160, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Horizontal", tilemap, m_events[3], new Rectangle(32, 96, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Single Dot", tilemap, m_events[4], new Rectangle(32, 128, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Horizontal", tilemap, m_events[5], new Rectangle(32, 160, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Upper Right", tilemap, m_events[6], new Rectangle(64, 96, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Vertical", tilemap, m_events[7], new Rectangle(64, 128, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Lower Right", tilemap, m_events[8], new Rectangle(64, 160, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Upper Left", m_tilemap, m_events[0], new Rectangle(0, 96, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Vertical", m_tilemap, m_events[1], new Rectangle(0, 128, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Lower Left", m_tilemap, m_events[2], new Rectangle(0, 160, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Horizontal", m_tilemap, m_events[3], new Rectangle(32, 96, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Single Dot", m_tilemap, m_events[4], new Rectangle(32, 128, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Horizontal", m_tilemap, m_events[5], new Rectangle(32, 160, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Upper Right", m_tilemap, m_events[6], new Rectangle(64, 96, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Vertical", m_tilemap, m_events[7], new Rectangle(64, 128, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Lower Right", m_tilemap, m_events[8], new Rectangle(64, 160, 32, 32), 0.4f));
 
-            roadTileList.Add(new RadialMenuItem("Dead End Left", tilemap, m_events[9], new Rectangle(96, 96, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Dead End Up", tilemap, m_events[10], new Rectangle(96, 128, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Dead End Down", tilemap, m_events[11], new Rectangle(96, 160, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Dead End Right", tilemap, m_events[12], new Rectangle(128, 96, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("T Up Right Down", tilemap, m_events[13], new Rectangle(128, 128, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Crossing", tilemap, m_events[14], new Rectangle(128, 160, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("T Left Right Down", tilemap, m_events[15], new Rectangle(160, 96, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("T Left Up Down", tilemap, m_events[16], new Rectangle(160, 128, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("T Left Up Right", tilemap, m_events[17], new Rectangle(160, 160, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Horizontal", tilemap, m_events[18], new Rectangle(224, 96, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Dead End Left", m_tilemap, m_events[9], new Rectangle(96, 96, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Dead End Up", m_tilemap, m_events[10], new Rectangle(96, 128, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Dead End Down", m_tilemap, m_events[11], new Rectangle(96, 160, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Dead End Right", m_tilemap, m_events[12], new Rectangle(128, 96, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("T Up Right Down", m_tilemap, m_events[13], new Rectangle(128, 128, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Crossing", m_tilemap, m_events[14], new Rectangle(128, 160, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("T Left Right Down", m_tilemap, m_events[15], new Rectangle(160, 96, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("T Left Up Down", m_tilemap, m_events[16], new Rectangle(160, 128, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("T Left Up Right", m_tilemap, m_events[17], new Rectangle(160, 160, 32, 32), 0.4f));
+            roadTileList.Add(new RadialMenuItem("Horizontal", m_tilemap, m_events[18], new Rectangle(224, 96, 32, 32), 0.4f));
             RadialMenu RoadTileMenu = new RadialMenu(m_device, m_content, roadTileList, road, null);
+
+            //CUSTOM MENU
+            List<RadialMenuItem> customList = new List<RadialMenuItem>();
+            RadialMenu customMenu = new RadialMenu(m_device, m_content, customList, question, null);
 
             //COLLECTION MENU
 			List<RadialMenuItem> collectionList = new List<RadialMenuItem>();
             collectionList.Add(new RadialMenuItem("Characters", characters, charactersMenu));
             collectionList.Add(new RadialMenuItem("Power-Ups", powerups, powerupsMenu));
-            collectionList.Add(new RadialMenuItem("Road Tiles", tilemap, RoadTileMenu, new Rectangle(0, 96, 96, 96)));
+            collectionList.Add(new RadialMenuItem("Road Tiles", m_tilemap, RoadTileMenu, new Rectangle(0, 96, 96, 96)));
+            collectionList.Add(new RadialMenuItem("Custom Selections", question, customMenu));
             RadialMenu collectionMenu = new RadialMenu(m_device, m_content, collectionList, tileCollection, null);
 
             //MAIN MENU
@@ -129,6 +149,7 @@ namespace MapEditor_TLCB.Systems
             charactersMenu.setParent(collectionMenu);
             powerupsMenu.setParent(collectionMenu);
             RoadTileMenu.setParent(collectionMenu);
+            customMenu.setParent(collectionMenu);
 
 
             //ADD ALL MENUS
@@ -137,6 +158,8 @@ namespace MapEditor_TLCB.Systems
             m_context.addRadialMenu(charactersMenu);
             m_context.addRadialMenu(powerupsMenu);
             m_context.addRadialMenu(RoadTileMenu);
+            m_context.addRadialMenu(customMenu);
+            customID = 5;
 		}
 
 		public override void Process()
@@ -166,9 +189,24 @@ namespace MapEditor_TLCB.Systems
             toolSys.SetCurrentTool(CustomControls.Tool.PAINT_TOOL);
 
             MapEditor_TLCB.CustomControls.IntPair pair;
-            pair.i1 = (int)p_toolIndex;
-            pair.i2 = (int)p_toolIndex;
+            pair = (IntPair)p_toolIndex;
             toolSys.SetCurrentDrawToolIndex(pair);
+        }
+        public void addCustomSelection(IntPair p_selection)
+        {
+            EventData ev = new EventData(setToolCallback, p_selection);
+            Vector2 min = new Vector2(p_selection.i1 - 30 * (p_selection.i1 / 30), p_selection.i1 / 30);
+            Vector2 max = new Vector2(p_selection.i2 - 30 * (p_selection.i2 / 30), p_selection.i2 / 30);
+
+            Rectangle rect;
+            rect.X = (int)(32 * min.X);
+            rect.Width = 32 * (int)(max.X - min.X + 1);
+            rect.Y = (int)(32 * min.Y);
+            rect.Height = 32 * (int)(max.Y - min.Y + 1);
+
+            RadialMenu customMenu = m_context.getRadialMenu(customID);
+            RadialMenuItem newItem = new RadialMenuItem("Custom Selection", m_tilemap, ev, rect);
+            customMenu.addItem(newItem);
         }
 	}
 }
