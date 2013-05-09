@@ -138,6 +138,7 @@ namespace MapEditor_TLCB.Systems
 			tileMapGarden.Left = buttonSize * 0 + 8 * 1;
 			tileMapGarden.Parent = possibleMaps;
 			tileMapGarden.tilemap = contentSystem.LoadTexture("TileSheets/tilemap_garden");
+			tileMapGarden.tilemap.Name = "Tilemap_garden";
 			tileMapGarden.Click += new TomShane.Neoforce.Controls.EventHandler(OnTilemapButtonClickBehavior);
 			tileMapGarden.MouseOver += new MouseEventHandler(OnTilemapButtonMouseOverBehavior);
 			tileMapGarden.FocusGained += new TomShane.Neoforce.Controls.EventHandler(OnTilemapButtonMouseOverBehavior);
@@ -154,6 +155,7 @@ namespace MapEditor_TLCB.Systems
 			tileMapCellar.Left = buttonSize * 1 + 8 * 2;
 			tileMapCellar.Parent = possibleMaps;
 			tileMapCellar.tilemap = contentSystem.LoadTexture("TileSheets/tilemap_winecellar");
+			tileMapCellar.tilemap.Name = "Tilemap_winecellar";
 			tileMapCellar.Click += new TomShane.Neoforce.Controls.EventHandler(OnTilemapButtonClickBehavior);
 			tileMapCellar.MouseOver += new MouseEventHandler(OnTilemapButtonMouseOverBehavior);
 			tileMapCellar.FocusGained += new TomShane.Neoforce.Controls.EventHandler(OnTilemapButtonMouseOverBehavior);

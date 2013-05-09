@@ -100,6 +100,32 @@ namespace MapEditor_TLCB.Components
 				}
 			}
 		}
+
+		public bool isWalkable(int p_x, int p_y)
+		{
+			int state = getState(p_x, p_y);
+			if(state >= 90 && state < 30*17)
+				return true;
+			return false;
+		}
+
+		public  bool connectedTo(int p_x, int p_y, int p_rangeFrom, int p_rangeTo)
+		{
+			int[] states = new int[4] {
+				getState(p_x, p_y - 1),
+				getState(p_x + 1, p_y),
+				getState(p_x, p_y + 1),
+				getState(p_x - 1, p_y)
+			};
+
+			for (int i = 0; i < 4; i++)
+			{
+				if(states[i] >= p_rangeFrom && states[i] < p_rangeTo)
+					return true;
+			}
+
+			return false;
+		}
 		
 		private int columns;
 		private int rows;

@@ -176,7 +176,8 @@ namespace MapEditor_TLCB
 			while (redoActions.Count > 0)
 			{
 				RedoLastAction();
-			}*/
+			}
+			*/
 		}
 		public void SaveSerialiazedActions()
 		{
