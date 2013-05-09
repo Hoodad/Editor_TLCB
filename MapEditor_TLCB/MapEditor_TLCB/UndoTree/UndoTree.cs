@@ -319,23 +319,27 @@ namespace MapEditor_TLCB.Actions
         }
 
         // Step down to child
-        public void redo()
+        public ActionInterface redo()
         {
             ActionNode currentNodeRef = m_nodes[m_currentNodeId];
             if (currentNodeRef.m_children.Count > 0)
             {
                 m_currentNodeId = currentNodeRef.m_children[0];
             }
+            currentNodeRef = m_nodes[m_currentNodeId];
+            return m_actions[currentNodeRef.m_actionId];
         }
 
         // step up to parent
-        public void undo()
+        public ActionInterface undo()
         {
             ActionNode currentNodeRef = m_nodes[m_currentNodeId];
             if (currentNodeRef.m_parentId>=0)
             {
                 m_currentNodeId = currentNodeRef.m_parentId;
             }
+            currentNodeRef = m_nodes[m_currentNodeId];
+            return m_actions[currentNodeRef.m_actionId];
         }
 
         public void setCurrent(int p_id)

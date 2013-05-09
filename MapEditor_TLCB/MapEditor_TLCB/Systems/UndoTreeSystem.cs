@@ -32,6 +32,7 @@ namespace MapEditor_TLCB.Systems
         private int m_scrollWheelValue = 0;
         private int m_previousScrollWheelValue = 0;
 
+        private ActionSystem m_actionsystem;
 
         public UndoTreeSystem(Manager p_manager, GraphicsDevice p_gd, ContentManager p_content)
         {
@@ -43,6 +44,7 @@ namespace MapEditor_TLCB.Systems
         public override void Initialize()
         {
             ContentSystem contentSystem = ((ContentSystem)world.SystemManager.GetSystem<ContentSystem>()[0]);
+            m_actionsystem = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
             Viewport viewport = contentSystem.GetViewport();
 
             undoTreeWindow = new Window(manager);
@@ -161,12 +163,12 @@ namespace MapEditor_TLCB.Systems
 
         public void UndoBehaviour(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
-            undoTreeContainer.m_undoTree.undo();
+            m_actionsystem.UndoLastPerformedAction();
         }
 
         public void RedoBehaviour(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
-            undoTreeContainer.m_undoTree.redo();
+            m_actionsystem.RedoLastAction();
         }
 
         public void ViewModeBehaviour(object sender, TomShane.Neoforce.Controls.EventArgs e)

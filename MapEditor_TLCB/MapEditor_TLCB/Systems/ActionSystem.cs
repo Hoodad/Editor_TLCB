@@ -83,13 +83,15 @@ namespace MapEditor_TLCB
 		public void UndoLastPerformedAction()
 		{
 			// PerformAction(performedActions, redoActions);
-            actionTree.undo();
+            ActionInterface action = actionTree.undo();
+            if (action!=null) action.PerformAction();
 		}
 
 		public void RedoLastAction()
 		{
 			// PerformAction(redoActions, performedActions);
-            actionTree.redo();
+            ActionInterface action = actionTree.redo();
+            if (action!=null) action.PerformAction();
 		}
 		private void PerformAction(List<EditorAction> p_originalActionOwner, List <EditorAction> p_newActionOwner)
 		{
