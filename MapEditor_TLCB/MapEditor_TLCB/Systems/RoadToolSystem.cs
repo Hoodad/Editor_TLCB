@@ -103,7 +103,15 @@ namespace MapEditor_TLCB.Systems
 			{
 				m_lmbPressed = true;
 				ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
-				actionSys.StartGroupingActions();
+                string actionstring = "Tool"; Tool currentTool = m_toolSys.GetCurrentTool();
+                switch (currentTool)
+                {
+                    case Tool.ROAD_TOOL: actionstring = "Road House"; break;
+                    case Tool.ERASE_TOOL: actionstring = "Erase"; break;
+                    case Tool.PAINT_TOOL: actionstring = "Paint"; break;
+                    default: actionstring = "W-T-F!!!!!!"; break;
+                }
+				actionSys.StartGroupingActions(actionstring);
 			}
 			else if (e.State.LeftButton == ButtonState.Released && m_lmbPressed)
 			{
@@ -178,7 +186,7 @@ namespace MapEditor_TLCB.Systems
 									roadChangeTile.row = changeTile.row;
 									roadChangeTile.state = -1;
 									roadChangeTile.affectedTilemap = roadTilemap;
-									actionSys.QueAction(roadChangeTile);
+                                    actionSys.EnqueueAction(roadChangeTile);
 
 									//actionSys.StopGroupingActions();
 
