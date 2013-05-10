@@ -359,17 +359,18 @@ namespace MapEditor_TLCB.Actions
         public List<ActionInterface> redo()
         {
             // step
+            List<ActionInterface> actions = null;
             ActionNode currentNodeRef = m_nodes[m_currentNodeId];
             if (currentNodeRef.m_children.Count > 0)
             {
-                m_currentNodeId = currentNodeRef.m_children[0];
+                m_currentNodeId = currentNodeRef.m_children[0];           
+                // change current node
+                currentNodeRef = m_nodes[m_currentNodeId];
+                // build a list from the indices for returning
+                actions = new List<ActionInterface>();
+                foreach (int n in currentNodeRef.m_actionIds)
+                    actions.Add(m_actions[n]);
             }
-            // change current node
-            currentNodeRef = m_nodes[m_currentNodeId];
-            // build a list from the indices for returning
-            List<ActionInterface> actions = new List<ActionInterface>();
-            foreach (int n in currentNodeRef.m_actionIds)
-                actions.Add(m_actions[n]);
             // return
             return actions;
         }
@@ -378,17 +379,18 @@ namespace MapEditor_TLCB.Actions
         public List<ActionInterface> undo()
         {
             // step
+            List<ActionInterface> actions = null;
             ActionNode currentNodeRef = m_nodes[m_currentNodeId];
             if (currentNodeRef.m_parentId>=0)
             {
-                m_currentNodeId = currentNodeRef.m_parentId;
+                m_currentNodeId = currentNodeRef.m_parentId;            
+                // build a list from the indices for returning
+                actions = new List<ActionInterface>();
+                foreach (int n in currentNodeRef.m_actionIds)
+                    actions.Add(m_actions[n]);
+                // change current node
+                currentNodeRef = m_nodes[m_currentNodeId];
             }
-            // build a list from the indices for returning
-            List<ActionInterface> actions = new List<ActionInterface>();
-            foreach (int n in currentNodeRef.m_actionIds)
-                actions.Add(m_actions[n]);
-            // change current node
-            currentNodeRef = m_nodes[m_currentNodeId];
             // return
             return actions;
         }

@@ -275,11 +275,11 @@ namespace MapEditor_TLCB.Systems
 			changeSingles[8].state = -1;
 			changeSingles[8].affectedTilemap = singlesTilemap;
 
-			//ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
-			//for (int i = 0; i < 9; i++)
-			//{
-			//	actionSys.EnqueueAction(changeSingles[i]);
-			//}
+			ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
+			for (int i = 0; i < 9; i++)
+			{
+				actionSys.EnqueueAction(changeSingles[i]);
+			}
 		}
 
 		private void updateTilemapUsingSingles(Tilemap p_mainTilemap, Tilemap p_singlesTilemap)
