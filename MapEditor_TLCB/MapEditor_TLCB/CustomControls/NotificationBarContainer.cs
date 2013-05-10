@@ -14,6 +14,8 @@ namespace MapEditor_TLCB.CustomControls
 
         private NotificationBar m_bar;
 
+        private bool m_hasFocus;
+
         public NotificationBarContainer(Manager p_manager, Window p_parent, NotificationBar p_bar)
 			: base(p_manager)
 		{
@@ -23,15 +25,16 @@ namespace MapEditor_TLCB.CustomControls
         
 		protected override void DrawControl(TomShane.Neoforce.Controls.Renderer renderer, Microsoft.Xna.Framework.Rectangle rect, Microsoft.Xna.Framework.GameTime gameTime)
 		{
-            m_bar.draw(renderer.SpriteBatch, Height, new Vector2(m_parentWindow.AbsoluteLeft, m_parentWindow.AbsoluteTop));
+            m_bar.draw(renderer.SpriteBatch, Height, new Vector2(m_parentWindow.AbsoluteLeft, m_parentWindow.AbsoluteTop), m_hasFocus);
 		}
 
 		protected override void OnMouseMove(TomShane.Neoforce.Controls.MouseEventArgs e)
 		{
 			Refresh();
 		}
-        public void Update(float p_dt)
+        public void Update(float p_dt, bool p_hasFocus)
         {
+            m_hasFocus = p_hasFocus;
             m_bar.update(p_dt, new Vector2(m_parentWindow.AbsoluteLeft, m_parentWindow.AbsoluteTop));
         }
         public void AddNotification(Notification p_notification)

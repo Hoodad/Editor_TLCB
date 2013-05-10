@@ -177,7 +177,7 @@ namespace MapEditor_TLCB.Systems
             m_radialWindow.Parent = null;
             //m_canvasWindow.BorderVisible = false;
             m_radialWindow.Resizable = false;
-            m_radialWindow.StayOnBack = false;
+            m_radialWindow.StayOnTop = true;
             m_radialWindow.RadialContext = m_context;
             m_radialWindow.DoubleClicks = false;
             m_radialWindow.Click += new TomShane.Neoforce.Controls.EventHandler(radialWindow_MouseClick);

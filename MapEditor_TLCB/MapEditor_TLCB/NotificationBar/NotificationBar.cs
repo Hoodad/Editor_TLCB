@@ -251,12 +251,12 @@ namespace MapEditor_TLCB
                 addNotification(note);
             }
         }
-        public void draw(SpriteBatch p_sb, int p_height, Vector2 p_topLeft)
+        public void draw(SpriteBatch p_sb, int p_height, Vector2 p_topLeft, bool p_hasFocus)
         {
 
             //p_sb.Draw(m_borderTexture, m_position, Color.Black);
 
-            draw3(p_sb, p_height, p_topLeft);
+            draw3(p_sb, p_height, p_topLeft, p_hasFocus);
 
             //Pin
             /*Rectangle dest;
@@ -304,7 +304,7 @@ namespace MapEditor_TLCB
             p_sb.DrawString(m_font, text, m_position - new Vector2(-50 + textSize.X*0.5f, 12.5f + textSize.Y*0.5f), textColor);*/
 
         }
-        public void draw3(SpriteBatch p_sb, int p_height, Vector2 p_topLeft)
+        public void draw3(SpriteBatch p_sb, int p_height, Vector2 p_topLeft, bool p_hasFocus)
         {
             Color warningColor = new Color(255, 242, 184, 255);
             Color successColor = new Color(185, 255, 182, 255);
@@ -375,7 +375,7 @@ namespace MapEditor_TLCB
 
                     Vector2 mousePos = new Vector2(Mouse.GetState().X - p_topLeft.X, Mouse.GetState().Y - p_topLeft.Y);
 
-                    if (rect.Contains((int)mousePos.X, (int)mousePos.Y))
+                    if (rect.Contains((int)mousePos.X, (int)mousePos.Y) && p_hasFocus)
                     {
                         barColor = highlight;
                     }

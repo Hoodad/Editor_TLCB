@@ -22,6 +22,8 @@ namespace MapEditor_TLCB.Systems
 
         int originalWidth;
 
+        bool m_focus = false;
+
 		public NotificationBarSystem(Manager p_manager, GraphicsDevice p_device, ContentManager p_content)
 		{
 			manager = p_manager;
@@ -58,10 +60,12 @@ namespace MapEditor_TLCB.Systems
             notificationBar.Height = 160;// tilemap.tilemapImage.Height;
             notificationBar.Parent = notificationWindow;
             notificationBar.CanFocus = false;
+            notificationBar.MouseOver += new TomShane.Neoforce.Controls.MouseEventHandler(OnGainFocus);
+            notificationBar.MouseOut += new TomShane.Neoforce.Controls.MouseEventHandler(OnLoseFocus);
 		}
 		public override void Process()
 		{
-            notificationBar.Update(World.Delta / 1000.0f);
+            notificationBar.Update(World.Delta / 1000.0f, m_focus);
    
             
             notificationBar.Width = notificationWindow.Width;
@@ -80,6 +84,14 @@ namespace MapEditor_TLCB.Systems
         {
             Notification n = new Notification("The notification bar shows important information, warnings and errors.", NotificationType.INFO);
             AddNotification(n);
+        }
+        public void OnGainFocus(object sender, TomShane.Neoforce.Controls.EventArgs e)
+        {
+            m_focus = true;
+        }
+        public void OnLoseFocus(object sender, TomShane.Neoforce.Controls.EventArgs e)
+        {
+            m_focus = false;
         }
 	}
 }
