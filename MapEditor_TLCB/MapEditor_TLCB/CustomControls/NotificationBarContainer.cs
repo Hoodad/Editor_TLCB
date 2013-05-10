@@ -35,7 +35,7 @@ namespace MapEditor_TLCB.CustomControls
         public void Update(float p_dt, bool p_hasFocus)
         {
             m_hasFocus = p_hasFocus;
-            m_bar.update(p_dt, new Vector2(m_parentWindow.AbsoluteLeft, m_parentWindow.AbsoluteTop));
+            m_bar.update(p_dt, new Vector2(m_parentWindow.AbsoluteLeft, m_parentWindow.AbsoluteTop), Height, m_hasFocus);
         }
         public void AddNotification(Notification p_notification)
         {

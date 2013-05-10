@@ -52,7 +52,7 @@ namespace MapEditor_TLCB.Systems
 			notificationWindow.IconVisible = false;
 			manager.Add(notificationWindow);
 
-            NotificationBar data = new NotificationBar(m_device, m_content, originalWidth, 25);
+            NotificationBar data = new NotificationBar(m_device, m_content, originalWidth-15, 25);
 
             notificationBar = new NotificationBarContainer(manager, notificationWindow, data);
             notificationBar.Init();
