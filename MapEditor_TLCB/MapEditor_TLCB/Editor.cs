@@ -105,7 +105,7 @@ namespace MapEditor_TLCB
 			systemManager.SetSystem(new RoadToolSystem(), ExecutionType.Update);
 			systemManager.SetSystem(new CurrentToolSystem(manager, GraphicsDevice, Content), ExecutionType.Update);
 			systemManager.SetSystem(new StartupDialogSystem(manager), ExecutionType.Update);
-			systemManager.SetSystem(new RadialMenuSystem(GraphicsDevice, Content), ExecutionType.Update);
+			systemManager.SetSystem(new RadialMenuSystem(GraphicsDevice, Content, manager), ExecutionType.Update);
 			systemManager.SetSystem(new ExportMapSystem(), ExecutionType.Update); //Have to be run after tilemaphandling systems
 			systemManager.SetSystem(new MapValidationSystem(manager), ExecutionType.Update);
 			

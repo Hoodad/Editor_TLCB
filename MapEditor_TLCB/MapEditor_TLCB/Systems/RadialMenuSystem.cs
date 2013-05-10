@@ -31,10 +31,15 @@ namespace MapEditor_TLCB.Systems
 
         int customID;
 
-		public RadialMenuSystem(GraphicsDevice p_device, ContentManager p_content)
+
+        RadialWindow m_radialWindow;
+        Manager m_manager;
+
+		public RadialMenuSystem(GraphicsDevice p_device, ContentManager p_content, Manager p_manager)
 		{
 			m_device = p_device;
 			m_content = p_content;
+            m_manager = p_manager;
 		}
 
 		public override void Initialize()
@@ -160,6 +165,24 @@ namespace MapEditor_TLCB.Systems
             m_context.addRadialMenu(RoadTileMenu);
             m_context.addRadialMenu(customMenu);
             customID = 5;
+
+
+
+            m_radialWindow = new RadialWindow(m_manager);
+            m_radialWindow.Init();
+            m_radialWindow.Left = 0;
+            m_radialWindow.Top = 0;
+            m_radialWindow.Width = m_manager.Window.Width;
+            m_radialWindow.Height = m_manager.Window.Height;
+            m_radialWindow.Parent = null;
+            //m_canvasWindow.BorderVisible = false;
+            m_radialWindow.Resizable = false;
+            m_radialWindow.StayOnBack = false;
+            m_radialWindow.RadialContext = m_context;
+            m_radialWindow.DoubleClicks = false;
+            m_radialWindow.Click += new TomShane.Neoforce.Controls.EventHandler(radialWindow_MouseClick);
+            m_manager.Add(m_radialWindow);
+            m_radialWindow.Hide();
 		}
 
 		public override void Process()
@@ -174,6 +197,11 @@ namespace MapEditor_TLCB.Systems
 
 			float dt = World.Delta / 1000.0f;
 			m_context.update(dt);
+
+            if (m_context.isActive())
+                m_radialWindow.Show();
+            else
+                m_radialWindow.Hide();
 		}
 		public void Render(SpriteBatch p_spriteBatch)
 		{
@@ -207,6 +235,22 @@ namespace MapEditor_TLCB.Systems
             RadialMenu customMenu = m_context.getRadialMenu(customID);
             RadialMenuItem newItem = new RadialMenuItem("Custom Selection", m_tilemap, ev, rect);
             customMenu.addItem(newItem);
+            m_events.Add(ev);
+
+            NotificationBarSystem note = (NotificationBarSystem)world.SystemManager.GetSystem<NotificationBarSystem>()[0];
+            note.AddNotification(new Notification("Added custom selection to radial menu", NotificationType.INFO));
+        }
+        public void toggleRadialMenu()
+        {
+            m_context.toggleRadialMenu();
+        }
+        private void radialWindow_MouseClick(object sender, TomShane.Neoforce.Controls.EventArgs e)
+        {
+            TomShane.Neoforce.Controls.MouseEventArgs ev = (TomShane.Neoforce.Controls.MouseEventArgs)(e);
+            if (ev.Button == MouseButton.Right)
+            {
+                toggleRadialMenu();
+            }
         }
 	}
 }

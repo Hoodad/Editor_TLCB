@@ -144,9 +144,19 @@ namespace MapEditor_TLCB
                 m_active = true;
             }
         }
+        public void toggleRadialMenu()
+        {
+            m_altDown = true;
+            m_active = !m_active;
+            if (!m_active)
+                m_current = m_root;
+
+            m_position.X = m_originalPosition.X = Mouse.GetState().X;
+            m_position.Y = m_originalPosition.Y = Mouse.GetState().Y;
+        }
         public void update(float p_dt)
         {
-            if ((Keyboard.GetState().IsKeyDown(Keys.Up) || Mouse.GetState().MiddleButton == ButtonState.Pressed) && !m_altDown)
+            if ((Keyboard.GetState().IsKeyDown(Keys.Up)) && !m_altDown)
             {
                 m_altDown = true;
                 m_active = !m_active;
@@ -156,7 +166,7 @@ namespace MapEditor_TLCB
                 m_position.X = m_originalPosition.X = Mouse.GetState().X;
                 m_position.Y = m_originalPosition.Y = Mouse.GetState().Y;
             }
-            else if (!Keyboard.GetState().IsKeyDown(Keys.Up) && Mouse.GetState().MiddleButton != ButtonState.Pressed)
+            else if (!Keyboard.GetState().IsKeyDown(Keys.Up))
             {
                 m_altDown = false;
             }

@@ -43,6 +43,7 @@ namespace MapEditor_TLCB.Systems
 			//m_canvasWindow.BorderVisible = false;
 			m_canvasWindow.Resizable = false;
 			m_canvasWindow.StayOnBack = true;
+            m_canvasWindow.DoubleClicks = false;
 			m_canvasWindow.CanvasTexture = m_canvasRender;
 			RoadToolSystem roadSys = ((RoadToolSystem)world.SystemManager.GetSystem<RoadToolSystem>()[0]);
 			m_canvasWindow.MouseDown += new MouseEventHandler(roadSys.canvasGroupBehavior);
@@ -51,9 +52,18 @@ namespace MapEditor_TLCB.Systems
 			m_canvasWindow.MouseMove += new MouseEventHandler(roadSys.canvasWindow_MouseMove);
 			m_canvasWindow.MouseMove += new MouseEventHandler(canvasWindow_MouseMove);
 			m_canvasWindow.MouseScroll += new MouseEventHandler(canvasWindow_MouseScroll);
+            m_canvasWindow.Click += new TomShane.Neoforce.Controls.EventHandler(canvasWindow_MouseClick);
 			m_manager.Add(m_canvasWindow);
 		}
-
+        private void canvasWindow_MouseClick(object sender, TomShane.Neoforce.Controls.EventArgs e)
+        {
+            TomShane.Neoforce.Controls.MouseEventArgs ev = (TomShane.Neoforce.Controls.MouseEventArgs)(e);
+            if (ev.Button == MouseButton.Right)
+            {
+                RadialMenuSystem radial = (RadialMenuSystem)world.SystemManager.GetSystem<RadialMenuSystem>()[0];
+                radial.toggleRadialMenu();
+            }
+        }
 		private void canvasWindow_MouseMove(object sender, MouseEventArgs e)
 		{
 			MouseState currentState = e.State;
