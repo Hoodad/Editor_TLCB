@@ -24,8 +24,9 @@ namespace MapEditor_TLCB.CustomControls
 		}
         
 		protected override void DrawControl(TomShane.Neoforce.Controls.Renderer renderer, Microsoft.Xna.Framework.Rectangle rect, Microsoft.Xna.Framework.GameTime gameTime)
-		{
-            m_bar.draw(renderer.SpriteBatch, Height, new Vector2(m_parentWindow.AbsoluteLeft, m_parentWindow.AbsoluteTop), m_hasFocus);
+		{   
+            ScrollBarValue s = m_parentWindow.ScrollBarValue;
+            m_bar.draw(renderer.SpriteBatch, Height, new Vector2(m_parentWindow.AbsoluteLeft, m_parentWindow.AbsoluteTop), m_hasFocus, s.Vertical);
 		}
 
 		protected override void OnMouseMove(TomShane.Neoforce.Controls.MouseEventArgs e)
@@ -35,11 +36,15 @@ namespace MapEditor_TLCB.CustomControls
         public void Update(float p_dt, bool p_hasFocus)
         {
             m_hasFocus = p_hasFocus;
-            m_bar.update(p_dt, new Vector2(m_parentWindow.AbsoluteLeft, m_parentWindow.AbsoluteTop), Height, m_hasFocus);
+            m_bar.update(p_dt, new Vector2(m_parentWindow.AbsoluteLeft, m_parentWindow.AbsoluteTop), Height, m_hasFocus, m_parentWindow.ScrollBarValue.Vertical);
         }
         public void AddNotification(Notification p_notification)
         {
             m_bar.addNotification(p_notification);
+        }
+        public NotificationBar getBar()
+        {
+            return m_bar;
         }
     }
 }

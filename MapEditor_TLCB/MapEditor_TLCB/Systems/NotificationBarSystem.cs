@@ -46,17 +46,17 @@ namespace MapEditor_TLCB.Systems
 			notificationWindow.Top = viewport.Height - notificationWindow.Height;
 			notificationWindow.Left = 0;
 			notificationWindow.CloseButtonVisible = false;
-            notificationWindow.AutoScroll = false;
+            notificationWindow.AutoScroll = true;
             notificationWindow.Resizable = true;
             notificationWindow.Click += new TomShane.Neoforce.Controls.EventHandler(OnWindowClickBehavior);
 			notificationWindow.IconVisible = false;
 			manager.Add(notificationWindow);
 
-            NotificationBar data = new NotificationBar(m_device, m_content, originalWidth-15, 25);
+            NotificationBar data = new NotificationBar(m_device, m_content, originalWidth-32, 25);
 
             notificationBar = new NotificationBarContainer(manager, notificationWindow, data);
             notificationBar.Init();
-            notificationBar.Width = originalWidth;// tilemap.tilemapImage.Width;
+            notificationBar.Width = originalWidth-32;// tilemap.tilemapImage.Width;
             notificationBar.Height = 160;// tilemap.tilemapImage.Height;
             notificationBar.Parent = notificationWindow;
             notificationBar.CanFocus = false;
@@ -66,15 +66,28 @@ namespace MapEditor_TLCB.Systems
 		public override void Process()
 		{
             notificationBar.Update(World.Delta / 1000.0f, m_focus);
-   
-            
-            notificationBar.Width = notificationWindow.Width;
-            notificationBar.Height = notificationWindow.Height;
+
+            if (notificationBar.getBar().isShowingAdditionalInformation())
+            {
+                //notificationWindow.AutoScroll = true;
+                //notificationBar.AutoScroll = true;
+                notificationBar.Height = (int)notificationBar.getBar().getAdditionalInformationHeight();
+            }
+            else
+            {
+                //notificationWindow.ScrollAlot = false;
+                //notificationWindow.AutoScroll = false;
+                //notificationBar.AutoScroll = false;
+                notificationBar.Height = notificationWindow.Height;
+            }
+
             if (notificationWindow.Width != originalWidth)
                 notificationWindow.Width = originalWidth;
-            notificationBar.Height = notificationWindow.Height;
+            notificationBar.Width = originalWidth - 32;
+
 
             notificationWindow.Refresh();
+            notificationBar.Refresh();
 		}
         public void AddNotification(Notification p_notification)
         {
@@ -82,7 +95,7 @@ namespace MapEditor_TLCB.Systems
         }
         public void OnWindowClickBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
-            Notification n = new Notification("The notification bar shows important information, warnings and errors.", NotificationType.INFO);
+            Notification n = new Notification("The notification bar shows information, warnings and errors.", NotificationType.INFO);
             AddNotification(n);
         }
         public void OnGainFocus(object sender, TomShane.Neoforce.Controls.EventArgs e)

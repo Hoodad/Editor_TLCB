@@ -60,7 +60,8 @@ namespace MapEditor_TLCB
 
         float m_randomAddTimer = 0;
 
-        bool m_showAdditionalInformation = false;
+        int m_showAdditionalInformation = -1;
+        float m_additionalInformationHeight = 100;
 
         public NotificationBar(GraphicsDevice p_gd, ContentManager p_content, float p_width, float p_height)
         {
@@ -92,7 +93,10 @@ namespace MapEditor_TLCB
 
             m_notifications = new List<Notification>();
 
-            m_notifications.Add(new Notification("This is an information message.", NotificationType.INFO));
+            List<Paragraph> paragraphs = new List<Paragraph>();
+            paragraphs.Add(new Paragraph("Information messages appear to inform you of some of the functionality of the editor."));
+            paragraphs.Add(new Paragraph("Information messages' use the following symbol.", m_info, 50, 50));
+            m_notifications.Add(new Notification("This is an information message.", NotificationType.INFO, paragraphs));
             m_notifications.Add(new Notification("This is a warning message", NotificationType.WARNING));
             m_notifications.Add(new Notification("This is an error message", NotificationType.ERROR));
             m_notifications.Add(new Notification("This is a success message", NotificationType.SUCCESS));
@@ -143,7 +147,7 @@ namespace MapEditor_TLCB
             return m_openOnHover;
         }
 
-        public void update(float p_dt, Vector2 p_topLeft, int p_height, bool p_hasFocus)
+        public void update(float p_dt, Vector2 p_topLeft, int p_height, bool p_hasFocus, float p_scroll)
         {
             if (m_transition)
             {
@@ -162,59 +166,73 @@ namespace MapEditor_TLCB
                 else
                     m_notifications[i].age = 0;
             }
-            if (!m_showAdditionalInformation)
-                checkCollision(p_height, p_topLeft, p_hasFocus);
+            checkCollision(p_height, p_topLeft, p_hasFocus, p_scroll);
         }
-        public void checkCollision(int p_height, Vector2 p_topLeft, bool p_hasFocus)
+        public void checkCollision(int p_height, Vector2 p_topLeft, bool p_hasFocus, float p_scroll)
         {
-            if (Mouse.GetState().LeftButton != ButtonState.Pressed)
-                return;
-
-            float offset = 0;
-            if (m_transition)
+            if (m_showAdditionalInformation == -1)
             {
-                offset = (m_transitionTime - m_transitionDT) / m_transitionTime;
-                offset *= m_height;
-            }
+                if (Mouse.GetState().LeftButton != ButtonState.Pressed)
+                    return;
 
-            Vector2 startPos = m_position - new Vector2(0, offset);
-
-            int count = p_height / m_height;
-            if (m_transition)
-                count++;
-
-            for (int i = 0; i < count; i++)
-            {
-                Vector2 barPos = startPos + new Vector2(0, m_height * i);
-
-                if (m_notifications.Count - i - 1 >= 0)
+                float offset = 0;
+                if (m_transition)
                 {
-                    string moreInfo = "More...";
-                    Vector2 textSize = m_font.MeasureString(moreInfo);
+                    offset = (m_transitionTime - m_transitionDT) / m_transitionTime;
+                    offset *= m_height;
+                }
 
-                    Rectangle rect;
-                    rect.X = (int)(barPos.X + m_width - textSize.X);
-                    rect.Y = (int)(barPos.Y + 0.5f * (m_height - textSize.Y));
-                    rect.Width = (int)textSize.X;
-                    rect.Height = (int)textSize.Y;
+                Vector2 startPos = m_position - new Vector2(0, offset);
+                startPos.Y -= p_scroll;
 
-                    Vector2 mousePos = new Vector2(Mouse.GetState().X - p_topLeft.X, Mouse.GetState().Y - p_topLeft.Y);
+                int count = p_height / m_height;
+                if (m_transition)
+                    count++;
 
-                    if (rect.Contains((int)mousePos.X, (int)mousePos.Y) && p_hasFocus)
+                for (int i = 0; i < count; i++)
+                {
+                    Vector2 barPos = startPos + new Vector2(0, m_height * i);
+
+                    if (m_notifications.Count - i - 1 >= 0)
                     {
-                        m_showAdditionalInformation = true;
+                        if (m_notifications[m_notifications.Count - i - 1].additionalInformationParagraphs.Count > 0)
+                        {
+                            string moreInfo = "More...";
+                            Vector2 textSize = m_font.MeasureString(moreInfo);
+
+                            Rectangle rect;
+                            rect.X = (int)(barPos.X + m_width - textSize.X);
+                            rect.Y = (int)(barPos.Y + 0.5f * (m_height - textSize.Y));
+                            rect.Width = (int)textSize.X;
+                            rect.Height = (int)textSize.Y;
+
+                            Vector2 mousePos = new Vector2(Mouse.GetState().X - p_topLeft.X, Mouse.GetState().Y - p_topLeft.Y);
+
+                            if (rect.Contains((int)mousePos.X, (int)mousePos.Y) && p_hasFocus)
+                            {
+                                m_showAdditionalInformation = m_notifications.Count - i - 1;
+                            }
+                        }
                     }
                 }
             }
         }
-        public void draw(SpriteBatch p_sb, int p_height, Vector2 p_topLeft, bool p_hasFocus)
+        public bool isShowingAdditionalInformation()
         {
-            if (m_showAdditionalInformation)
-                drawAdditionalInfo(p_sb);
-            else
-                draw3(p_sb, p_height, p_topLeft, p_hasFocus);
+            return m_showAdditionalInformation >= 0;
         }
-        public void draw3(SpriteBatch p_sb, int p_height, Vector2 p_topLeft, bool p_hasFocus)
+        public float getAdditionalInformationHeight()
+        {
+            return m_additionalInformationHeight;
+        }
+        public void draw(SpriteBatch p_sb, int p_height, Vector2 p_topLeft, bool p_hasFocus, float p_scroll)
+        {
+            if (m_showAdditionalInformation >= 0)
+                drawAdditionalInfo(p_sb, p_scroll, p_topLeft, p_hasFocus);
+            else
+                draw3(p_sb, p_height, p_topLeft, p_hasFocus, p_scroll);
+        }
+        public void draw3(SpriteBatch p_sb, int p_height, Vector2 p_topLeft, bool p_hasFocus, float p_scroll)
         {
             Color warningColor = new Color(255, 242, 184, 255);
             Color successColor = new Color(185, 255, 182, 255);
@@ -233,9 +251,9 @@ namespace MapEditor_TLCB
                 offset *= m_height;
             }
 
-            Vector2 startPos = m_position - new Vector2(0, offset);// +new Vector2(m_barBorder, m_barBorder + offset);
+            Vector2 startPos = m_position - new Vector2(0, offset + p_scroll);// +new Vector2(m_barBorder, m_barBorder + offset);
 
-            int count = p_height / m_height;
+            int count = p_height / m_height + 1;
             if (m_transition)
                 count++;
 
@@ -289,7 +307,7 @@ namespace MapEditor_TLCB
 
                     Vector2 mousePos = new Vector2(Mouse.GetState().X - p_topLeft.X, Mouse.GetState().Y - p_topLeft.Y);
 
-                    if (rect.Contains((int)mousePos.X, (int)mousePos.Y) && p_hasFocus)
+                    if (rect.Contains((int)mousePos.X, (int)mousePos.Y) && p_hasFocus && n.additionalInformationParagraphs.Count > 0)
                     {
                         barColor = highlight;
                         moreinfoColor = Color.White;
@@ -325,24 +343,69 @@ namespace MapEditor_TLCB
                     //textPos.X += m_border + m_height;
                     textPos.X += m_width - textSize.X;
 
-                    p_sb.DrawString(m_font, moreInfo, textPos, moreinfoColor);
+                    if (n.additionalInformationParagraphs.Count > 0)
+                        p_sb.DrawString(m_font, moreInfo, textPos, moreinfoColor);
 
 
                 }
             }
         }
-        public void drawAdditionalInfo(SpriteBatch p_sb)
+        public void drawAdditionalInfo(SpriteBatch p_sb, float p_scroll, Vector2 p_topLeft, bool p_hasFocus)
         {
-            string text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
-
-            List<string> rows = makeIntoRows(text);
-
-            float y = 0;
-            for (int i = 0; i < rows.Count; i++)
+            List<Paragraph> paragraphs = m_notifications[m_showAdditionalInformation].additionalInformationParagraphs;
+            float y = -p_scroll;
+            for (int i = 0; i < paragraphs.Count; i++)
             {
-                p_sb.DrawString(m_font, rows[i], m_position + new Vector2(0, y), Color.White);
-                y += m_font.MeasureString(rows[i]).Y;
+                string text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
+                text = (i+1).ToString() + ": " + paragraphs[i].text;
+
+                List<string> rows = makeIntoRows(text);
+
+                for (int row = 0; row < rows.Count; row++)
+                {
+                    p_sb.DrawString(m_font, rows[row], m_position + new Vector2(0, y), Color.White);
+                    y += m_font.MeasureString(rows[row]).Y;
+                }
+                if (paragraphs[i].texture != null)
+                {
+                    Texture2D tex = paragraphs[i].texture;
+
+                    float scale = Math.Min(paragraphs[i].maxX / tex.Width, paragraphs[i].maxY / tex.Height);
+
+                    Rectangle target;
+                    target.X = (int)m_position.X;
+                    target.Y = (int)(m_position.Y + y);
+                    target.Width = (int)(scale * tex.Width);
+                    target.Height = (int)(scale * tex.Height);
+
+                    p_sb.Draw(tex, target, Color.White);
+
+                    y += scale * tex.Height;
+                }
+
+                y += m_font.MeasureString(rows[rows.Count - 1]).Y;
             }
+
+            Vector2 textSize = m_font.MeasureString("Go Back");
+            Color backColor = Color.White;
+            Rectangle backRect;
+            backRect.X = (int)m_position.X;
+            backRect.Y = (int)(m_position.Y + y);
+            backRect.Width = (int)(textSize.X);
+            backRect.Height = (int)(textSize.Y);
+
+            Vector2 mousePos = new Vector2(Mouse.GetState().X - p_topLeft.X, Mouse.GetState().Y - p_topLeft.Y);
+
+            if (backRect.Contains((int)mousePos.X, (int)mousePos.Y) && p_hasFocus)
+            {
+                backColor = Color.Green;
+                if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                    m_showAdditionalInformation = -1;
+            }
+            p_sb.DrawString(m_font, "Go Back", m_position + new Vector2(0, y), backColor);
+            y += textSize.Y;
+
+            m_additionalInformationHeight = y+p_scroll;
         }
         public List<string> makeIntoRows(string p_text)
         {
@@ -367,6 +430,7 @@ namespace MapEditor_TLCB
 
                 }
             }
+            rows.Add(p_text.Substring(start, p_text.Length - start));
 
             return rows;
         }
