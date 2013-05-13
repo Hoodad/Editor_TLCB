@@ -388,6 +388,7 @@ namespace MapEditor_TLCB.Actions
                 actions = new List<ActionInterface>();
                 foreach (int n in currentNodeRef.m_actionIds)
                     actions.Add(m_actions[n]);
+                actions.Reverse();
                 // change current node
                 currentNodeRef = m_nodes[m_currentNodeId];
             }
