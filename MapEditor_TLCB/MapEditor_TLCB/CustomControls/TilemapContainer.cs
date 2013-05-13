@@ -18,7 +18,7 @@ namespace MapEditor_TLCB.CustomControls
 	class TilemapContainer : Container
 	{
 		public Texture2D tilemapImage = null;
-		public Texture2D tileSelectorImage;
+		public Texture2D tileSelectorImage = null;
 		public Texture2D gridImage;
 		public Color gridColor;
 		private Rectangle selectorRect;
@@ -50,7 +50,7 @@ namespace MapEditor_TLCB.CustomControls
             Rectangle selectRect = adjustToScroll();
 			if (tilemapImage != null)
 			{
-				renderer.Draw(tilemapImage, rect, Color.Gray);
+				renderer.Draw(tilemapImage, rect, Color.White);
                 Rectangle source;
                 source.X = 32 * curr.X;
                 source.Width = currSize.X;
@@ -58,10 +58,10 @@ namespace MapEditor_TLCB.CustomControls
                 source.Height = currSize.Y;
 
                 Rectangle highlight = adjustToScroll2();
-                renderer.Draw(tilemapImage, highlight, source, Color.White);
+				renderer.Draw(tileSelectorImage, highlight, source, Color.Green);
 			}
 			renderer.Draw(gridImage, rect, gridColor);
-            renderer.Draw(tileSelectorImage, selectRect, Color.White);
+            renderer.Draw(tileSelectorImage, selectRect, Color.DeepSkyBlue);
 		}
 
 		/*protected override void OnMouseMove(TomShane.Neoforce.Controls.MouseEventArgs e)
@@ -170,8 +170,8 @@ namespace MapEditor_TLCB.CustomControls
 			tileSize.Y = (int)(32 * aspect);
 
 			selectorRect = new Rectangle();
-			selectorRect.X = 6;
-			selectorRect.Y = 26;
+			selectorRect.X = 1;
+			selectorRect.Y = 1;
 			selectorRect.Width = tileSize.X;
 			selectorRect.Height = tileSize.Y;
 		}
