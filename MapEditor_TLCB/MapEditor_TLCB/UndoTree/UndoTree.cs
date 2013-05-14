@@ -88,6 +88,18 @@ namespace MapEditor_TLCB.Actions
 			m_startNodeId = m_currentNodeId;
 		}
 
+        public Tuple<InvariableIndexList<ActionNode>, InvariableIndexList<ActionInterface>> GetData()
+        {
+            return new Tuple<InvariableIndexList<ActionNode>, InvariableIndexList<ActionInterface>>(
+                m_nodes, m_actions);
+        }
+
+        public void SetData(InvariableIndexList<ActionNode> p_nodes, InvariableIndexList<ActionInterface> p_actions)
+        {
+            m_nodes = p_nodes;
+            m_actions = p_actions;
+        }
+
         public void update(float p_dt)
         {
             // update sub sizes dependant on any changes
@@ -214,7 +226,7 @@ namespace MapEditor_TLCB.Actions
                         {
                             string info = i.ToString()+"| ";
                             if (currentRender.m_actionIds.Count > 1)
-                                info += currentRender.m_info; // action group info
+                                info += currentRender.GetInfo(); // action group info
                             else
                                 info += action.GetInfo();    // single action info
                             Vector2 strSz = m_font.MeasureString(info);
@@ -329,7 +341,7 @@ namespace MapEditor_TLCB.Actions
         }
 
         // add a group of actions
-        public int addActionGroup(string p_groupName,List<ActionInterface> p_actions)
+        public int addActionGroup(ActionNode.NodeType p_groupType,List<ActionInterface> p_actions)
         {
             int nodeId = -1;
             // store actions in list
@@ -345,7 +357,7 @@ namespace MapEditor_TLCB.Actions
                 ActionNode currentNodeRef = m_nodes[m_currentNodeId];
                 // and add its id to tree list
                 ActionNode groupNode = new ActionNode(actionIds, m_currentNodeId, currentNodeRef.m_level + 1);
-                groupNode.m_info = p_groupName;
+                groupNode.m_type = p_groupType;
                 nodeId = m_nodes.add(groupNode);
                 // then add new node index as child to parent
                 currentNodeRef.m_children.Add(nodeId);
@@ -355,7 +367,7 @@ namespace MapEditor_TLCB.Actions
             else // first node
             {
                 ActionNode groupNode = new ActionNode(actionIds, m_currentNodeId, 0);
-                groupNode.m_info = p_groupName;
+                groupNode.m_type = p_groupType;
                 nodeId = m_nodes.add(groupNode);
             }
             m_currentNodeId = nodeId;

@@ -104,15 +104,15 @@ namespace MapEditor_TLCB.Systems
 			{
 				m_lmbPressed = true;
 				ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
-                string actionstring = "Tool"; Tool currentTool = m_toolSys.GetCurrentTool();
+                ActionNode.NodeType nodeType=ActionNode.NodeType.NONE; Tool currentTool = m_toolSys.GetCurrentTool();
                 switch (currentTool)
                 {
-                    case Tool.ROAD_TOOL: actionstring = "Road"; break;
-                    case Tool.ERASE_TOOL: actionstring = "Erase"; break;
-                    case Tool.PAINT_TOOL: actionstring = "Paint"; break;
-                    default: actionstring = "W-T-F!!!!!!"; break;
+                    case Tool.ROAD_TOOL:  nodeType=ActionNode.NodeType.ROAD; break;
+                    case Tool.ERASE_TOOL: nodeType=ActionNode.NodeType.ERASE; break;
+                    case Tool.PAINT_TOOL: nodeType=ActionNode.NodeType.PAINT; break;
+                    default: nodeType = ActionNode.NodeType.NONE; break;
                 }
-				actionSys.StartGroupingActions(actionstring);
+				actionSys.StartGroupingActions(nodeType);
 			}
 			else if (e.State.LeftButton == ButtonState.Released && m_lmbPressed)
 			{
