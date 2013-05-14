@@ -2,16 +2,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Runtime.Serialization;
 
 namespace MapEditor_TLCB.Common
 {
+    [Serializable()]
     class InvariableIndexList<T>
     {
         public InvariableIndexList()
         {
             m_list=new List<T>();
 	        m_freeIndices=new Stack<int>();
+        }
+
+        public InvariableIndexList(SerializationInfo info, StreamingContext ctxt)
+		{
+            m_list = (List<T>)info.GetValue("List", typeof(List<T>));
+            m_freeIndices = (Stack<int>)info.GetValue("FreeIndices", typeof(Stack<int>));
+		}
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("List", m_list);
+            info.AddValue("FreeIndices", m_freeIndices);
         }
 
         public int add(T p_valueRef)

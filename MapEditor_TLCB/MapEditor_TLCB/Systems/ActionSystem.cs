@@ -33,7 +33,7 @@ namespace MapEditor_TLCB
 
 
 		private bool grouping;
-        private string currentGroupName;
+        private ActionNode.NodeType currentGroupType;
 
 		static int groupCount = 0;
         private bool faultyStopCalled = false;
@@ -166,7 +166,7 @@ namespace MapEditor_TLCB
 		}
          * */
 
-		public void StartGroupingActions(string p_groupName)
+		public void StartGroupingActions(ActionNode.NodeType p_nodeType)
 		{
             if (grouping)
             {
@@ -174,7 +174,7 @@ namespace MapEditor_TLCB
             }
             else
             {
-                currentGroupName = p_groupName;
+                currentGroupType = p_nodeType;
             }
 			grouping = true;
 		}
@@ -190,8 +190,8 @@ namespace MapEditor_TLCB
                 {
                     groupCount++;
                     grouping = false;
-                    actionTree.addActionGroup(currentGroupName, queuedActions);
-                    currentGroupName = "Invalid";
+                    actionTree.addActionGroup(currentGroupType, queuedActions);
+                    currentGroupType = ActionNode.NodeType.NONE;
                     queuedActions.Clear();
                     faultyStopCalled = false;
                 }
