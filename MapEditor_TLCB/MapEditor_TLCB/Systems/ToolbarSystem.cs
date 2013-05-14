@@ -17,13 +17,13 @@ namespace MapEditor_TLCB.Systems
 		Button eraserTool;
 		Button paintTool;
 
-		Button clearMap;
+		Button newMap;
 		Button saveMap;
 		Button exportMap;
 		Button backToStartScreen;
 		Button exitButton;
 
-		Window clearMapConfirmationWindow;
+		Window newMapConfirmationWindow;
 		Button accept;
 		Button cancel;
 
@@ -100,15 +100,15 @@ namespace MapEditor_TLCB.Systems
 			saveMap.Top = toolbarWindow.Height - 24 * 4;
 			saveMap.Click += new TomShane.Neoforce.Controls.EventHandler(SaveMapBehavior);
 
-			clearMap = new Button(manager);
-			clearMap.Init();
-			clearMap.Parent = toolbarWindow;
-			clearMap.Text = "Clear Map";
-			clearMap.Width = toolbarWindow.Width;
-			clearMap.Height = 24;
-			clearMap.Left = 0;
-			clearMap.Top = toolbarWindow.Height - 24 * 3;
-			clearMap.Click += new TomShane.Neoforce.Controls.EventHandler(ClearMapBehavior);
+			newMap = new Button(manager);
+			newMap.Init();
+			newMap.Parent = toolbarWindow;
+			newMap.Text = "New Map";
+			newMap.Width = toolbarWindow.Width;
+			newMap.Height = 24;
+			newMap.Left = 0;
+			newMap.Top = toolbarWindow.Height - 24 * 3;
+			newMap.Click += new TomShane.Neoforce.Controls.EventHandler(ClearMapBehavior);
 
 			backToStartScreen = new Button(manager);
 			backToStartScreen.Init();
@@ -131,37 +131,35 @@ namespace MapEditor_TLCB.Systems
 			exitButton.Click += new TomShane.Neoforce.Controls.EventHandler(ExitBehavior);
 
 
-			clearMapConfirmationWindow = new Window(manager);
-			clearMapConfirmationWindow.Init();
-			clearMapConfirmationWindow.Text = "Would you like to clear the map?";
-			clearMapConfirmationWindow.Width = 248;
-			clearMapConfirmationWindow.Height = 48;
-			clearMapConfirmationWindow.Center();
-			clearMapConfirmationWindow.Visible = false;
-			clearMapConfirmationWindow.Resizable = false;
-			//clearMapConfirmationWindow.Closing += new WindowClosingEventHandler(WindowCloseBehavior);
-			manager.Add(clearMapConfirmationWindow);
+			newMapConfirmationWindow = new Window(manager);
+			newMapConfirmationWindow.Init();
+			newMapConfirmationWindow.Text = "Start a new map?";
+			newMapConfirmationWindow.Width = 248;
+			newMapConfirmationWindow.Height = 48;
+			newMapConfirmationWindow.Center();
+			newMapConfirmationWindow.Visible = false;
+			newMapConfirmationWindow.Resizable = false;
+			manager.Add(newMapConfirmationWindow);
 
 			accept = new Button(manager);
 			accept.Init();
-			accept.Parent = clearMapConfirmationWindow;
+			accept.Parent = newMapConfirmationWindow;
 			accept.Width = 100;
 			accept.Height = 24;
-			accept.Click += new TomShane.Neoforce.Controls.EventHandler(ConfirmedClearMapBehavior);
+			accept.Click += new TomShane.Neoforce.Controls.EventHandler(ConfirmedNewMapBehavior);
 			accept.Left = 12;
 			accept.Top = 8;
 			accept.Text = "Yes";
 
 			cancel = new Button(manager);
 			cancel.Init();
-			cancel.Parent = clearMapConfirmationWindow;
+			cancel.Parent = newMapConfirmationWindow;
 			cancel.Width = 100;
 			cancel.Height = 24;
-			cancel.Click += new TomShane.Neoforce.Controls.EventHandler(CancelClearMapBehavior);
+			cancel.Click += new TomShane.Neoforce.Controls.EventHandler(CancelNewMapBehavior);
 			cancel.Left = 124;
 			cancel.Top = 8;
 			cancel.Text = "No thanks";
-
 		}
 
 		public override void Process()
@@ -199,25 +197,26 @@ namespace MapEditor_TLCB.Systems
 		}
 		private void ClearMapBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
 		{
-			clearMapConfirmationWindow.ShowModal();
+			newMapConfirmationWindow.ShowModal();
+			cancel.Focused = true;
 		}
-		private void ConfirmedClearMapBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
+		private void ConfirmedNewMapBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
 		{
 			Entity singleTilemap = world.TagManager.GetEntity("singlesTilemap");
 			Entity roadTilemap = world.TagManager.GetEntity("roadTilemap");
 
 			((Tilemap)roadTilemap.GetComponent<Tilemap>()).clear();
 			((Tilemap)singleTilemap.GetComponent<Tilemap>()).clear();
-			clearMapConfirmationWindow.Close();
+			newMapConfirmationWindow.Close();
 
 			UndoTreeSystem sys = (UndoTreeSystem)world.SystemManager.GetSystem<UndoTreeSystem>()[0];
 			sys.Initialize();
 			world.SystemManager.GetSystem<ActionSystem>()[0].Initialize();
 		}
 
-		private void CancelClearMapBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
+		private void CancelNewMapBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
 		{
-			clearMapConfirmationWindow.Close();
+			newMapConfirmationWindow.Close();
 		}
 		public void ExportMapBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
 		{
