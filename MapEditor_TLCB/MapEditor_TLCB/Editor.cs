@@ -59,9 +59,6 @@ namespace MapEditor_TLCB
 			// like Initialize(), Update() and Draw() are called manually in the game loop.
 			manager = new Manager(this, graphics, "Blue");
 
-			// Layouts are not used
-			//manager.LayoutDirectory = "../../../Neoforce/Layouts";
-
 			// Setting up the shared skins directory
 			manager.SkinDirectory = "../../../Neoforce/Skins";
 			manager.RenderTarget = new RenderTarget2D(GraphicsDevice, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.DiscardContents);
