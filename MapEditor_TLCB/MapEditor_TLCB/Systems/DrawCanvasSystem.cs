@@ -32,7 +32,7 @@ namespace MapEditor_TLCB.Systems
 
 			m_spriteBatch.Draw(m_textures["canvas_shadow_30px"], new Vector2(-30.0f, -30.0f), new Color(0, 0, 0, 0.5f));
 
-			Color transparent = new Color(0.9f, 0.9f, 0.9f, 0.3f);
+			Color transparent = new Color(0.5f, 0.5f, 0.5f, 0.5f);
 			foreach (Entity e in entities.Values)
 			{
 				Transform transform = m_transformMapper.Get(e);
@@ -75,7 +75,16 @@ namespace MapEditor_TLCB.Systems
 				{
 					int[] mouseTilePos = tilemap.getTilePosition(m_lastMovedMousePos);
 					Vector2 mouseGridPosition = tilemap.getPosition(mouseTilePos[0], mouseTilePos[1]);
-					m_spriteBatch.Draw(m_textures["TileSelector"], mouseGridPosition, transparent);
+
+					if (m_toolSys.GetCurrentTool() == Tool.ROAD_TOOL ||
+						m_toolSys.GetCurrentTool() == Tool.ERASE_TOOL)
+					{
+						m_spriteBatch.Draw(m_textures["TileSelector"], mouseGridPosition, transparent);
+					}
+					else if (m_toolSys.GetCurrentTool() == Tool.PAINT_TOOL)
+					{
+						m_spriteBatch.Draw(texture, mouseGridPosition, m_toolSys.getTilemapIconRectangle(), transparent);
+					}
 				}
 			}
 
@@ -86,6 +95,7 @@ namespace MapEditor_TLCB.Systems
 			m_transformMapper = new ComponentMapper<Transform>(world);
 			m_tilemapMapper = new ComponentMapper<Tilemap>(world);
 			m_tilemapRenderMapper = new ComponentMapper<TilemapRender>(world);
+			m_toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
 		}
 
 		protected override void Begin()
@@ -133,5 +143,6 @@ namespace MapEditor_TLCB.Systems
 		ComponentMapper<Tilemap> m_tilemapMapper;
 		ComponentMapper<TilemapRender> m_tilemapRenderMapper;
 		Vector2 m_lastMovedMousePos;
+		CurrentToolSystem m_toolSys;
 	}
 }

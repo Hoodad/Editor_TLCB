@@ -102,6 +102,10 @@ namespace MapEditor_TLCB.CustomControls
             m_tileMapIconRectangle.Y = (int)(32 * min.Y);
             m_tileMapIconRectangle.Height = 32*(int)(max.Y-min.Y+1);
         }
+		public Rectangle getTilemapIconRectangle()
+		{
+			return m_tileMapIconRectangle;
+		}
         public IntPair GetCurrentDrawTileIndex()
         {
             return m_currentDrawTileIndex;

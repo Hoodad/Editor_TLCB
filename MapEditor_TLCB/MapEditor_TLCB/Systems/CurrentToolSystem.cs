@@ -7,6 +7,7 @@ using Artemis;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using MapEditor_TLCB.CustomControls;
+using Microsoft.Xna.Framework;
 
 namespace MapEditor_TLCB.Systems
 {
@@ -44,6 +45,7 @@ namespace MapEditor_TLCB.Systems
 			currentToolWindow.Resizable = false;
             currentToolWindow.BorderVisible = false;
 			currentToolWindow.Movable = false;
+			currentToolWindow.Visible = false;
             manager.Add(currentToolWindow);
 
             m_container = new CurrentToolContainer(manager, currentToolWindow, m_content);
@@ -81,6 +83,10 @@ namespace MapEditor_TLCB.Systems
         {
             return m_container.GetCurrentDrawTileIndex();
         }
+		public Rectangle getTilemapIconRectangle()
+		{
+			return m_container.getTilemapIconRectangle();
+		}
         public void OnWindowClickBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
             NotificationBarSystem noteSys = (NotificationBarSystem)world.SystemManager.GetSystem<NotificationBarSystem>()[0];
