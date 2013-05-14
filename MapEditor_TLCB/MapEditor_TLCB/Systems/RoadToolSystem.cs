@@ -200,26 +200,26 @@ namespace MapEditor_TLCB.Systems
 								}
 							}
 						}
-					}
-					else if (currentTool == Tool.ERASE_TOOL)
-					{
-						int[] mapPos = roadTilemap.getTilePosition(mousePos);
+						else if (currentTool == Tool.ERASE_TOOL)
+						{
+							int[] mapPos = roadTilemap.getTilePosition(mousePos);
 
-						ModifyTile roadModify = new ModifyTile(world.SystemManager);
-						roadModify.affectedTilemap = roadTilemap.getType();
-						roadModify.col = mapPos[0];
-						roadModify.row = mapPos[1];
-						roadModify.state = -1;
+							ModifyTile roadModify = new ModifyTile(world.SystemManager);
+							roadModify.affectedTilemap = roadTilemap.getType();
+							roadModify.col = mapPos[0];
+							roadModify.row = mapPos[1];
+							roadModify.state = -1;
 
-						ModifyTile singlesModify = new ModifyTile(world.SystemManager);
-						singlesModify.affectedTilemap = singlesTilemap.getType();
-						singlesModify.col = mapPos[0];
-						singlesModify.row = mapPos[1];
-						singlesModify.state = -1;
+							ModifyTile singlesModify = new ModifyTile(world.SystemManager);
+							singlesModify.affectedTilemap = singlesTilemap.getType();
+							singlesModify.col = mapPos[0];
+							singlesModify.row = mapPos[1];
+							singlesModify.state = -1;
 
-						ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
-						actionSys.EnqueueAction(roadModify);
-						actionSys.EnqueueAction(singlesModify);
+							ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
+							actionSys.EnqueueAction(roadModify);
+							actionSys.EnqueueAction(singlesModify);
+						}
 					}
 				}
 			}
