@@ -23,6 +23,7 @@ namespace MapEditor_TLCB
         bool m_active = false;
         bool m_enterDown = false;
 
+        private Texture2D m_largeWhiteDot;
         private Texture2D m_circleTexture;
         private Texture2D m_infoBox;
         private Texture2D m_arrow;
@@ -105,6 +106,8 @@ namespace MapEditor_TLCB
             m_arrow = p_content.Load<Texture2D>("arrow2");
 
             m_infoBox = p_content.Load<Texture2D>("textbox");
+
+            m_largeWhiteDot = p_content.Load<Texture2D>("largeWhiteDot");
 
             prevMouseWheel = Mouse.GetState().ScrollWheelValue;
         }
@@ -292,7 +295,7 @@ namespace MapEditor_TLCB
         {
             return m_menus[p_id];
         }
-        public void draw1(SpriteBatch p_sb)
+        /*public void draw1(SpriteBatch p_sb)
         {
             m_transitionTime = 0.5f;
             if (m_current >= 0 && m_active)
@@ -414,12 +417,22 @@ namespace MapEditor_TLCB
                 else
                     m_menus[m_current].draw(p_sb, m_position, size);
             }
-        }
+        }*/
         public void draw5(SpriteBatch p_sb)
         {
             m_transitionTime = 0.5f;
             if (m_current >= 0 && m_active)
             {
+                float dotSize = size * 5;
+                Rectangle rect;
+                rect.X = (int)(m_position.X - dotSize * 0.5);
+                rect.Y = (int)(m_position.Y - dotSize * 0.5f);
+                rect.Width = (int)dotSize;
+                rect.Height = (int)dotSize;
+                Color c = new Color(100, 100, 100, 255);
+                c *= 0.25f;
+                p_sb.Draw(m_largeWhiteDot, rect, c);
+
                 if (m_transitionPhase)
                 {
                     m_menus[m_queued].setCurrentWithTarget(m_menus[m_current]);
@@ -459,7 +472,7 @@ namespace MapEditor_TLCB
                     m_menus[m_current].draw(p_sb, m_position, size);
             }
         }
-        public void draw6(SpriteBatch p_sb)
+        /*public void draw6(SpriteBatch p_sb)
         {
             m_transitionTime = 0.5f;
             if (m_current >= 0 && m_active)
@@ -493,7 +506,7 @@ namespace MapEditor_TLCB
             {
                 m_menus[m_current].draw(p_sb, m_position, size);
             }
-        }
+        }*/
 
     }
 }

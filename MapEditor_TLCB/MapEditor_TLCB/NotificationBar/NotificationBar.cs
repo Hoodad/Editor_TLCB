@@ -29,6 +29,7 @@ namespace MapEditor_TLCB
         SpriteFont m_font;
 
         List<Notification> m_notifications;
+        Queue<Notification> m_queued;
 
         bool m_transition;
         float m_transitionDT;
@@ -92,6 +93,7 @@ namespace MapEditor_TLCB
             m_warning = p_content.Load<Texture2D>("warning");
 
             m_notifications = new List<Notification>();
+            m_queued = new Queue<Notification>();
 
             List<Paragraph> paragraphs = new List<Paragraph>();
             paragraphs.Add(new Paragraph("Information messages appear to inform you of some of the functionality of the editor."));
@@ -122,12 +124,19 @@ namespace MapEditor_TLCB
         }
         public void addNotification(Notification p_notification)
         {
-            m_notifications.Add(p_notification);
-            m_transition = true;
-            m_transitionDT = 0;
+            if (!m_transition)
+            {
+                m_notifications.Add(p_notification);
+                m_transition = true;
+                m_transitionDT = 0;
 
-            if (m_openOnHover)
-                m_unseen++;
+                if (m_openOnHover)
+                    m_unseen++;
+            }
+            else
+            {
+                m_queued.Enqueue(p_notification);
+            }
         }
 
         public void setAging(bool p_value)
@@ -146,6 +155,10 @@ namespace MapEditor_TLCB
         {
             return m_openOnHover;
         }
+        public float getTotalHeight()
+        {
+            return m_height * m_notifications.Count;
+        }
 
         public void update(float p_dt, Vector2 p_topLeft, int p_height, bool p_hasFocus, float p_scroll)
         {
@@ -156,6 +169,10 @@ namespace MapEditor_TLCB
                 {
                     m_transition = false;
                     m_transitionDT = 0;
+                    if (m_queued.Count > 0)
+                    {
+                        addNotification(m_queued.Dequeue());
+                    }
                 }
             }
 
@@ -251,13 +268,15 @@ namespace MapEditor_TLCB
                 offset *= m_height;
             }
 
-            Vector2 startPos = m_position - new Vector2(0, offset + p_scroll);// +new Vector2(m_barBorder, m_barBorder + offset);
+            int start = (int)Math.Max(p_scroll / m_height, 0);
+
+            Vector2 startPos = m_position - new Vector2(0, offset + p_scroll);
 
             int count = p_height / m_height + 1;
             if (m_transition)
                 count++;
 
-            for (int i = 0; i < count; i++)
+            for (int i = start; i < start + count; i++)
             {
                 Vector2 barPos = startPos + new Vector2(0, m_height * i);
                 p_sb.Draw(m_barTexture, barPos, Color.White);

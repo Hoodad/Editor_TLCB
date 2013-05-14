@@ -65,7 +65,8 @@ namespace MapEditor_TLCB.CustomControls
             Rectangle selectRect = adjustToScroll();
 			if (tilemapImage != null)
 			{
-				renderer.Draw(tilemapImage, rect, Color.Gray);
+                Color c = new Color(255, 255, 255, 255);
+				renderer.Draw(tilemapImage, rect, c);
                 Rectangle source;
                 source.X = 32 * curr.X;
                 source.Width = currSize.X;
@@ -75,10 +76,20 @@ namespace MapEditor_TLCB.CustomControls
                 Rectangle highlight = adjustToScroll2();
 
                 if (!showAddToRadial)
-                    renderer.Draw(tilemapImage, highlight, source, Color.White);
+                {
+                    c = new Color(150, 150, 255, 255);
+                    renderer.Draw(tilemapImage, highlight, source, c);
+                }
 			}
 			renderer.Draw(gridImage, rect, gridColor);
-            renderer.Draw(tileSelectorImage, selectRect, Color.White);
+
+            Rectangle markedRect;
+            markedRect.X = 32 * marked.X;
+            markedRect.Width = markedSize.X;
+            markedRect.Y = 32 * marked.Y;
+            markedRect.Height = markedSize.Y;
+
+            renderer.Draw(tilemapImage, selectRect, markedRect, Color.Green);
             if (showAddToRadial)
             {
                 string s = "Add Selection to Radial Menu";

@@ -67,20 +67,6 @@ namespace MapEditor_TLCB.Systems
 		{
             notificationBar.Update(World.Delta / 1000.0f, m_focus);
 
-            if (notificationBar.getBar().isShowingAdditionalInformation())
-            {
-                //notificationWindow.AutoScroll = true;
-                //notificationBar.AutoScroll = true;
-                notificationBar.Height = (int)notificationBar.getBar().getAdditionalInformationHeight();
-            }
-            else
-            {
-                //notificationWindow.ScrollAlot = false;
-                //notificationWindow.AutoScroll = false;
-                //notificationBar.AutoScroll = false;
-                notificationBar.Height = notificationWindow.Height;
-            }
-
             if (notificationWindow.Width != originalWidth)
                 notificationWindow.Width = originalWidth;
             notificationBar.Width = originalWidth - 32;

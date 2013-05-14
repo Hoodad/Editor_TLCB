@@ -105,7 +105,7 @@ namespace MapEditor_TLCB.Systems
             RadialMenu powerupsMenu = new RadialMenu(m_device, m_content, powerupsList, powerups, null);
 
             //ROAD TILES MENU
-            List<RadialMenuItem> roadTileList = new List<RadialMenuItem>();
+            /*List<RadialMenuItem> roadTileList = new List<RadialMenuItem>();
             roadTileList.Add(new RadialMenuItem("Upper Left", m_tilemap, m_events[0], new Rectangle(0, 96, 32, 32), 0.4f));
             roadTileList.Add(new RadialMenuItem("Vertical", m_tilemap, m_events[1], new Rectangle(0, 128, 32, 32), 0.4f));
             roadTileList.Add(new RadialMenuItem("Lower Left", m_tilemap, m_events[2], new Rectangle(0, 160, 32, 32), 0.4f));
@@ -126,7 +126,7 @@ namespace MapEditor_TLCB.Systems
             roadTileList.Add(new RadialMenuItem("T Left Up Down", m_tilemap, m_events[16], new Rectangle(160, 128, 32, 32), 0.4f));
             roadTileList.Add(new RadialMenuItem("T Left Up Right", m_tilemap, m_events[17], new Rectangle(160, 160, 32, 32), 0.4f));
             roadTileList.Add(new RadialMenuItem("Horizontal", m_tilemap, m_events[18], new Rectangle(224, 96, 32, 32), 0.4f));
-            RadialMenu RoadTileMenu = new RadialMenu(m_device, m_content, roadTileList, road, null);
+            RadialMenu RoadTileMenu = new RadialMenu(m_device, m_content, roadTileList, road, null);*/
 
             //CUSTOM MENU
             List<RadialMenuItem> customList = new List<RadialMenuItem>();
@@ -136,16 +136,22 @@ namespace MapEditor_TLCB.Systems
 			List<RadialMenuItem> collectionList = new List<RadialMenuItem>();
             collectionList.Add(new RadialMenuItem("Characters", characters, charactersMenu));
             collectionList.Add(new RadialMenuItem("Power-Ups", powerups, powerupsMenu));
-            collectionList.Add(new RadialMenuItem("Road Tiles", m_tilemap, RoadTileMenu, new Rectangle(0, 96, 96, 96)));
+            //collectionList.Add(new RadialMenuItem("Road Tiles", m_tilemap, RoadTileMenu, new Rectangle(0, 96, 96, 96)));
             collectionList.Add(new RadialMenuItem("Custom Selections", question, customMenu));
             RadialMenu collectionMenu = new RadialMenu(m_device, m_content, collectionList, tileCollection, null);
 
             //MAIN MENU
 			List<RadialMenuItem> items = new List<RadialMenuItem>();
             items.Add(new RadialMenuItem("Tile Collection", tileCollection, collectionMenu));
-            items.Add(new RadialMenuItem("Dummy", dummy, tempEvent));
-            items.Add(new RadialMenuItem("Dummy", dummy, tempEvent));
-            items.Add(new RadialMenuItem("Dummy", dummy, tempEvent));
+            items.Add(new RadialMenuItem("Recent 1", m_tilemap, m_events[0], new Rectangle(0, 96, 32, 32)));
+            items.Add(new RadialMenuItem("Recent 2", m_tilemap, m_events[1], new Rectangle(0, 128, 32, 32)));
+            items.Add(new RadialMenuItem("Recent 3", m_tilemap, m_events[2], new Rectangle(0, 160, 32, 32)));
+            items.Add(new RadialMenuItem("Recent 4", m_tilemap, m_events[3], new Rectangle(32, 96, 32, 32)));
+            items.Add(new RadialMenuItem("Recent 5", m_tilemap, m_events[4], new Rectangle(32, 128, 32, 32)));
+            items.Add(new RadialMenuItem("Recent 6", m_tilemap, m_events[5], new Rectangle(32, 160, 32, 32)));
+            items.Add(new RadialMenuItem("Recent 7", m_tilemap, m_events[6], new Rectangle(64, 96, 32, 32)));
+            items.Add(new RadialMenuItem("Recent 8", m_tilemap, m_events[7], new Rectangle(64, 128, 32, 32)));
+            items.Add(new RadialMenuItem("Recent 9", m_tilemap, m_events[8], new Rectangle(64, 160, 32, 32)));
 
 			RadialMenu menu = new RadialMenu(m_device, m_content, items, main, null);
 
@@ -153,7 +159,7 @@ namespace MapEditor_TLCB.Systems
             collectionMenu.setParent(menu);
             charactersMenu.setParent(collectionMenu);
             powerupsMenu.setParent(collectionMenu);
-            RoadTileMenu.setParent(collectionMenu);
+            //RoadTileMenu.setParent(collectionMenu);
             customMenu.setParent(collectionMenu);
 
 
@@ -162,7 +168,7 @@ namespace MapEditor_TLCB.Systems
             m_context.addRadialMenu(collectionMenu);
             m_context.addRadialMenu(charactersMenu);
             m_context.addRadialMenu(powerupsMenu);
-            m_context.addRadialMenu(RoadTileMenu);
+            //m_context.addRadialMenu(RoadTileMenu);
             m_context.addRadialMenu(customMenu);
             customID = 5;
 
