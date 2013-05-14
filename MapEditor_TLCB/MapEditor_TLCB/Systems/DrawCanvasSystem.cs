@@ -23,6 +23,7 @@ namespace MapEditor_TLCB.Systems
 			m_spriteBatch = new SpriteBatch(p_graphicsDevice);
 			m_graphicsDevice = p_graphicsDevice;
 			m_canvasRender = p_canvasRender;
+			m_lastMovedMousePos = Vector2.Zero;
 		}
 
 		protected override void ProcessEntities(Dictionary<int, Entity> entities)
@@ -31,7 +32,7 @@ namespace MapEditor_TLCB.Systems
 
 			m_spriteBatch.Draw(m_textures["canvas_shadow_30px"], new Vector2(-30.0f, -30.0f), new Color(0, 0, 0, 0.5f));
 
-			Color transparent = new Color(0.3f, 0.3f, 0.3f, 0.2f);
+			Color transparent = new Color(0.9f, 0.9f, 0.9f, 0.3f);
 			foreach (Entity e in entities.Values)
 			{
 				Transform transform = m_transformMapper.Get(e);
@@ -66,7 +67,18 @@ namespace MapEditor_TLCB.Systems
 						}
 					}
 				}
+
+				if (m_lastMovedMousePos.X >= 0.0f &&
+					m_lastMovedMousePos.X < tilemap.getColumns() * 32.0f &&
+					m_lastMovedMousePos.Y >= 0.0f &&
+					m_lastMovedMousePos.Y < tilemap.getRows() * 32.0f)
+				{
+					int[] mouseTilePos = tilemap.getTilePosition(m_lastMovedMousePos);
+					Vector2 mouseGridPosition = tilemap.getPosition(mouseTilePos[0], mouseTilePos[1]);
+					m_spriteBatch.Draw(m_textures["debugBlock"], mouseGridPosition, transparent);
+				}
 			}
+
 		}
 
 		public override void Initialize()
@@ -108,6 +120,11 @@ namespace MapEditor_TLCB.Systems
 			}
 		}
 
+		public void setLastMousePos(Vector2 p_mousePos)
+		{
+			m_lastMovedMousePos = p_mousePos;
+		}
+
 		Dictionary<string, Texture2D> m_textures;
 		SpriteBatch m_spriteBatch;
 		GraphicsDevice m_graphicsDevice;
@@ -115,5 +132,6 @@ namespace MapEditor_TLCB.Systems
 		ComponentMapper<Transform> m_transformMapper;
 		ComponentMapper<Tilemap> m_tilemapMapper;
 		ComponentMapper<TilemapRender> m_tilemapRenderMapper;
+		Vector2 m_lastMovedMousePos;
 	}
 }

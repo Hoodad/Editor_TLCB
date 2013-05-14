@@ -25,6 +25,7 @@ namespace MapEditor_TLCB.Systems
 		{
 			m_tilemapMapper = new ComponentMapper<Tilemap>(world);
 			m_toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
+			m_drawCanvasSys = (DrawCanvasSystem)(world.SystemManager.GetSystem<DrawCanvasSystem>()[0]);
 		}
 
 		public override void OnRemoved(Artemis.Entity e)
@@ -130,6 +131,7 @@ namespace MapEditor_TLCB.Systems
 				if (camTransform != null)
 				{
 					mousePos = Vector2.Transform(mousePos, Matrix.Invert(camTransform.getMatrix()));
+					m_drawCanvasSys.setLastMousePos(mousePos);
 				}
 			}
 
@@ -396,6 +398,7 @@ namespace MapEditor_TLCB.Systems
 		Tilemap wallTilemap;
 		ComponentMapper<Tilemap> m_tilemapMapper;
 		CurrentToolSystem m_toolSys;
+		DrawCanvasSystem m_drawCanvasSys;
 		bool m_lmbPressed;
 	}
 }
