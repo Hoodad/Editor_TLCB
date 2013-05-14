@@ -29,7 +29,7 @@ namespace MapEditor_TLCB.Systems
 
 					File.WriteAllText(completePath, SaveTheTileMapToFile(tilemap).ToString());
 					requestedToSaveMap = false;
-					Notification alreadySaving = new Notification("Successfully saved file! Its located " + completePath, NotificationType.SUCCESS);
+					Notification alreadySaving = new Notification("Successfully exported the map! Its located " + completePath, NotificationType.SUCCESS);
 					((NotificationBarSystem)(world.SystemManager.GetSystem<NotificationBarSystem>()[0])).AddNotification(alreadySaving);
 				}
 			}

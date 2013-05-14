@@ -6,12 +6,11 @@ using System.Runtime.Serialization;
 
 namespace MapEditor_TLCB.Actions.Interface
 {	
+	//This class can be removed and replaced if needed.
 	[Serializable()]
 	class ActionsSerialized : ISerializable
 	{
 		public List<ActionInterface> queuedActions;
-		public List<ActionInterface> performedActions;
-		public List<ActionInterface> redoActions;
 
 		public ActionsSerialized()
 		{
@@ -21,15 +20,11 @@ namespace MapEditor_TLCB.Actions.Interface
 		public ActionsSerialized(SerializationInfo info, StreamingContext ctxt)
 		{
 			queuedActions = (List<ActionInterface>)info.GetValue("Queued", typeof(List<ActionInterface>));
-			performedActions = (List<ActionInterface>)info.GetValue("Performed", typeof(List<ActionInterface>));
-			redoActions = (List<ActionInterface>)info.GetValue("Redo", typeof(List<ActionInterface>));
 		}
 
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			info.AddValue("Queued", queuedActions);
-			info.AddValue("Performed", performedActions);
-			info.AddValue("Redo", redoActions);
 		}
 	}
 }

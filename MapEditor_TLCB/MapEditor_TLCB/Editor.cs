@@ -123,7 +123,7 @@ namespace MapEditor_TLCB
 
 			entity = world.CreateEntity();
 			entity.Tag = "mainTilemap";
-			entity.AddComponent(new Tilemap(60, 31, 32, 32));
+			entity.AddComponent(new Tilemap(60, 31, 32, 32, Tilemap.TilemapType.FinalTilemap));
 			entity.AddComponent(new Transform(new Vector2(0, 0)));
 			entity.AddComponent(new TilemapRender("tilemap_garden", false));
 			entity.AddComponent(new TilemapValidate());
@@ -131,18 +131,18 @@ namespace MapEditor_TLCB
 			
 			entity = world.CreateEntity();
 			entity.Tag = "singlesTilemap";
-			entity.AddComponent(new Tilemap(60, 31, 32, 32));
+			entity.AddComponent(new Tilemap(60, 31, 32, 32, Tilemap.TilemapType.SingleTilemap));
 			entity.Refresh();
 
 			entity = world.CreateEntity();
 			entity.Tag = "roadTilemap";
-			entity.AddComponent(new Tilemap(60, 31, 32, 32));
+			entity.AddComponent(new Tilemap(60, 31, 32, 32, Tilemap.TilemapType.RoadTilemap));
 			entity.AddComponent(new Transform(new Vector2(0, 0)));
 			entity.Refresh();
 			
 			entity = world.CreateEntity();
 			entity.Tag = "wallTilemap";
-			entity.AddComponent(new Tilemap(60, 31, 32, 32));
+			entity.AddComponent(new Tilemap(60, 31, 32, 32, Tilemap.TilemapType.WallTilemap));
 			entity.Refresh();
 		}
 
@@ -162,6 +162,8 @@ namespace MapEditor_TLCB
 			{
 				f.FormClosing += f_FormClosing;
 			}
+
+			f.Text = "The Little Cheese Boy Editor - Pre Alpha";
 			
 			textures.Add("tilemap_garden", Content.Load<Texture2D>("TileSheets/tilemap_garden"));
 			textures.Add("tilemap_winecellar", Content.Load<Texture2D>("TileSheets/tilemap_winecellar"));

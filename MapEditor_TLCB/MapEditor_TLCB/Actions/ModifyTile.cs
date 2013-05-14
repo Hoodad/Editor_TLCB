@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Artemis;
+using MapEditor_TLCB.Components;
 using MapEditor_TLCB.Actions.Interface;
 using MapEditor_TLCB.Systems.Interface;
 using MapEditor_TLCB.Systems;
@@ -14,14 +15,22 @@ namespace MapEditor_TLCB.Actions
 	[Serializable()]
 	class ModifyTile : ActionInterface
 	{
-		public Tilemap affectedTilemap = null;
+		public Tilemap.TilemapType affectedTilemap;
 		public int row;
 		public int col;
 		public int state;
 		public List<ActionSystemInterface> affectedSystems;
+		
 		public ModifyTile(SystemManager p_systemManager)
 		{
 			AddAffectedSystems(p_systemManager);
+		}
+		public ModifyTile(SerializationInfo info, StreamingContext ctxt)
+		{
+			affectedTilemap = (Tilemap.TilemapType)info.GetValue("AffectedTilemap", typeof(Tilemap.TilemapType));
+			row = (int)info.GetValue("Row", typeof(int));
+			col = (int)info.GetValue("Col", typeof(int));
+			state = (int)info.GetValue("State", typeof(int));
 		}
 
 		public void PerformAction()
@@ -46,7 +55,10 @@ namespace MapEditor_TLCB.Actions
 
 		public void GetObjectData(SerializationInfo info,StreamingContext context)
 		{
-			// Todo: Add support for serialize the data
+			info.AddValue("AffectedTilemap", affectedTilemap);
+			info.AddValue("Row", row);
+			info.AddValue("Col", col);
+			info.AddValue("State", state);
 		}
 
         public string GetInfo()

@@ -235,27 +235,16 @@ namespace MapEditor_TLCB
 			}
 			*/
 		}
-		public void SaveSerialiazedActions()
+		public void SaveSerialiazedActions(string p_completePath)
 		{
-			/*
-			while (performedActions.Count > 0)
-			{
-				UndoLastPerformedAction();
-			}
-
 			ActionsSerialized obj = new ActionsSerialized();
 			obj.queuedActions = queuedActions;
-			obj.performedActions = performedActions;
-			obj.redoActions = redoActions;
 
 			Serializer seri = new Serializer();
-			seri.SerializeObject("SerializeObjects.txt", obj);
+			seri.SerializeObject(p_completePath, obj);
 
-			while (redoActions.Count > 0)
-			{
-				RedoLastAction();
-			}
-			 * */
+			Notification alreadySaving = new Notification("Successfully saved the map! Its located " + p_completePath, NotificationType.SUCCESS);
+			((NotificationBarSystem)(world.SystemManager.GetSystem<NotificationBarSystem>()[0])).AddNotification(alreadySaving);
 		}
 		public void ClearAllActions()
 		{

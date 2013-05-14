@@ -145,7 +145,7 @@ namespace MapEditor_TLCB.Systems
 						changeTile.col = mapPos[0];
 						changeTile.row = mapPos[1];
 						changeTile.state = 0;
-						changeTile.affectedTilemap = roadTilemap;
+						changeTile.affectedTilemap = roadTilemap.getType();
 
 						if (roadTilemap.getState(mapPos[0], mapPos[1]) != 0)
 						{
@@ -177,7 +177,7 @@ namespace MapEditor_TLCB.Systems
 									changeTile.col = mapPos[0] + i - (int)min.X;
 									changeTile.row = mapPos[1] + j - (int)min.Y;
 									changeTile.state = index;
-									changeTile.affectedTilemap = singlesTilemap;
+									changeTile.affectedTilemap = singlesTilemap.getType();
 
                                     actionSys.EnqueueAction(changeTile);
 
@@ -185,7 +185,7 @@ namespace MapEditor_TLCB.Systems
 									roadChangeTile.col = changeTile.col;
 									roadChangeTile.row = changeTile.row;
 									roadChangeTile.state = -1;
-									roadChangeTile.affectedTilemap = roadTilemap;
+									roadChangeTile.affectedTilemap = roadTilemap.getType();
                                     actionSys.EnqueueAction(roadChangeTile);
 
 									//actionSys.StopGroupingActions();
@@ -199,13 +199,13 @@ namespace MapEditor_TLCB.Systems
 						int[] mapPos = roadTilemap.getTilePosition(mousePos);
 
 						ModifyTile roadModify = new ModifyTile(world.SystemManager);
-						roadModify.affectedTilemap = roadTilemap;
+						roadModify.affectedTilemap = roadTilemap.getType();
 						roadModify.col = mapPos[0];
 						roadModify.row = mapPos[1];
 						roadModify.state = -1;
 
 						ModifyTile singlesModify = new ModifyTile(world.SystemManager);
-						singlesModify.affectedTilemap = singlesTilemap;
+						singlesModify.affectedTilemap = singlesTilemap.getType();
 						singlesModify.col = mapPos[0];
 						singlesModify.row = mapPos[1];
 						singlesModify.state = -1;
@@ -225,55 +225,55 @@ namespace MapEditor_TLCB.Systems
 			changeSingles[0].col = p_mapPos[0] - 1;
 			changeSingles[0].row = p_mapPos[1] - 1;
 			changeSingles[0].state = -1;
-			changeSingles[0].affectedTilemap = singlesTilemap;
+			changeSingles[0].affectedTilemap = singlesTilemap.getType();
 
 			changeSingles[1] = new ModifyTile(world.SystemManager);
 			changeSingles[1].col = p_mapPos[0];
 			changeSingles[1].row = p_mapPos[1] - 1;
 			changeSingles[1].state = -1;
-			changeSingles[1].affectedTilemap = singlesTilemap;
+			changeSingles[1].affectedTilemap = singlesTilemap.getType();
 
 			changeSingles[2] = new ModifyTile(world.SystemManager);
 			changeSingles[2].col = p_mapPos[0] + 1;
 			changeSingles[2].row = p_mapPos[1] - 1;
 			changeSingles[2].state = -1;
-			changeSingles[2].affectedTilemap = singlesTilemap;
+			changeSingles[2].affectedTilemap = singlesTilemap.getType();
 
 			changeSingles[3] = new ModifyTile(world.SystemManager);
 			changeSingles[3].col = p_mapPos[0] + 1;
 			changeSingles[3].row = p_mapPos[1];
 			changeSingles[3].state = -1;
-			changeSingles[3].affectedTilemap = singlesTilemap;
+			changeSingles[3].affectedTilemap = singlesTilemap.getType();
 			
 			changeSingles[4] = new ModifyTile(world.SystemManager);
 			changeSingles[4].col = p_mapPos[0] + 1;
 			changeSingles[4].row = p_mapPos[1] + 1;
 			changeSingles[4].state = -1;
-			changeSingles[4].affectedTilemap = singlesTilemap;
+			changeSingles[4].affectedTilemap = singlesTilemap.getType();
 			
 			changeSingles[5] = new ModifyTile(world.SystemManager);
 			changeSingles[5].col = p_mapPos[0];
 			changeSingles[5].row = p_mapPos[1] + 1;
 			changeSingles[5].state = -1;
-			changeSingles[5].affectedTilemap = singlesTilemap;
+			changeSingles[5].affectedTilemap = singlesTilemap.getType();
 			
 			changeSingles[6] = new ModifyTile(world.SystemManager);
 			changeSingles[6].col = p_mapPos[0] - 1;
 			changeSingles[6].row = p_mapPos[1] + 1;
 			changeSingles[6].state = -1;
-			changeSingles[6].affectedTilemap = singlesTilemap;
+			changeSingles[6].affectedTilemap = singlesTilemap.getType();
 			
 			changeSingles[7] = new ModifyTile(world.SystemManager);
 			changeSingles[7].col = p_mapPos[0] - 1;
 			changeSingles[7].row = p_mapPos[1];
 			changeSingles[7].state = -1;
-			changeSingles[7].affectedTilemap = singlesTilemap;
+			changeSingles[7].affectedTilemap = singlesTilemap.getType();
 			
 			changeSingles[8] = new ModifyTile(world.SystemManager);
 			changeSingles[8].col = p_mapPos[0];
 			changeSingles[8].row = p_mapPos[1];
 			changeSingles[8].state = -1;
-			changeSingles[8].affectedTilemap = singlesTilemap;
+			changeSingles[8].affectedTilemap = singlesTilemap.getType();
 
 			ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
 			for (int i = 0; i < 9; i++)
@@ -368,17 +368,26 @@ namespace MapEditor_TLCB.Systems
 			if (p_action.GetType() == typeof(ModifyTile))
 			{
 				ModifyTile action = (ModifyTile)p_action;
-				//roadTilemap.setState(mapPos[0], mapPos[1], 0);
 
-				//singlesTilemap.setState(mapPos[0], mapPos[1], m_toolSys.GetCurrentDrawTileIndex());
-				//roadTilemap.setState(mapPos[0], mapPos[1], -1);
-				//if (action.affectedTilemap == roadTilemap)
-				//{
-					int oldState;
-					oldState = action.affectedTilemap.getState(action.col, action.row);
-					action.affectedTilemap.setState(action.col, action.row, action.state);
-					action.state = oldState;
-				//}
+				int oldState = -1;
+
+				switch (action.affectedTilemap)
+				{
+					case Tilemap.TilemapType.RoadTilemap:
+						oldState = roadTilemap.getState(action.col, action.row);
+						roadTilemap.setState(action.col, action.row, action.state);
+						break;
+
+					case Tilemap.TilemapType.SingleTilemap:
+						oldState = singlesTilemap.getState(action.col, action.row);
+						singlesTilemap.setState(action.col, action.row, action.state);
+						break;
+
+					default:
+						break;
+				}
+
+				action.state = oldState;
 			}
 		}
 		

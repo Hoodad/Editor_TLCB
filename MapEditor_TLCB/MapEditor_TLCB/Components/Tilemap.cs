@@ -9,7 +9,9 @@ namespace MapEditor_TLCB.Components
 {
 	class Tilemap: Component
 	{
-		public Tilemap(int p_columns, int p_rows, int p_tilewidth, int p_tileheight)
+		public enum TilemapType {SingleTilemap, RoadTilemap, FinalTilemap, WallTilemap};
+
+		public Tilemap(int p_columns, int p_rows, int p_tilewidth, int p_tileheight, TilemapType p_tilemapType)
 		{
 			columns = p_columns;
 			rows = p_rows;
@@ -23,6 +25,8 @@ namespace MapEditor_TLCB.Components
 					map[x, y] = -1;
 				}
 			}
+
+			type = p_tilemapType;
 		}
 
 		public int[] getTilePosition(float p_x, float p_y)
@@ -126,11 +130,16 @@ namespace MapEditor_TLCB.Components
 
 			return false;
 		}
+		public TilemapType getType()
+		{
+			return type;
+		}
 		
 		private int columns;
 		private int rows;
 		private int tilewidth;
 		private int tileheight;
 		private int[,] map;
+		private TilemapType type;
 	}
 }

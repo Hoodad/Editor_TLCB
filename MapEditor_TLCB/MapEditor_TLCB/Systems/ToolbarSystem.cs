@@ -94,6 +94,7 @@ namespace MapEditor_TLCB.Systems
 			saveMap.Height = 24;
 			saveMap.Left = 0;
 			saveMap.Top = toolbarWindow.Height - 24 * 4;
+			saveMap.Click += new TomShane.Neoforce.Controls.EventHandler(SaveMapBehavior);
 
 			clearMap = new Button(manager);
 			clearMap.Init();
@@ -172,18 +173,36 @@ namespace MapEditor_TLCB.Systems
 		{
 			Button btn = (Button)sender;
 			btn.Focused = false;
-			System.Windows.Forms.SaveFileDialog saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-			saveFileDialog1.InitialDirectory = Convert.ToString(Environment.SpecialFolder.MyDocuments);
-			saveFileDialog1.Filter = "Map files (*.datmap)|*.datmap";
-			saveFileDialog1.FilterIndex = 1;
-			saveFileDialog1.Title = "Export your map";
-			saveFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(SuccessfullyPressedSave);
-			saveFileDialog1.ShowDialog();
+			System.Windows.Forms.SaveFileDialog exportMapDialog = new System.Windows.Forms.SaveFileDialog();
+			exportMapDialog.InitialDirectory = Convert.ToString(Environment.SpecialFolder.CommonProgramFilesX86);
+			exportMapDialog.Filter = "Map files (*.datmap)|*.datmap";
+			exportMapDialog.FilterIndex = 1;
+			exportMapDialog.Title = "Export your map";
+			exportMapDialog.FileOk += new System.ComponentModel.CancelEventHandler(SuccessfullyExportedMap);
+			exportMapDialog.ShowDialog();
 		}
-		private void SuccessfullyPressedSave(object sender, System.EventArgs e)
+
+		public void SaveMapBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
+		{
+			Button btn = (Button)sender;
+			btn.Focused = false;
+			System.Windows.Forms.SaveFileDialog saveMapDialog = new System.Windows.Forms.SaveFileDialog();
+			saveMapDialog.InitialDirectory = Convert.ToString(Environment.SpecialFolder.MyDocuments);
+			saveMapDialog.Filter = "Project files (*.cheeseboy)|*.cheeseboy";
+			saveMapDialog.FilterIndex = 1;
+			saveMapDialog.Title = "Save your project";
+			saveMapDialog.FileOk += new System.ComponentModel.CancelEventHandler(SuccessfullySavedMap);
+			saveMapDialog.ShowDialog();
+		}
+		private void SuccessfullyExportedMap(object sender, System.EventArgs e)
 		{
 			System.Windows.Forms.SaveFileDialog dialog = (System.Windows.Forms.SaveFileDialog)(sender);
 			((ExportMapSystem)world.SystemManager.GetSystem<ExportMapSystem>()[0]).RequestToSaveMap(dialog.FileName);
+		}
+		private void SuccessfullySavedMap(object sender, System.EventArgs e)
+		{
+			System.Windows.Forms.SaveFileDialog dialog = (System.Windows.Forms.SaveFileDialog)(sender);
+			((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]).SaveSerialiazedActions(dialog.FileName);
 		}
 	}
 }
