@@ -291,5 +291,11 @@ namespace MapEditor_TLCB.CustomControls
                     return true;
             return false;
         }
+
+		protected override void OnMouseOut(TomShane.Neoforce.Controls.MouseEventArgs e)
+		{
+			highlightRect.X = 1;
+			highlightRect.Y = 1;
+		}
 	}
 }
