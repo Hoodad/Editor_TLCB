@@ -42,7 +42,7 @@ namespace MapEditor_TLCB
 			useFullScreen = p_useFullScreen;
 			useMaxRes = p_useMaxRes;
 
-			repeatDelay = 0.5f;
+			repeatDelay = 0.3f;
 			repeatTime = 0;
 		}
 
@@ -227,7 +227,7 @@ namespace MapEditor_TLCB
 							repeatTime = 0;
 						}
 					}
-					else if (newState.IsKeyUp(Keys.Y))
+					if (newState.IsKeyUp(Keys.Y))
 					{
 						if (oldState.IsKeyDown(Keys.Y))
 						{
@@ -237,8 +237,9 @@ namespace MapEditor_TLCB
 						}
 					}
 
+					
 					//Repeat delay
-					if (newState.IsKeyDown(Keys.Z))
+					if (newState.IsKeyDown(Keys.Z) && oldState.IsKeyDown(Keys.Z))
 					{
 						repeatTime += gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
 
@@ -249,7 +250,7 @@ namespace MapEditor_TLCB
 							repeatTime -= 0.1f;
 						}
 					}
-					else if (newState.IsKeyDown(Keys.Y))
+					if (newState.IsKeyDown(Keys.Y) && oldState.IsKeyDown(Keys.Y))
 					{
 						repeatTime += gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
 
@@ -257,9 +258,10 @@ namespace MapEditor_TLCB
 						{
 							ActionSystem sys = (ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0];
 							sys.RedoLastAction();
-							repeatTime -= 0.1f;
+							repeatTime -= 0.05f;
 						}
 					}
+					
 				}
 			}
 			// Call manager updates.
