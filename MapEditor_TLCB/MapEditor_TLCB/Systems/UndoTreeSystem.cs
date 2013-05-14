@@ -241,6 +241,10 @@ namespace MapEditor_TLCB.Systems
             sb.Value += scrollDiff;
         }
 
+		public void ClearTheUndoTree()
+		{
+			//TODO: Clear the undo tree!
+		}
 
     }
 }

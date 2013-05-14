@@ -65,13 +65,11 @@ namespace MapEditor_TLCB.Actions
         public UndoTree(GraphicsDevice p_gd, ContentManager p_content)
         {
             m_gd = p_gd;
-            m_nodes = new InvariableIndexList<ActionNode>();
-            m_actions = new InvariableIndexList<ActionInterface>();
             m_lineRenderer = new LineRenderer(m_gd,p_content);
-            m_currentNodeId = addAction(null);
-            m_startNodeId = m_currentNodeId;
 
-            // modes
+			ResetUndoTree();
+            
+			// modes
             m_mode = Mode.TREE;
             m_zoom = Zoom.NORMAL;
             m_nodeWidth=m_nodeOrigWidth;
@@ -81,6 +79,14 @@ namespace MapEditor_TLCB.Actions
             m_nodeBoxTex = p_content.Load<Texture2D>("node");
             m_font = p_content.Load<SpriteFont>("Arcadepix");
         }
+
+		public void ResetUndoTree()
+		{
+			m_nodes = new InvariableIndexList<ActionNode>();
+			m_actions = new InvariableIndexList<ActionInterface>();
+			m_currentNodeId = addAction(null);
+			m_startNodeId = m_currentNodeId;
+		}
 
         public void update(float p_dt)
         {

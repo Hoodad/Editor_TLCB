@@ -27,34 +27,45 @@ namespace MapEditor_TLCB.Systems
 				if (mainTilemap != null)
 				{
 					string mapName;
+					string mapArrangerPath = ""; //Used to access maps.tx
+					string mapCorrectedPath = ""; //Will contain the corrected name of the newly exported map
+					string[] seperated = completePath.Split('\\');
+
+					for (int i = 0; i < seperated.Length - 1; i++)
+					{
+						mapArrangerPath += seperated[i] + "\\";
+						mapCorrectedPath += seperated[i] + "\\";
+					}
+					mapArrangerPath += "maps.txt";
+					mapCorrectedPath += seperated[seperated.Length - 1].Replace(' ', '_');
+
+					mapName = seperated[seperated.Length - 1].Replace(' ', '_');
+
 					Tilemap tilemap = mainTilemap.GetComponent <Tilemap>();
 
-					File.WriteAllText(completePath, SaveTheTileMapToFile(tilemap).ToString());
+					File.WriteAllText(mapCorrectedPath, SaveTheTileMapToFile(tilemap).ToString());
 					requestedToSaveMap = false;
-					Notification alreadySaving = new Notification("Successfully exported the map! Its located " + completePath, NotificationType.SUCCESS);
+
+					List<Paragraph> exportedInfo = new List<Paragraph>();
+					exportedInfo.Add(new Paragraph("Your map was now successfully exported to "+ mapCorrectedPath));
+					Notification alreadySaving = new Notification("Successfully exported the map!", NotificationType.SUCCESS, exportedInfo);
 					((NotificationBarSystem)(world.SystemManager.GetSystem<NotificationBarSystem>()[0])).AddNotification(alreadySaving);
 
-					string[] seperated = completePath.Split('\\');
-					mapName = seperated[seperated.Length - 1];
-					string path = "";
-					for (int i = 0; i < seperated.Length-1; i++ )
+					if (File.Exists(mapArrangerPath))
 					{
-						path += seperated[i] +"\\";
-					}
-					path+="maps.txt";
-
-					if (File.Exists(path))
-					{
-						using (StreamWriter w = File.AppendText(path))
+						using (StreamWriter w = File.AppendText(mapArrangerPath))
 						{
 							w.Write("\r\n");
-							string[] temp = mapName.Split('.');
-							w.Write(temp[0].ToUpper() + " " + mapName + " " + 20 + " " + "POL-rescue-short.wav");
+							string[] formatedMapName = mapName.Split('.');
+							formatedMapName[0] = formatedMapName[0].ToUpper();
+							w.Write(formatedMapName[0] + " " + mapName + " " + 20 + " " + "POL-rescue-short.wav");
 						}
 					}
 					else
 					{
-						Notification unableFindMapFile = new Notification("Sorry, wasn't able to import the map to The Little Cheese Boy. You will have to do it yourself", NotificationType.WARNING);
+						List<Paragraph> info = new List<Paragraph>();
+						info.Add(new Paragraph("Unfortunately the file \"maps.txt\" wasn't found in the same folder as the exported map. This means you will have to add it yourself, manually. Error Code: Missing Maps"));
+						Notification unableFindMapFile = new Notification("Sorry, wasn't able to import the map to The Little Cheese Boy!", NotificationType.WARNING, info);
 						((NotificationBarSystem)(world.SystemManager.GetSystem<NotificationBarSystem>()[0])).AddNotification(unableFindMapFile);
 					}
 					
