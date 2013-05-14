@@ -122,97 +122,104 @@ namespace MapEditor_TLCB.Systems
 		}
 		public void canvasWindow_MouseMove(object sender, MouseEventArgs e)
 		{
-			if (m_lmbPressed)
+			Vector2 mousePos = new Vector2(e.Position.X, e.Position.Y);
+			Entity camera = world.TagManager.GetEntity("mainCamera");
+			if (camera != null)
 			{
-				Tool currentTool = m_toolSys.GetCurrentTool();
-				if (mainTilemap != null && roadTilemap != null && wallTilemap != null &&
-					canvasTransform != null)
+				Transform camTransform = camera.GetComponent<Transform>();
+				if (camTransform != null)
 				{
-					Vector2 mousePos = new Vector2(e.Position.X, e.Position.Y);
-					Entity camera = world.TagManager.GetEntity("mainCamera");
-					if (camera != null)
-					{
-						Transform camTransform = camera.GetComponent<Transform>();
-						if (camTransform != null)
-						{
-							mousePos = Vector2.Transform(mousePos, Matrix.Invert(camTransform.getMatrix()));
-						}
-					}
-					if (currentTool == Tool.ROAD_TOOL)
-					{
-						int[] mapPos = roadTilemap.getTilePosition(mousePos);
-						ModifyTile changeTile = new ModifyTile(world.SystemManager);
-						changeTile.col = mapPos[0];
-						changeTile.row = mapPos[1];
-						changeTile.state = 0;
-						changeTile.affectedTilemap = roadTilemap;
+					mousePos = Vector2.Transform(mousePos, Matrix.Invert(camTransform.getMatrix()));
+				}
+			}
 
-						if (roadTilemap.getState(mapPos[0], mapPos[1]) != 0)
-						{
-							ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
-							actionSys.EnqueueAction(changeTile);
-							overWriteSinglesWithWalls(mapPos);
-						}
-					}
-					else if (currentTool == Tool.PAINT_TOOL)
+			if (mousePos.X >= 0.0f &&
+				mousePos.X < mainTilemap.getColumns() * 32.0f &&
+				mousePos.Y >= 0.0f &&
+				mousePos.Y < mainTilemap.getRows() * 32.0f)
+			{
+				if (m_lmbPressed)
+				{
+					Tool currentTool = m_toolSys.GetCurrentTool();
+					if (mainTilemap != null && roadTilemap != null && wallTilemap != null &&
+						canvasTransform != null)
 					{
-						int[] mapPos = roadTilemap.getTilePosition(mousePos);
-
-						IntPair indexPair = m_toolSys.GetCurrentDrawTileIndex();
-						Vector2 min = new Vector2(indexPair.i1 - 30 * (indexPair.i1 / 30), indexPair.i1 / 30);
-						Vector2 max = new Vector2(indexPair.i2 - 30 * (indexPair.i2 / 30), indexPair.i2 / 30);
-
-						for (int i = (int)min.X; i <= max.X; i++)
+						if (currentTool == Tool.ROAD_TOOL)
 						{
-							for (int j = (int)min.Y; j <= max.Y; j++)
+							int[] mapPos = roadTilemap.getTilePosition(mousePos);
+							ModifyTile changeTile = new ModifyTile(world.SystemManager);
+							changeTile.col = mapPos[0];
+							changeTile.row = mapPos[1];
+							changeTile.state = 0;
+							changeTile.affectedTilemap = roadTilemap;
+
+							if (roadTilemap.getState(mapPos[0], mapPos[1]) != 0)
 							{
-								int index = j * 30 + i;
-								if (singlesTilemap.getState(mapPos[0]+i-(int)min.X, mapPos[1]+j-(int)min.Y) != index)
+								ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
+								actionSys.EnqueueAction(changeTile);
+								overWriteSinglesWithWalls(mapPos);
+							}
+						}
+						else if (currentTool == Tool.PAINT_TOOL)
+						{
+							int[] mapPos = roadTilemap.getTilePosition(mousePos);
+
+							IntPair indexPair = m_toolSys.GetCurrentDrawTileIndex();
+							Vector2 min = new Vector2(indexPair.i1 - 30 * (indexPair.i1 / 30), indexPair.i1 / 30);
+							Vector2 max = new Vector2(indexPair.i2 - 30 * (indexPair.i2 / 30), indexPair.i2 / 30);
+
+							for (int i = (int)min.X; i <= max.X; i++)
+							{
+								for (int j = (int)min.Y; j <= max.Y; j++)
 								{
-									ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
+									int index = j * 30 + i;
+									if (singlesTilemap.getState(mapPos[0]+i-(int)min.X, mapPos[1]+j-(int)min.Y) != index)
+									{
+										ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
 
-									//actionSys.StartGroupingActions();
+										//actionSys.StartGroupingActions();
 
-									ModifyTile changeTile = new ModifyTile(world.SystemManager);
-									changeTile.col = mapPos[0] + i - (int)min.X;
-									changeTile.row = mapPos[1] + j - (int)min.Y;
-									changeTile.state = index;
-									changeTile.affectedTilemap = singlesTilemap;
+										ModifyTile changeTile = new ModifyTile(world.SystemManager);
+										changeTile.col = mapPos[0] + i - (int)min.X;
+										changeTile.row = mapPos[1] + j - (int)min.Y;
+										changeTile.state = index;
+										changeTile.affectedTilemap = singlesTilemap;
 
-                                    actionSys.EnqueueAction(changeTile);
+										actionSys.EnqueueAction(changeTile);
 
-									ModifyTile roadChangeTile = new ModifyTile(world.SystemManager);
-									roadChangeTile.col = changeTile.col;
-									roadChangeTile.row = changeTile.row;
-									roadChangeTile.state = -1;
-									roadChangeTile.affectedTilemap = roadTilemap;
-                                    actionSys.EnqueueAction(roadChangeTile);
+										ModifyTile roadChangeTile = new ModifyTile(world.SystemManager);
+										roadChangeTile.col = changeTile.col;
+										roadChangeTile.row = changeTile.row;
+										roadChangeTile.state = -1;
+										roadChangeTile.affectedTilemap = roadTilemap;
+										actionSys.EnqueueAction(roadChangeTile);
 
-									//actionSys.StopGroupingActions();
+										//actionSys.StopGroupingActions();
 
+									}
 								}
 							}
 						}
-					}
-					else if (currentTool == Tool.ERASE_TOOL)
-					{
-						int[] mapPos = roadTilemap.getTilePosition(mousePos);
+						else if (currentTool == Tool.ERASE_TOOL)
+						{
+							int[] mapPos = roadTilemap.getTilePosition(mousePos);
 
-						ModifyTile roadModify = new ModifyTile(world.SystemManager);
-						roadModify.affectedTilemap = roadTilemap;
-						roadModify.col = mapPos[0];
-						roadModify.row = mapPos[1];
-						roadModify.state = -1;
+							ModifyTile roadModify = new ModifyTile(world.SystemManager);
+							roadModify.affectedTilemap = roadTilemap;
+							roadModify.col = mapPos[0];
+							roadModify.row = mapPos[1];
+							roadModify.state = -1;
 
-						ModifyTile singlesModify = new ModifyTile(world.SystemManager);
-						singlesModify.affectedTilemap = singlesTilemap;
-						singlesModify.col = mapPos[0];
-						singlesModify.row = mapPos[1];
-						singlesModify.state = -1;
+							ModifyTile singlesModify = new ModifyTile(world.SystemManager);
+							singlesModify.affectedTilemap = singlesTilemap;
+							singlesModify.col = mapPos[0];
+							singlesModify.row = mapPos[1];
+							singlesModify.state = -1;
 
-						ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
-						actionSys.EnqueueAction(roadModify);
-						actionSys.EnqueueAction(singlesModify);
+							ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
+							actionSys.EnqueueAction(roadModify);
+							actionSys.EnqueueAction(singlesModify);
+						}
 					}
 				}
 			}
