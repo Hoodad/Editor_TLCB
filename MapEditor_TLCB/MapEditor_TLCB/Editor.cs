@@ -235,9 +235,7 @@ namespace MapEditor_TLCB
 							sys.RedoLastAction();
 							repeatTime = 0;
 						}
-					}
-
-					
+					}					
 					//Repeat delay
 					if (newState.IsKeyDown(Keys.Z) && oldState.IsKeyDown(Keys.Z))
 					{

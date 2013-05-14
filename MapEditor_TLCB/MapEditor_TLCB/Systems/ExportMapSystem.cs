@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using Artemis;
 using MapEditor_TLCB.Components;
+using System.Text.RegularExpressions;
 
 namespace MapEditor_TLCB.Systems
 {
@@ -25,12 +26,38 @@ namespace MapEditor_TLCB.Systems
 				Entity mainTilemap = world.TagManager.GetEntity("mainTilemap");
 				if (mainTilemap != null)
 				{
+					string mapName;
 					Tilemap tilemap = mainTilemap.GetComponent <Tilemap>();
 
 					File.WriteAllText(completePath, SaveTheTileMapToFile(tilemap).ToString());
 					requestedToSaveMap = false;
 					Notification alreadySaving = new Notification("Successfully exported the map! Its located " + completePath, NotificationType.SUCCESS);
 					((NotificationBarSystem)(world.SystemManager.GetSystem<NotificationBarSystem>()[0])).AddNotification(alreadySaving);
+
+					string[] seperated = completePath.Split('\\');
+					mapName = seperated[seperated.Length - 1];
+					string path = "";
+					for (int i = 0; i < seperated.Length-1; i++ )
+					{
+						path += seperated[i] +"\\";
+					}
+					path+="maps.txt";
+
+					if (File.Exists(path))
+					{
+						using (StreamWriter w = File.AppendText(path))
+						{
+							w.Write("\r\n");
+							string[] temp = mapName.Split('.');
+							w.Write(temp[0].ToUpper() + " " + mapName + " " + 20 + " " + "POL-rescue-short.wav");
+						}
+					}
+					else
+					{
+						Notification unableFindMapFile = new Notification("Sorry, wasn't able to import the map to The Little Cheese Boy. You will have to do it yourself", NotificationType.WARNING);
+						((NotificationBarSystem)(world.SystemManager.GetSystem<NotificationBarSystem>()[0])).AddNotification(unableFindMapFile);
+					}
+					
 				}
 			}
 		}
