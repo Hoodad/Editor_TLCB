@@ -258,7 +258,7 @@ namespace MapEditor_TLCB
 						{
 							ActionSystem sys = (ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0];
 							sys.RedoLastAction();
-							repeatTime -= 0.05f;
+							repeatTime -= 0.1f;
 						}
 					}
 					
