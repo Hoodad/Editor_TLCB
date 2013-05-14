@@ -6,6 +6,7 @@ using Artemis;
 using TomShane.Neoforce.Controls;
 using Microsoft.Xna.Framework.Graphics;
 using MapEditor_TLCB.Components;
+using MapEditor_TLCB.CustomControls;
 
 namespace MapEditor_TLCB.Systems
 {
@@ -13,9 +14,9 @@ namespace MapEditor_TLCB.Systems
 	{
 		Manager manager;
 		Window toolbarWindow;
-		Button roadTool;
-		Button eraserTool;
-		Button paintTool;
+		ImageBasedButton roadTool;
+		ImageBasedButton eraserTool;
+		ImageBasedButton paintTool;
 
 		Button newMap;
 		Button saveMap;
@@ -34,7 +35,8 @@ namespace MapEditor_TLCB.Systems
 
 		public override void Initialize()
 		{
-			Viewport viewport = ((ContentSystem)world.SystemManager.GetSystem<ContentSystem>()[0]).GetViewport();
+			ContentSystem sys = (ContentSystem)world.SystemManager.GetSystem<ContentSystem>()[0];
+			Viewport viewport = sys.GetViewport();
 
 			toolbarWindow = new Window(manager);
 			toolbarWindow.Init();
@@ -50,34 +52,39 @@ namespace MapEditor_TLCB.Systems
 			toolbarWindow.Movable = false;
 			manager.Add(toolbarWindow);
 
-			roadTool = new Button(manager);
+			roadTool = new ImageBasedButton(manager);
 			roadTool.Init();
 			roadTool.Parent = toolbarWindow;
 			roadTool.Width = toolbarWindow.Width / 2;
-			roadTool.Height = 24;
+			roadTool.Height = roadTool.Width;
 			roadTool.Left = 0;
 			roadTool.Top = 0;
-			roadTool.Text = "Road";
+			roadTool.Text = "";
+			roadTool.image = sys.LoadTexture("RoadIcon");
             roadTool.Click += new TomShane.Neoforce.Controls.EventHandler(RoadToolBehavior);
+			roadTool.Pushed = true;
+			roadTool.Mode = ButtonMode.PushButton;
 
-			eraserTool = new Button(manager);
+			eraserTool = new ImageBasedButton(manager);
 			eraserTool.Init();
 			eraserTool.Parent = toolbarWindow;
 			eraserTool.Width = toolbarWindow.Width / 2;
-			eraserTool.Height = 24;
+			eraserTool.Height = eraserTool.Width;
 			eraserTool.Left = 50;
 			eraserTool.Top = 0;
-			eraserTool.Text = "Erase";
+			eraserTool.Text = "";
+			eraserTool.image = sys.LoadTexture("EraserIcon");
             eraserTool.Click += new TomShane.Neoforce.Controls.EventHandler(EraseToolBehavior);
 
-			paintTool = new Button(manager);
+			paintTool = new ImageBasedButton(manager);
 			paintTool.Init();
 			paintTool.Parent = toolbarWindow;
 			paintTool.Width = toolbarWindow.Width / 2;
-			paintTool.Height = 24;
+			paintTool.Height = paintTool.Width;
 			paintTool.Left = 0;
-			paintTool.Top = 24;
-			paintTool.Text = "Paint";
+			paintTool.Top = roadTool.Height;
+			paintTool.Text = "";
+			paintTool.image = sys.LoadTexture("PaintingIcon");
             paintTool.Click += new TomShane.Neoforce.Controls.EventHandler(PaintToolBehavior);
 
 			exportMap = new Button(manager);
@@ -174,16 +181,22 @@ namespace MapEditor_TLCB.Systems
         {
             CurrentToolSystem toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
             toolSys.SetCurrentTool(CustomControls.Tool.PAINT_TOOL);
+
+			HighligthButton(paintTool);
         }
         public void RoadToolBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
             CurrentToolSystem toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
             toolSys.SetCurrentTool(CustomControls.Tool.ROAD_TOOL);
+
+			HighligthButton(roadTool);
         }
         public void EraseToolBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
             CurrentToolSystem toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
             toolSys.SetCurrentTool(CustomControls.Tool.ERASE_TOOL);
+
+			HighligthButton(eraserTool);
         }
         public void OnWindowClickBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
@@ -252,6 +265,31 @@ namespace MapEditor_TLCB.Systems
 		{
 			System.Windows.Forms.SaveFileDialog dialog = (System.Windows.Forms.SaveFileDialog)(sender);
 			((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]).SaveSerialiazedActions(dialog.FileName);
+		}
+
+		private void ResetTools(object sender, TomShane.Neoforce.Controls.EventArgs e)
+		{
+			roadTool.Mode = ButtonMode.Normal;
+			paintTool.Mode = ButtonMode.Normal;
+			eraserTool.Mode = ButtonMode.Normal;
+		}
+		private void HighligthButton(ImageBasedButton p_button)
+		{
+			if (p_button != eraserTool)
+			{
+				eraserTool.Mode = ButtonMode.Normal;
+			}
+			if (p_button != paintTool)
+			{
+				paintTool.Mode = ButtonMode.Normal;
+			}
+			if (p_button != roadTool)
+			{
+				roadTool.Mode = ButtonMode.Normal;
+			}
+
+			p_button.Mode = ButtonMode.PushButton;
+			p_button.Pushed = true;
 		}
 	}
 }

@@ -57,7 +57,7 @@ namespace MapEditor_TLCB
 			// Create an instance of manager using Default skin. We set the fourth parameter to false,
 			// so the instance of manager is not registered as an XNA game component and methods
 			// like Initialize(), Update() and Draw() are called manually in the game loop.
-			manager = new Manager(this, graphics, "Default");
+			manager = new Manager(this, graphics, "Blue");
 
 			// Layouts are not used
 			//manager.LayoutDirectory = "../../../Neoforce/Layouts";
