@@ -20,7 +20,7 @@ namespace MapEditor_TLCB.CustomControls
 	class TilemapContainer : Container
 	{
 		public Texture2D tilemapImage = null;
-		public Texture2D tileSelectorImage;
+		public Texture2D tileSelectorImage = null;
 		public Texture2D gridImage;
 		public Color gridColor;
 		private Rectangle selectorRect;
@@ -67,6 +67,8 @@ namespace MapEditor_TLCB.CustomControls
 			{
                 Color c = new Color(255, 255, 255, 255);
 				renderer.Draw(tilemapImage, rect, c);
+				renderer.Draw(tilemapImage, rect, Color.White);
+
                 Rectangle source;
                 source.X = 32 * curr.X;
                 source.Width = currSize.X;
@@ -81,15 +83,15 @@ namespace MapEditor_TLCB.CustomControls
                     renderer.Draw(tilemapImage, highlight, source, c);
                 }
 			}
-			renderer.Draw(gridImage, rect, gridColor);
-
             Rectangle markedRect;
             markedRect.X = 32 * marked.X;
             markedRect.Width = markedSize.X;
             markedRect.Y = 32 * marked.Y;
             markedRect.Height = markedSize.Y;
-
+			renderer.Draw(gridImage, rect, gridColor);
             renderer.Draw(tilemapImage, selectRect, markedRect, Color.Green);
+
+
             if (showAddToRadial)
             {
                 string s = "Add Selection to Radial Menu";
@@ -224,8 +226,8 @@ namespace MapEditor_TLCB.CustomControls
 			tileSize.Y = (int)(32 * aspect);
 
 			selectorRect = new Rectangle();
-			selectorRect.X = 6;
-			selectorRect.Y = 26;
+			selectorRect.X = 1;
+			selectorRect.Y = 1;
 			selectorRect.Width = tileSize.X;
 			selectorRect.Height = tileSize.Y;
 		}

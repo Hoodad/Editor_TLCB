@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using MapEditor_TLCB.CustomControls;
 using MapEditor_TLCB.Actions;
+using MapEditor_TLCB.Actions.Interface;
 
 namespace MapEditor_TLCB.Systems
 {
@@ -73,6 +74,8 @@ namespace MapEditor_TLCB.Systems
             undoTreeContainer.Height = viewport.Height-16;
             undoTreeContainer.Parent = undoTreeWindow;
             undoTreeContainer.CanFocus = false;
+            undoTreeContainer.Click += new TomShane.Neoforce.Controls.EventHandler(OnContainerClickBehavior);
+            undoTreeContainer.DoubleClicks = false;
 
             undoBtn = new Button(manager);
             undoBtn.Init();
@@ -159,6 +162,21 @@ namespace MapEditor_TLCB.Systems
             NotificationBarSystem noteSys = (NotificationBarSystem)world.SystemManager.GetSystem<NotificationBarSystem>()[0];
             Notification n = new Notification("The Undo Tree allows you to jump between various map states.", NotificationType.INFO);
             noteSys.AddNotification(n);
+
+        }
+
+
+        public void OnContainerClickBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
+        {
+            TomShane.Neoforce.Controls.MouseEventArgs me = e as TomShane.Neoforce.Controls.MouseEventArgs;
+
+            if (me.Button == MouseButton.Left)
+            {
+                List<ActionInterface> actions = undoTreeContainer.m_undoTree.setCurrentByPosition(me.Position.X-undoTreeWindow.AbsoluteLeft,
+                                                                                                  me.Position.Y-undoTreeWindow.AbsoluteTop);
+                m_actionsystem.PerformActionList(actions);
+            }
+
         }
 
         public void UndoBehaviour(object sender, TomShane.Neoforce.Controls.EventArgs e)

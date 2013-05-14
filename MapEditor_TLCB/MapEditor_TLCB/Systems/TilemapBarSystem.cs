@@ -49,7 +49,7 @@ namespace MapEditor_TLCB.Systems
 
             tilemap = new TilemapContainer(manager, m_content);
 			tilemap.gridImage = contentSystem.LoadTexture("TileSheets/grid");
-			tilemap.tileSelectorImage = contentSystem.LoadTexture("TileSelector_v3");
+			tilemap.tileSelectorImage = contentSystem.LoadTexture("TileSheets/tileSelector");
 			tilemap.Parent = tilemapWindow;
 			tilemap.windowParent = tilemapWindow;
 			tilemap.Width = 960;
