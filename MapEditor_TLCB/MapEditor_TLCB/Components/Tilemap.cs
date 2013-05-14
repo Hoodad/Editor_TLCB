@@ -11,7 +11,7 @@ namespace MapEditor_TLCB.Components
 	{
 		public enum TilemapType {SingleTilemap, RoadTilemap, FinalTilemap, WallTilemap};
 
-		public Tilemap(int p_columns, int p_rows, int p_tilewidth, int p_tileheight, TilemapType p_tilemapType)
+		public Tilemap(int p_columns, int p_rows, int p_tilewidth, int p_tileheight, TilemapType p_tilemapType, int p_fill = -1)
 		{
 			columns = p_columns;
 			rows = p_rows;
@@ -22,7 +22,7 @@ namespace MapEditor_TLCB.Components
 			{
 				for (int x = 0; x < p_columns; x++)
 				{
-					map[x, y] = -1;
+					map[x, y] = p_fill;
 				}
 			}
 

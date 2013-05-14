@@ -181,21 +181,19 @@ namespace MapEditor_TLCB.Systems
 										ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
 
 										//actionSys.StartGroupingActions();
-									ModifyTile changeTile = new ModifyTile(world.SystemManager);
-									changeTile.col = mapPos[0] + i - (int)min.X;
-									changeTile.row = mapPos[1] + j - (int)min.Y;
-									changeTile.state = index;
-									changeTile.affectedTilemap = singlesTilemap.getType();
+										ModifyTile changeTile = new ModifyTile(world.SystemManager);
+										changeTile.col = mapPos[0] + i - (int)min.X;
+										changeTile.row = mapPos[1] + j - (int)min.Y;
+										changeTile.state = index;
+										changeTile.affectedTilemap = singlesTilemap.getType();
+										actionSys.EnqueueAction(changeTile);
 
-									actionSys.EnqueueAction(changeTile);
-
-									ModifyTile roadChangeTile = new ModifyTile(world.SystemManager);
-									roadChangeTile.col = changeTile.col;
-									roadChangeTile.row = changeTile.row;
-									roadChangeTile.state = -1;
-									roadChangeTile.affectedTilemap = roadTilemap.getType();
-                                    actionSys.EnqueueAction(roadChangeTile);
-
+										//ModifyTile roadChangeTile = new ModifyTile(world.SystemManager);
+										//roadChangeTile.col = changeTile.col;
+										//roadChangeTile.row = changeTile.row;
+										//roadChangeTile.state = -1;
+										//roadChangeTile.affectedTilemap = roadTilemap.getType();
+										//actionSys.EnqueueAction(roadChangeTile);
 									}
 								}
 							}

@@ -125,7 +125,7 @@ namespace MapEditor_TLCB
 
 			entity = world.CreateEntity();
 			entity.Tag = "mainTilemap";
-			entity.AddComponent(new Tilemap(60, 31, 32, 32, Tilemap.TilemapType.FinalTilemap));
+			entity.AddComponent(new Tilemap(60, 31, 32, 32, Tilemap.TilemapType.FinalTilemap, 31));
 			entity.AddComponent(new Transform(new Vector2(0, 0)));
 			entity.AddComponent(new TilemapRender("tilemap_garden", false));
 			entity.AddComponent(new TilemapValidate());
