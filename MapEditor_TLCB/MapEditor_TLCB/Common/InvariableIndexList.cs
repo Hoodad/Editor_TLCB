@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 namespace MapEditor_TLCB.Common
 {
     [Serializable()]
-    class InvariableIndexList<T>
+    class InvariableIndexList<T> : ISerializable
     {
         public InvariableIndexList()
         {

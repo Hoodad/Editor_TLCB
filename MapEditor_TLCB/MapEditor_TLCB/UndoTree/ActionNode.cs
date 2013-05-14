@@ -8,7 +8,7 @@ using System.Runtime.Serialization;
 namespace MapEditor_TLCB.Actions
 {
     [Serializable()]
-    class ActionNode
+    class ActionNode : ISerializable
     {
         public enum NodeType
         {
