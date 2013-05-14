@@ -10,8 +10,8 @@ namespace MapEditor_TLCB.Systems
 {
 	class StateSystem : EntitySystem
 	{
-		bool requestToShutdown;
 		bool shouldShutdown;
+		bool canvasCanBeReached;
 		Manager manager;
 		Window confirmWindow;
 		Button acceptButton;
@@ -20,9 +20,9 @@ namespace MapEditor_TLCB.Systems
 
 		public StateSystem(Manager p_manager) : base()
 		{
-			requestToShutdown = false;
 			shouldShutdown = false;
 			manager = p_manager;
+			canvasCanBeReached = false;
 		}
 
 		public override void Initialize()
@@ -37,6 +37,7 @@ namespace MapEditor_TLCB.Systems
 			confirmWindow.Center();
 			confirmWindow.Visible = false;
 			confirmWindow.Resizable = false;
+			confirmWindow.Closing += new WindowClosingEventHandler(WindowCloseBehavior);
 			manager.Add(confirmWindow);
 
 			acceptButton = new Button(manager);
@@ -63,17 +64,15 @@ namespace MapEditor_TLCB.Systems
 
 		public void RequestToShutdown()
 		{
-			requestToShutdown = true;
 			confirmWindow.Visible = true;
 			confirmWindow.ShowModal();
 			cancelButton.Focused = true;
+			canvasCanBeReached = false;
 		}
 		public bool ShouldShutDown()
 		{
-
 			return shouldShutdown;
 		}
-
 		void ConfirmedExit (object sender, TomShane.Neoforce.Controls.EventArgs e)
 		{
 			shouldShutdown = true;
@@ -81,9 +80,19 @@ namespace MapEditor_TLCB.Systems
 		}
 		void CancelExit(object sender, TomShane.Neoforce.Controls.EventArgs e)
 		{
-			requestToShutdown = false;
 			confirmWindow.Close(ModalResult.Cancel);
 		}
-
+		void WindowCloseBehavior(object sender, WindowClosingEventArgs e)
+		{
+			canvasCanBeReached = true;
+		}
+		public void SetCanvasCanBeReached(bool p_newValue)
+		{
+			canvasCanBeReached = p_newValue;
+		}
+		public bool CanCanvasBeReached()
+		{
+			return canvasCanBeReached;
+		}
 	}
 }

@@ -60,6 +60,8 @@ namespace MapEditor_TLCB.Systems
 		public void ShowStartUpDialog()
 		{
 			startupDialog.ShowModal();
+			StateSystem stateSys = (StateSystem)world.SystemManager.GetSystem<StateSystem>()[0];
+			stateSys.SetCanvasCanBeReached(false);
 		}
 		public bool IsVisible()
 		{
@@ -106,6 +108,7 @@ namespace MapEditor_TLCB.Systems
 			startupDialog.Movable = false;
 			startupDialog.IconVisible = false;
 			startupDialog.VisibleChanged +=new TomShane.Neoforce.Controls.EventHandler(startupDialog_VisibleChanged);
+			startupDialog.Closing += new WindowClosingEventHandler(WindowCloseBehavior);
 			manager.Add(startupDialog);
 
 			possibleMaps = new GroupPanel(manager);
@@ -165,6 +168,11 @@ namespace MapEditor_TLCB.Systems
 			//manager.Add(tileMapCellar);
 
 			tilemap = tileMapGarden.tilemap;
+		}
+		void WindowCloseBehavior(object sender, WindowClosingEventArgs e)
+		{
+			StateSystem stateSys = (StateSystem)world.SystemManager.GetSystem<StateSystem>()[0];
+			stateSys.SetCanvasCanBeReached(true);
 		}
 
 	}

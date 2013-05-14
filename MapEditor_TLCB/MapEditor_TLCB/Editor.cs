@@ -29,6 +29,8 @@ namespace MapEditor_TLCB
 		RenderTarget2D canvasRender;
 		bool useFullScreen;
 		bool useMaxRes;
+		float repeatDelay;
+		float repeatTime;
 
 		private	KeyboardState oldState;
 
@@ -39,6 +41,9 @@ namespace MapEditor_TLCB
 			textures = new Dictionary<string, Texture2D>();
 			useFullScreen = p_useFullScreen;
 			useMaxRes = p_useMaxRes;
+
+			repeatDelay = 0.5f;
+			repeatTime = 0;
 		}
 
 		/// <summary>
@@ -209,23 +214,51 @@ namespace MapEditor_TLCB
 					stateSys.RequestToShutdown();
 				}
 			}
-			
-			if (newState.IsKeyDown(Keys.LeftControl))
+			if (stateSys.CanCanvasBeReached())
 			{
-				if (newState.IsKeyUp(Keys.Z))
+				if (newState.IsKeyDown(Keys.LeftControl))
 				{
-					if (oldState.IsKeyDown(Keys.Z))
+					if (newState.IsKeyUp(Keys.Z))
 					{
-						ActionSystem sys = (ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0];
-						sys.UndoLastPerformedAction();
+						if (oldState.IsKeyDown(Keys.Z))
+						{
+							ActionSystem sys = (ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0];
+							sys.UndoLastPerformedAction();
+							repeatTime = 0;
+						}
 					}
-				}
-				if (newState.IsKeyUp(Keys.Y))
-				{
-					if (oldState.IsKeyDown(Keys.Y))
+					else if (newState.IsKeyUp(Keys.Y))
 					{
-						ActionSystem sys = (ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0];
-						sys.RedoLastAction();
+						if (oldState.IsKeyDown(Keys.Y))
+						{
+							ActionSystem sys = (ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0];
+							sys.RedoLastAction();
+							repeatTime = 0;
+						}
+					}
+
+					//Repeat delay
+					if (newState.IsKeyDown(Keys.Z))
+					{
+						repeatTime += gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
+
+						if (repeatTime > repeatDelay)
+						{
+							ActionSystem sys = (ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0];
+							sys.UndoLastPerformedAction();
+							repeatTime -= 0.1f;
+						}
+					}
+					else if (newState.IsKeyDown(Keys.Y))
+					{
+						repeatTime += gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
+
+						if (repeatTime > repeatDelay)
+						{
+							ActionSystem sys = (ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0];
+							sys.RedoLastAction();
+							repeatTime -= 0.1f;
+						}
 					}
 				}
 			}
