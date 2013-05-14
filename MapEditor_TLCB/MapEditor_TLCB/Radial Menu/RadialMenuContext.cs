@@ -113,7 +113,7 @@ namespace MapEditor_TLCB
         }
         public void addRadialMenu(RadialMenu p_menu)
         {
-            p_menu.setTexturesAndFonts(m_circleTexture, m_infoBox, m_arrow, m_font);
+            p_menu.setTexturesAndFonts(m_circleTexture, m_infoBox, m_arrow, m_font, m_largeWhiteDot);
             m_menus.Add(p_menu);
             if (m_current == -1)
             {
@@ -431,6 +431,12 @@ namespace MapEditor_TLCB
                 rect.Height = (int)dotSize;
                 Color c = new Color(100, 100, 100, 255);
                 c *= 0.25f;
+                p_sb.Draw(m_largeWhiteDot, rect, c);
+                dotSize *= 0.5f;
+                rect.X = (int)(m_position.X - dotSize * 0.5);
+                rect.Y = (int)(m_position.Y - dotSize * 0.5f);
+                rect.Width = (int)dotSize;
+                rect.Height = (int)dotSize;
                 p_sb.Draw(m_largeWhiteDot, rect, c);
 
                 if (m_transitionPhase)

@@ -23,6 +23,8 @@ namespace MapEditor_TLCB
 
         private Texture2D m_arrow;
 
+        private Texture2D m_largeWhiteDot;
+
         private SpriteFont m_font;
 
         private float rot = 0.0f;
@@ -70,12 +72,13 @@ namespace MapEditor_TLCB
                 return null;
             return m_items[arrowTarget];
         }
-        public void setTexturesAndFonts(Texture2D p_circleTexture, Texture2D p_infoBox, Texture2D p_arrow, SpriteFont p_font)
+        public void setTexturesAndFonts(Texture2D p_circleTexture, Texture2D p_infoBox, Texture2D p_arrow, SpriteFont p_font, Texture2D p_largeWhiteDot)
         {
             m_circleTexture = p_circleTexture;
             m_infoBox = p_infoBox;
             m_arrow = p_arrow;
             m_font = p_font;
+            m_largeWhiteDot = p_largeWhiteDot;
         }
 
         public void update(float p_size, Vector2 p_position)
@@ -362,7 +365,19 @@ namespace MapEditor_TLCB
                         c.A = alpha;
                     }
 
+                    Color backdropC = new Color(100, 100, 100, 255);
+                    backdropC *= 0.25f;
+                    sp.Draw(m_largeWhiteDot, drawRect, backdropC);
+
+                    rectSize2 = rectSize * sizeFraction / 2.0f;// (float)Math.Sqrt(2.0f);
+                    drawRect.X = (int)(IconPos.X - rectSize2 * 0.5f);
+                    drawRect.Y = (int)(IconPos.Y - rectSize2 * 0.5f);
+
+                    drawRect.Width = (int)rectSize2;
+                    drawRect.Height = (int)rectSize2;
+
                     sp.Draw(m_items[i].texture, drawRect, m_items[i].sourceRect, c);
+
                 }
                 //if (i == arrowTarget)
                     //sp.Draw(m_circleTexture, IconPos - new Vector2(size, size)*0.5f, Color.White);
