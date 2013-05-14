@@ -118,6 +118,17 @@ namespace MapEditor_TLCB
                     if (action != null) action.PerformAction();
             }
 		}
+
+        public void PerformActionList(List<ActionInterface> p_actions)
+        {
+            // PerformAction(performedActions, redoActions);
+            if (p_actions != null)
+            {
+                foreach (ActionInterface action in p_actions)
+                    if (action != null) action.PerformAction();
+            }
+        }
+
         /*
 		private void PerformAction(List<EditorAction> p_originalActionOwner, List <EditorAction> p_newActionOwner)
 		{

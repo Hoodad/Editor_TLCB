@@ -106,7 +106,7 @@ namespace MapEditor_TLCB.Systems
                 string actionstring = "Tool"; Tool currentTool = m_toolSys.GetCurrentTool();
                 switch (currentTool)
                 {
-                    case Tool.ROAD_TOOL: actionstring = "Road House"; break;
+                    case Tool.ROAD_TOOL: actionstring = "Road"; break;
                     case Tool.ERASE_TOOL: actionstring = "Erase"; break;
                     case Tool.PAINT_TOOL: actionstring = "Paint"; break;
                     default: actionstring = "W-T-F!!!!!!"; break;

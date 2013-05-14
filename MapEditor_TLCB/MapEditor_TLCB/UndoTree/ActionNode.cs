@@ -36,6 +36,7 @@ namespace MapEditor_TLCB.Actions
         public int m_activeBranch = 2; // using int for now. 0=false, 1=evaluation, 2=true. make tick down each time not having active branch child
         // for representation
         public Vector2 m_renderPos;
-        public string m_info="Generic";
+        public string m_info="Generic"; ///< fix this into indexed names
+        //public float traversedflash = 0.0f;
     }
 }
