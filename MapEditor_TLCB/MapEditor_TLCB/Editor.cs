@@ -199,6 +199,7 @@ namespace MapEditor_TLCB
 		{
 			KeyDelta.update();
 			StateSystem stateSys = (StateSystem)world.SystemManager.GetSystem<StateSystem>()[0];
+			ActionSystem actionSys = (ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0];
 			if (stateSys.ShouldShutDown())
 			{
 				this.Exit();
@@ -211,6 +212,15 @@ namespace MapEditor_TLCB
 					stateSys.RequestToShutdown();
 				}
 			}
+
+			if (newState.IsKeyUp(Keys.O))
+			{
+				if (oldState.IsKeyDown(Keys.O))
+				{
+					actionSys.LoadSerialiazedActions();
+				}
+			}
+
 			if (stateSys.CanCanvasBeReached())
 			{
 				if (newState.IsKeyDown(Keys.LeftControl))

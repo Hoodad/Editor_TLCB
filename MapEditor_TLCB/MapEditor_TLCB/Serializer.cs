@@ -2,6 +2,7 @@
 using MapEditor_TLCB.Actions.Interface;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Diagnostics;
 
 namespace MapEditor_TLCB
 {
@@ -17,11 +18,15 @@ namespace MapEditor_TLCB
 
 		public ActionsSerialized DeSerializeObject(string p_fileName)
 		{
-			ActionsSerialized deSerializeObj;
+			ActionsSerialized deSerializeObj = null;
+
+
 			Stream stream = File.Open(p_fileName, FileMode.Open);
 			BinaryFormatter binaryForm = new BinaryFormatter();
 			deSerializeObj = (ActionsSerialized)binaryForm.Deserialize(stream);
 			stream.Close();
+
+		
 			return deSerializeObj;
 		}
 	}

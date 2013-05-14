@@ -4,6 +4,8 @@ using MapEditor_TLCB.Actions.Interface;
 using MapEditor_TLCB.Actions;
 using MapEditor_TLCB.Systems;
 using System.Diagnostics;
+using MapEditor_TLCB.Common;
+using System;
 
 namespace MapEditor_TLCB
 {
@@ -205,40 +207,34 @@ namespace MapEditor_TLCB
 
 		public void LoadSerialiazedActions()
 		{
-			/*
 			ActionsSerialized obj = new ActionsSerialized();
 			Serializer seri = new Serializer();
-			obj = seri.DeSerializeObject("SerializeObjects.txt");
+			obj = seri.DeSerializeObject("test.cheeseboy");
 
-			performedActions = obj.performedActions;
-			queuedActions = obj.queuedActions;
-			redoActions = obj.redoActions;
 
-			foreach (ActionInterface action in performedActions)
+			for (int i = 1; i < obj.actions.getSize(); i++ )
 			{
-				action.AddAffectedSystems(world.SystemManager);
+				obj.actions.at(i).AddAffectedSystems(world.SystemManager);
 			}
 
-			foreach (ActionInterface action in queuedActions)
-			{
-				action.AddAffectedSystems(world.SystemManager);
-			}
-
-			foreach (ActionInterface action in redoActions)
-			{
-				action.AddAffectedSystems(world.SystemManager);
-
-			}
-			while (redoActions.Count > 0)
-			{
-				RedoLastAction();
-			}
-			*/
+			actionTree.SetData(obj.nodes, obj.actions);		
 		}
 		public void SaveSerialiazedActions(string p_completePath)
 		{
 			ActionsSerialized obj = new ActionsSerialized();
-			obj.queuedActions = queuedActions;
+
+
+			List<ActionInterface> actions = actionTree.undo();
+			while(actions != null)
+			{
+				foreach (ActionInterface action in actions)
+					if (action != null) action.PerformAction();
+				
+				actions = actionTree.undo();
+			}
+
+			obj.nodes = actionTree.GetData().Item1;
+			obj.actions = actionTree.GetData().Item2;
 
 			Serializer seri = new Serializer();
 			seri.SerializeObject(p_completePath, obj);
