@@ -243,7 +243,7 @@ namespace MapEditor_TLCB.Systems
 
 		public void ClearTheUndoTree()
 		{
-			//TODO: Clear the undo tree!
+            undoTreeContainer.m_undoTree.ResetData();
 		}
 
     }

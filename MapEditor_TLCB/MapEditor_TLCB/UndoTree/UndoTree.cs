@@ -44,7 +44,7 @@ namespace MapEditor_TLCB.Actions
         private Vector2 m_nodeMargin;
         private Vector2 scrollOffset = Vector2.Zero;
         private Vector2 scrollInputBuffer=Vector2.Zero;
-        private Vector2 m_renderOffset = new Vector2(30, 100);
+        private Vector2 m_renderOffset;
         private Vector2 m_lineRenderOffset;
 
         Color m_activeBranchCol = new Color(58, 174, 163);
@@ -67,7 +67,7 @@ namespace MapEditor_TLCB.Actions
             m_gd = p_gd;
             m_lineRenderer = new LineRenderer(m_gd,p_content);
 
-			ResetUndoTree();
+			ResetData();
             
 			// modes
             m_mode = Mode.TREE;
@@ -80,8 +80,13 @@ namespace MapEditor_TLCB.Actions
             m_font = p_content.Load<SpriteFont>("Arcadepix");
         }
 
-		public void ResetUndoTree()
+		public void ResetData()
 		{
+            m_currentNodeId=-1;
+            m_startNodeId=-1;
+            scrollOffset = Vector2.Zero;
+            scrollInputBuffer=Vector2.Zero;
+            m_renderOffset = new Vector2(30, 100);
 			m_nodes = new InvariableIndexList<ActionNode>();
 			m_actions = new InvariableIndexList<ActionInterface>();
 			m_currentNodeId = addAction(null);
