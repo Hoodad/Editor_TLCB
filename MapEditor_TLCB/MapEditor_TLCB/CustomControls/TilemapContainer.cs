@@ -80,7 +80,7 @@ namespace MapEditor_TLCB.CustomControls
                 if (!showAddToRadial)
                 {
                     c = new Color(150, 150, 255, 255);
-                    renderer.Draw(tilemapImage, highlight, source, c);
+                    renderer.Draw(tileSelectorImage, highlight, source, Color.Green);
                 }
 			}
             Rectangle markedRect;
@@ -89,7 +89,7 @@ namespace MapEditor_TLCB.CustomControls
             markedRect.Y = 32 * marked.Y;
             markedRect.Height = markedSize.Y;
 			renderer.Draw(gridImage, rect, gridColor);
-            renderer.Draw(tilemapImage, selectRect, markedRect, Color.Green);
+			renderer.Draw(tileSelectorImage, selectRect, markedRect, Color.CornflowerBlue);
 
 
             if (showAddToRadial)
