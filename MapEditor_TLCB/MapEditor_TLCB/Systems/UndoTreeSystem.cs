@@ -172,7 +172,8 @@ namespace MapEditor_TLCB.Systems
 
             if (me.Button == MouseButton.Left)
             {
-                List<ActionInterface> actions = undoTreeContainer.m_undoTree.setCurrentByPosition(me.Position.X, me.Position.Y);
+                List<ActionInterface> actions = undoTreeContainer.m_undoTree.setCurrentByPosition(me.Position.X-undoTreeWindow.AbsoluteLeft,
+                                                                                                  me.Position.Y-undoTreeWindow.AbsoluteTop);
                 m_actionsystem.PerformActionList(actions);
             }
 
