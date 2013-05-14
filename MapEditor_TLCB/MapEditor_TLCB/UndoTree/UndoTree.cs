@@ -116,7 +116,7 @@ namespace MapEditor_TLCB.Actions
                 currentProcNode.m_renderPos = Vector2.Lerp(currentProcNode.m_renderPos,
                                                          goal,
                                                10.0f * p_dt); //<-dt
-
+                //currentProcNode.traversedflash = MathHelper.Lerp(currentProcNode.traversedflash, 0.0f, p_dt);
 
 
 
@@ -198,6 +198,7 @@ namespace MapEditor_TLCB.Actions
                     Color tint = m_inactiveNodeCol;
                     if (currentRender.m_activeBranch>0) tint = m_activeBranchCol;
                     if (i == m_currentNodeId) tint = m_currentNodeCol;
+                    //tint = Color.Lerp(tint,Color.Red,currentRender.traversedflash);
                     drawNode(p_spriteBatch, scrollOffset + m_renderOffset + currentRender.m_renderPos, tint);
                     // draw action info as well
                     if (m_zoom != Zoom.MINI)
@@ -205,11 +206,11 @@ namespace MapEditor_TLCB.Actions
                         if (currentRender.m_actionIds[0] != -1) action = m_actions[currentRender.m_actionIds[0]];
                         if (action != null)
                         {
-                            string info = "";
+                            string info = i.ToString()+"| ";
                             if (currentRender.m_actionIds.Count > 1)
-                                info = currentRender.m_info; // action group info
+                                info += currentRender.m_info; // action group info
                             else
-                                info = action.GetInfo();    // single action info
+                                info += action.GetInfo();    // single action info
                             Vector2 strSz = m_font.MeasureString(info);
                             float scale = Math.Min(1.0f, m_nodeWidth / strSz.X);
                             strSz *= scale;
@@ -396,9 +397,155 @@ namespace MapEditor_TLCB.Actions
             return actions;
         }
 
+        // traverse from current to specified id
+        // super crappy method
+        public List<ActionInterface> traverse(int p_newId)
+        {
+            ActionNode currentNode = m_nodes[m_currentNodeId];
+            ActionNode newNode = m_nodes[p_newId];
+            
+            List<ActionInterface> upStepActions = new List<ActionInterface>(); // actions encountered when stepping through parents (undo actions)
+            List<ActionInterface> downStepActions = new List<ActionInterface>(); // actions encountered when stepping through children (redo actions)
+
+            List<ActionNode> upNodes = null;
+            List<ActionNode> downNodes = getStepsFromParentToChild(m_currentNodeId,p_newId);
+            if (downNodes==null) // Try find in children
+            {
+                // if fail, try find in parent
+                upNodes = getStepsFromChildToParent(m_currentNodeId,p_newId);
+                if (upNodes[upNodes.Count - 1] != m_nodes[p_newId]) // if fail, use parent path to root and append child search from root
+                {
+                    downNodes = getStepsFromParentToChild(0, p_newId);
+                }
+
+            }
+            // add all undos in reverse
+            if (upNodes!=null) // if null then we only have redos
+            {
+                //upNodes[upNodes.Count-1].traversedflash = 1.0f;
+                upNodes.RemoveAt(upNodes.Count-1); // never undo bottom(if existant it's always the newId; the to-be-undoed)
+                for (int i = 0; i<upNodes.Count; i++) // already in reverse due to search being child-to-parent
+                {
+                    ActionNode node = upNodes[i];
+                    //node.traversedflash = 1.0f;
+                    for (int n = node.m_actionIds.Count - 1; n >= 0; n--) // actions internally must be added to list in reverse though
+                    {
+                        int aid = node.m_actionIds[n];
+                        if (aid > -1)
+                        {
+                            ActionInterface action = m_actions[aid];
+                            upStepActions.Add(action);
+                        }
+                    }
+                }
+            }
+            // then append all redos in normal order
+            if (downNodes != null) // if null then we only have undos
+            {
+                // downNodes[0].traversedflash = 1.0f;
+                downNodes.RemoveAt(0); // never redo top(it's either the start or root)
+                for (int i = 0;i<downNodes.Count;i++)
+                {
+                    ActionNode node = downNodes[i];
+                    //node.traversedflash = 1.0f;
+                    for (int n = 0; n < node.m_actionIds.Count; n++)
+                    {
+                        int aid = node.m_actionIds[n];
+                        if (aid > -1)
+                        {
+                            ActionInterface action = m_actions[aid];
+                            downStepActions.Add(action);
+                        }
+                    }
+                }
+            }
+
+            upStepActions.AddRange(downStepActions); // append redos at end of undos
+
+            return upStepActions; // return finalized action list
+        }
+
+        public bool findChild(int p_current,int p_childId)
+        {
+            ActionNode p = m_nodes[p_current];
+            Queue<ActionNode> workQueue = new Queue<ActionNode>();
+            workQueue.Enqueue(p);
+            while(workQueue.Count>0)
+            {
+                p = workQueue.Dequeue();
+                foreach (int childId in p.m_children)
+                {
+                    //
+                    if (childId == p_childId) return true;
+                    //
+                    ActionNode childNode = m_nodes[childId];
+                    workQueue.Enqueue(childNode);
+                }
+            }
+            return false;
+        }
+
+        // adds all parents from(and including) child to the specified parent, or the root if not found
+        public List<ActionNode> getStepsFromChildToParent(int p_child, int p_parent)
+        {
+            List<ActionNode> list = new List<ActionNode>();
+            int current = p_child;
+            list.Add(m_nodes[current]);
+            while (current > 0 && current!=p_parent)
+            {
+                int parent = m_nodes[current].m_parentId;
+                list.Add(m_nodes[parent]);
+                current = parent;
+            }
+
+            return list;
+        }
+
+        // adds all parents from(and including) child to the specified parent, or the root if not found
+        public List<ActionNode> getStepsFromParentToChild(int p_parent, int p_child)
+        {
+            List<ActionNode> resultPath = null;
+            if (findChild(p_parent, p_child))
+            {
+                resultPath = getStepsFromChildToParent(p_child, p_parent);
+                resultPath.Reverse();
+            }
+            
+            return resultPath;
+        }
+
+
         public void setCurrent(int p_id)
         {
             m_currentNodeId = p_id;
+        }
+
+        public List<ActionInterface> setCurrentByPosition(int p_x, int p_y)
+        {
+            List<ActionInterface> returnPath = null;
+            p_x -= (int)(scrollOffset.X + m_renderOffset.X);
+            p_y -= (int)(scrollOffset.Y + m_renderOffset.Y);
+            // only check the visible for collision
+            foreach (int i in m_renderBatch)
+            {
+                if (i != -1 && i < m_nodes.getSize() && m_nodes[i] != null)
+                {
+                    ActionNode currentRender = m_nodes[i];
+                    // ye olde box collision, forgive the continues
+                    if (p_x > currentRender.m_renderPos.X + m_nodeWidth)  continue;
+                    if (p_x < currentRender.m_renderPos.X)                continue;
+                    if (p_y > currentRender.m_renderPos.Y + m_nodeHeight) continue;
+                    if (p_y < currentRender.m_renderPos.Y)                continue;
+                    // if passed, click hit
+                    if (m_currentNodeId != i)
+                    {
+                        returnPath = traverse(i);
+                        m_currentNodeId = i;
+                    }
+                    break;
+                }
+            }
+            return returnPath;
         }
 
         public void ScrollX(int p_dx, int p_max)
