@@ -75,7 +75,7 @@ namespace MapEditor_TLCB.Systems
 				{
 					int[] mouseTilePos = tilemap.getTilePosition(m_lastMovedMousePos);
 					Vector2 mouseGridPosition = tilemap.getPosition(mouseTilePos[0], mouseTilePos[1]);
-					m_spriteBatch.Draw(m_textures["debugBlock"], mouseGridPosition, transparent);
+					m_spriteBatch.Draw(m_textures["TileSelector"], mouseGridPosition, transparent);
 				}
 			}
 
@@ -91,7 +91,7 @@ namespace MapEditor_TLCB.Systems
 		protected override void Begin()
 		{
 			m_graphicsDevice.SetRenderTarget(m_canvasRender);
-			m_graphicsDevice.Clear(Color.White);
+			m_graphicsDevice.Clear(Color.LightGray);
 
 			Matrix cameraMatrix = Matrix.Identity;
 			Entity camera = world.TagManager.GetEntity("mainCamera");
