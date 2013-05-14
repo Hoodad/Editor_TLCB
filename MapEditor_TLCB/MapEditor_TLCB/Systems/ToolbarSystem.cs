@@ -115,7 +115,7 @@ namespace MapEditor_TLCB.Systems
 			newMap.Height = 24;
 			newMap.Left = 0;
 			newMap.Top = toolbarWindow.Height - 24 * 3;
-			newMap.Click += new TomShane.Neoforce.Controls.EventHandler(ClearMapBehavior);
+			newMap.Click += new TomShane.Neoforce.Controls.EventHandler(NewMapBehavior);
 
 			backToStartScreen = new Button(manager);
 			backToStartScreen.Init();
@@ -208,7 +208,7 @@ namespace MapEditor_TLCB.Systems
 		{
 			((StartupDialogSystem)world.SystemManager.GetSystem<StartupDialogSystem>()[0]).ShowStartUpDialog();
 		}
-		private void ClearMapBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
+		private void NewMapBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
 		{
 			newMapConfirmationWindow.ShowModal();
 			cancel.Focused = true;
@@ -223,7 +223,7 @@ namespace MapEditor_TLCB.Systems
 			newMapConfirmationWindow.Close();
 
 			UndoTreeSystem sys = (UndoTreeSystem)world.SystemManager.GetSystem<UndoTreeSystem>()[0];
-			sys.Initialize();
+			sys.ClearTheUndoTree();
 			world.SystemManager.GetSystem<ActionSystem>()[0].Initialize();
 		}
 
