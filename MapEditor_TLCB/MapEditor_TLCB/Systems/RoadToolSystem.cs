@@ -103,6 +103,25 @@ namespace MapEditor_TLCB.Systems
 			if (e.State.LeftButton == ButtonState.Pressed && !m_lmbPressed)
 			{
 				m_lmbPressed = true;
+
+                m_mouseDownPosition = new Vector2(e.Position.X, e.Position.Y);
+                Entity camera = world.TagManager.GetEntity("mainCamera");
+                if (camera != null)
+                {
+                    Transform camTransform = camera.GetComponent<Transform>();
+                    if (camTransform != null)
+                    {
+                        m_mouseDownPosition = Vector2.Transform(m_mouseDownPosition, Matrix.Invert(camTransform.getMatrix()));
+                    }
+                }
+
+                bool ctrl = Keyboard.GetState().IsKeyDown(Keys.LeftControl);
+                bool shift = Keyboard.GetState().IsKeyDown(Keys.LeftShift);
+                if (ctrl)
+                    m_limitHorizontal = true;
+                if (shift)
+                    m_limitVertical = true;
+
 				ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
                 ActionNode.NodeType nodeType=ActionNode.NodeType.NONE; Tool currentTool = m_toolSys.GetCurrentTool();
                 switch (currentTool)
@@ -142,6 +161,18 @@ namespace MapEditor_TLCB.Systems
 			{
 				if (m_lmbPressed)
 				{
+                    bool ctrl = Keyboard.GetState().IsKeyDown(Keys.LeftControl);
+                    bool shift = Keyboard.GetState().IsKeyDown(Keys.LeftShift);
+                    if (!ctrl)
+                        m_limitHorizontal = false;
+                    if (!shift)
+                        m_limitVertical = false;
+
+                    if (m_limitHorizontal)
+                        mousePos.X = m_mouseDownPosition.X;
+                    if (m_limitVertical)
+                        mousePos.Y = m_mouseDownPosition.Y;
+
 					Tool currentTool = m_toolSys.GetCurrentTool();
 					if (mainTilemap != null && roadTilemap != null && wallTilemap != null &&
 						canvasTransform != null)
@@ -404,6 +435,10 @@ namespace MapEditor_TLCB.Systems
 		ComponentMapper<Tilemap> m_tilemapMapper;
 		CurrentToolSystem m_toolSys;
 		DrawCanvasSystem m_drawCanvasSys;
+        Vector2 m_mouseDownPosition;
+        bool m_limitHorizontal = false;
+        bool m_limitVertical = false;
+
 		bool m_lmbPressed;
 	}
 }
