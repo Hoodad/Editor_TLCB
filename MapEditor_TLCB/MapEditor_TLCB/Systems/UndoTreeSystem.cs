@@ -11,6 +11,7 @@ using MapEditor_TLCB.CustomControls;
 using MapEditor_TLCB.Actions;
 using MapEditor_TLCB.Actions.Interface;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
 namespace MapEditor_TLCB.Systems
 {
@@ -30,7 +31,7 @@ namespace MapEditor_TLCB.Systems
         public UndoTreeContainer undoTreeContainer;
         GraphicsDevice m_gd;
         ContentManager m_content;
-        private MouseState previousMouseState;
+        private Vector2 oldMousePos=Vector2.Zero;
 
         private int m_scrollWheelValue = 0;
         private int m_previousScrollWheelValue = 0;
@@ -41,7 +42,6 @@ namespace MapEditor_TLCB.Systems
 
         public UndoTreeSystem(Manager p_manager, GraphicsDevice p_gd, ContentManager p_content)
         {
-            previousMouseState = Mouse.GetState();
             manager = p_manager;
             m_gd = p_gd;
             m_content = p_content;
@@ -81,7 +81,7 @@ namespace MapEditor_TLCB.Systems
             undoTreeContainer.CanFocus = false;
             undoTreeContainer.Click += new TomShane.Neoforce.Controls.EventHandler(OnContainerClickBehavior);
             undoTreeContainer.MouseScroll += new TomShane.Neoforce.Controls.MouseEventHandler(OnContainerScrollBehaviour);
-            undoTreeContainer.MouseMove += new TomShane.Neoforce.Controls.MouseEventHandler(OnContainerPanBehaviour);
+            undoTreeContainer.MousePress += new TomShane.Neoforce.Controls.MouseEventHandler(OnContainerPanBehaviour);
             undoTreeContainer.DoubleClicks = false;
 
             undoBtn = new Button(manager);
@@ -157,6 +157,7 @@ namespace MapEditor_TLCB.Systems
             undoTreeContainer.m_undoTree.m_renderArea = undoTreeWindow.ClientRect;
             float dt = (float)world.Delta / 1000.0f;
             undoTreeContainer.Update(dt);
+
             //
             if (undoTreeContainer.m_undoTree.isThereANewNode())
             {
@@ -246,17 +247,22 @@ namespace MapEditor_TLCB.Systems
             undoTreeContainer.m_undoTree.ScrollX(sb.Value, scrollMax);
         }
 
-        public void OnContainerPanBehaviour(object sender, TomShane.Neoforce.Controls.MouseEventArgs e)
+        private void OnContainerPanBehaviour(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
-            MouseState currentState = e.State;
-            if (e.State.MiddleButton == ButtonState.Pressed)
+            MouseEventArgs me = e as MouseEventArgs;
+            MouseState currentState = me.State;
+            Vector2 mousePos = Vector2.Zero;
+            if (me.State.MiddleButton == ButtonState.Pressed)
             {
-                Vector2 mouseDiff = new Vector2(e.Position.X - previousMouseState.X, e.Position.Y - previousMouseState.Y);
+                mousePos = new Vector2(me.Position.X, me.Position.Y);
+                
+                Vector2 mouseDiff = mousePos - oldMousePos;
                 undoTreeContainer.m_undoTree.scrollOffset += mouseDiff;
                 // update gui
                 UpdateScrollBarsFromTreeValues();
             }
-            previousMouseState = currentState;
+            oldMousePos = mousePos;
+            
         }
 
         public void OnContainerScrollBehaviour(object sender, TomShane.Neoforce.Controls.MouseEventArgs e)
