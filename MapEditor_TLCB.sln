@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapEditor_TLCB", "MapEditor_TLCB\MapEditor_TLCB\MapEditor_TLCB.csproj", "{E976F134-7FBA-4E72-90BF-7F9E6A097780}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "MapEditor_TLCBContent", "MapEditor_TLCB\MapEditor_TLCBContent\MapEditor_TLCBContent.contentproj", "{D1E7AE8D-17E9-4D08-ACA7-5639F35C256E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapEditor_TLCBContent", "MapEditor_TLCB\MapEditor_TLCBContent\MapEditor_TLCBContent.contentproj", "{D1E7AE8D-17E9-4D08-ACA7-5639F35C256E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

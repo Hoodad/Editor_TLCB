@@ -52,6 +52,7 @@ namespace MapEditor_TLCB.Systems
 			if (e.Tag == "mainTilemap") {
 				mainTilemap = m_tilemapMapper.Get(e);
 				canvasTransform = e.GetComponent<Transform>();
+				mainValidate = e.GetComponent<TilemapValidate>();
 			}
 			else if (e.Tag == "singlesTilemap")
 			{
@@ -119,6 +120,7 @@ namespace MapEditor_TLCB.Systems
 				m_lmbPressed = false;
 				ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
 				actionSys.StopGroupingActions();
+				mainValidate.validateThisTick = true;
 			}
 		}
 		public void canvasWindow_MouseMove(object sender, MouseEventArgs e)
@@ -397,6 +399,7 @@ namespace MapEditor_TLCB.Systems
 		}
 		
 		Tilemap mainTilemap;
+		TilemapValidate mainValidate;
 		Transform canvasTransform;
 		Tilemap singlesTilemap;
 		Tilemap roadTilemap;
