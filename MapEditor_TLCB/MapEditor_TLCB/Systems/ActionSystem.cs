@@ -6,6 +6,7 @@ using MapEditor_TLCB.Systems;
 using System.Diagnostics;
 using MapEditor_TLCB.Common;
 using System;
+using MapEditor_TLCB.Components;
 
 namespace MapEditor_TLCB
 {
@@ -57,20 +58,7 @@ namespace MapEditor_TLCB
         }
 
 		public override void Process()
-		{
-            /* grouping disabled for now
-			if (queuedActions.Count > 0)
-			{
-				foreach (EditorAction editorAction in queuedActions)
-				{
-					editorAction.action.PerformAction();
-					performedActions.Add(editorAction);
-				}
-				queuedActions.Clear();
-				redoActions.Clear();
-			}
-             * */ 
-            
+		{            
             // if a faulty stop was encountered
             // do a second check to make sure there are no
             // buffered actions remaining
@@ -83,20 +71,8 @@ namespace MapEditor_TLCB
 
 		public void EnqueueAction(ActionInterface p_action)
 		{
-            /*
-			int groupID = -1;
-			if (grouping)
-			{
-				groupID = groupCount;
-			}
-			queuedActions.Add(new EditorAction(p_action, groupID));
-             * */
-
             p_action.PerformAction();
-            // if (grouping)                        Does not work properly right now due to derpy events
-                queuedActions.Add(p_action);
-            /*else
-                actionTree.addAction(p_action);*/
+            queuedActions.Add(p_action);
 		}
 
 		public void UndoLastPerformedAction()
@@ -108,6 +84,8 @@ namespace MapEditor_TLCB
                 foreach (ActionInterface action in actions)
                     if (action != null) action.PerformAction();
             }
+
+            world.TagManager.GetEntity("mainTilemap").GetComponent<TilemapValidate>().validateThisTick = true;
 		}
 
 		public void RedoLastAction()
@@ -119,6 +97,8 @@ namespace MapEditor_TLCB
                 foreach (ActionInterface action in actions)
                     if (action != null) action.PerformAction();
             }
+
+            world.TagManager.GetEntity("mainTilemap").GetComponent<TilemapValidate>().validateThisTick = true;
 		}
 
         public void PerformActionList(List<ActionInterface> p_actions)
@@ -130,43 +110,6 @@ namespace MapEditor_TLCB
                     if (action != null) action.PerformAction();
             }
         }
-
-        /*
-		private void PerformAction(List<EditorAction> p_originalActionOwner, List <EditorAction> p_newActionOwner)
-		{
-			bool hasPerformedAllAssociatedActions = false;
-
-			while (hasPerformedAllAssociatedActions == false)
-			{
-				if (p_originalActionOwner.Count > 0)
-				{
-					EditorAction lastAction = p_originalActionOwner[p_originalActionOwner.Count - 1];
-					lastAction.action.PerformAction();
-
-					if (p_originalActionOwner.Count > 1)
-					{
-						EditorAction secondLastAction = p_originalActionOwner[p_originalActionOwner.Count - 2];
-
-						if (!AreActionsInSameGroup(lastAction, secondLastAction))
-						{
-							hasPerformedAllAssociatedActions = true;
-						}
-					}
-					else
-					{
-						hasPerformedAllAssociatedActions = true;
-					}
-
-					p_newActionOwner.Add(lastAction);
-					p_originalActionOwner.RemoveAt(p_originalActionOwner.Count - 1);
-				}
-				else
-				{
-					hasPerformedAllAssociatedActions = true;
-				}
-			}
-		}
-         * */
 
 		public void StartGroupingActions(ActionNode.NodeType p_nodeType)
 		{
@@ -217,7 +160,8 @@ namespace MapEditor_TLCB
 				obj.actions.at(i).AddAffectedSystems(world.SystemManager);
 			}
 
-			actionTree.SetData(obj.nodes, obj.actions);		
+			actionTree.SetData(obj.nodes, obj.actions);
+
 		}
 		public void SaveSerialiazedActions(string p_completePath)
 		{
@@ -239,7 +183,9 @@ namespace MapEditor_TLCB
 			Serializer seri = new Serializer();
 			seri.SerializeObject(p_completePath, obj);
 
-			Notification alreadySaving = new Notification("Successfully saved the map! Its located " + p_completePath, NotificationType.SUCCESS);
+            List<Paragraph> info = new List<Paragraph>();
+            info.Add(new Paragraph("Successfully saved the map to\n" + p_completePath));
+			Notification alreadySaving = new Notification("Successfully saved the map!", NotificationType.SUCCESS, info);
 			((NotificationBarSystem)(world.SystemManager.GetSystem<NotificationBarSystem>()[0])).AddNotification(alreadySaving);
 		}
 		public void ClearAllActions()

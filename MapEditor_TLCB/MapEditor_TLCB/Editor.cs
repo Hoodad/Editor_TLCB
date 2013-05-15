@@ -122,7 +122,7 @@ namespace MapEditor_TLCB
 		{
 			Entity entity = world.CreateEntity();
 			entity.Tag = "mainCamera";
-			entity.AddComponent(new Transform(new Vector2(200.0f, 100.0f), 1.0f));
+            entity.AddComponent(new Transform(new Vector2(GraphicsDevice.Viewport.Width / 8, GraphicsDevice.Viewport.Height / 8), 0.5f));
 			entity.Refresh();
 
 			entity = world.CreateEntity();

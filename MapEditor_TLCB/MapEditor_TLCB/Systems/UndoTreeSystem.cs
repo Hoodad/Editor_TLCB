@@ -12,6 +12,7 @@ using MapEditor_TLCB.Actions;
 using MapEditor_TLCB.Actions.Interface;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
+using MapEditor_TLCB.Components;
 
 namespace MapEditor_TLCB.Systems
 {
@@ -191,6 +192,8 @@ namespace MapEditor_TLCB.Systems
                 List<ActionInterface> actions = undoTreeContainer.m_undoTree.setCurrentByPosition(me.Position.X-undoTreeWindow.AbsoluteLeft,
                                                                                                   me.Position.Y-undoTreeWindow.AbsoluteTop);
                 m_actionsystem.PerformActionList(actions);
+
+                world.TagManager.GetEntity("mainTilemap").GetComponent<TilemapValidate>().validateThisTick = true;
             }
 
         }
