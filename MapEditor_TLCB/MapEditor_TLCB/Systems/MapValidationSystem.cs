@@ -36,6 +36,31 @@ namespace MapEditor_TLCB.Systems
 						toolSys.pathsValid.Checked = valid.pathsValid;
 						toolSys.playerValid.Checked = valid.playerValid;
 						toolSys.switchesValid.Checked = valid.switchesValid;
+
+						if (toolSys.pathsValid.Checked) {
+							toolSys.pathsValid.ToolTip.Text = "Roads are valid.";
+							toolSys.pathsValid.ToolTip.Color = Color.Green;
+						}
+						else {
+							toolSys.pathsValid.ToolTip.Text = "Roads are not completely connected.";
+							toolSys.pathsValid.ToolTip.Color = Color.Red;
+						}
+						if (toolSys.playerValid.Checked) {
+							toolSys.playerValid.ToolTip.Text = "Player is valid.";
+							toolSys.playerValid.ToolTip.Color = Color.Green;
+						}
+						else {
+							toolSys.playerValid.ToolTip.Text = "Player count must be exactly one.\nThe player must also be connected to the road.";
+							toolSys.playerValid.ToolTip.Color = Color.Red;
+						}
+						if (toolSys.switchesValid.Checked) {
+							toolSys.switchesValid.ToolTip.Text = "All switches and blockades are valid.";
+							toolSys.switchesValid.ToolTip.Color = Color.Green;
+						}
+						else {
+							toolSys.switchesValid.ToolTip.Text = "There is a switch/blockade miss match!";
+							toolSys.switchesValid.ToolTip.Color = Color.Red;
+						}
 					}
 				}
 			}

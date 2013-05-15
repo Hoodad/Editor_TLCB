@@ -103,6 +103,12 @@ namespace MapEditor_TLCB.Systems
 			pathsValid.Width = 15;
 			pathsValid.Enabled = false;
 			pathsValid.TextColor = Color.Red;
+			pathsValid.ToolTip = new ToolTip(manager);
+			pathsValid.ToolTip.Init();
+			pathsValid.ToolTip.Text = "0";
+			pathsValid.ToolTip.TextColor = Color.White;
+			pathsValid.ToolTip.Left = -100;
+			pathsValid.ToolTip.Color = Color.Red;
 
 			playerValid = new CheckBox(manager);
 			playerValid.Init();
@@ -113,6 +119,11 @@ namespace MapEditor_TLCB.Systems
 			playerValid.Width = 15;
 			playerValid.Enabled = false;
 			playerValid.TextColor = Color.Red;
+			playerValid.ToolTip = new ToolTip(manager);
+			playerValid.ToolTip.Init();
+			playerValid.ToolTip.Text = "1";
+			playerValid.ToolTip.TextColor = Color.White;
+			playerValid.ToolTip.Color = Color.Red;
 
 			switchesValid = new CheckBox(manager);
 			switchesValid.Init();
@@ -123,6 +134,11 @@ namespace MapEditor_TLCB.Systems
 			switchesValid.Width = 15;
 			switchesValid.Enabled = false;
 			switchesValid.TextColor = Color.Red;
+			switchesValid.ToolTip = new ToolTip(manager);
+			switchesValid.ToolTip.Init();
+			switchesValid.ToolTip.Text = "2";
+			switchesValid.ToolTip.TextColor = Color.White;
+			switchesValid.ToolTip.Color = Color.Red;
 			//
 
 			exportMap = new Button(manager);
