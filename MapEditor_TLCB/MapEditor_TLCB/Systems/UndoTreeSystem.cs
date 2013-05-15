@@ -167,7 +167,7 @@ namespace MapEditor_TLCB.Systems
             if (refocusTick > 0.0f)
             {
                 refocusTick -= dt;
-                Vector2 newPos = undoTreeContainer.m_undoTree.getCurrentNodeContextPosition() / (undoTreeContainer.m_undoTree.m_zoomValue);
+                Vector2 newPos = Vector2.Max(Vector2.Zero, undoTreeContainer.m_undoTree.getCurrentNodeContextPosition() - new Vector2(undoTreeWindow.Width * 0.2f, undoTreeWindow.Height * 0.3f));
                 // newPos -= new Vector2(undoTreeWindow.Width, undoTreeWindow.Height) * 0.15f;
                 undoTreeContainer.m_undoTree.scrollOffset = Vector2.Lerp(undoTreeContainer.m_undoTree.scrollOffset,-newPos,10.0f*dt);
                 UpdateScrollBarsFromTreeValues();
@@ -248,21 +248,20 @@ namespace MapEditor_TLCB.Systems
             undoTreeContainer.m_undoTree.ScrollX(sb.Value, scrollMax);
         }
 
-        private void OnContainerPanBehaviour(object sender, TomShane.Neoforce.Controls.EventArgs e)
+        private void OnContainerPanBehaviour(object sender, TomShane.Neoforce.Controls.MouseEventArgs e)
         {
-            MouseEventArgs me = e as MouseEventArgs;
-            MouseState currentState = me.State;
-            Vector2 mousePos = Vector2.Zero;
-            if (me.State.MiddleButton == ButtonState.Pressed)
+            MouseState currentState = e.State;
+            Vector2 mousePos = new Vector2(e.Position.X, e.Position.Y); ;
+            if (e.State.MiddleButton == ButtonState.Pressed)
             {
-                mousePos = new Vector2(me.Position.X, me.Position.Y);
-                
                 Vector2 mouseDiff = mousePos - oldMousePos;
-                undoTreeContainer.m_undoTree.scrollOffset += mouseDiff;
+                undoTreeContainer.m_undoTree.scrollOffset += mouseDiff*3.0f;
+                undoTreeContainer.m_undoTree.scrollOffset = Vector2.Min(Vector2.Zero, undoTreeContainer.m_undoTree.scrollOffset);
                 // update gui
                 UpdateScrollBarsFromTreeValues();
             }
             oldMousePos = mousePos;
+            refocusTick = 0.0f;
             
         }
 
@@ -292,6 +291,7 @@ namespace MapEditor_TLCB.Systems
             Vector2 scroll = (mousePosNewScale - mousePosOldScale);
             undoTreeContainer.m_undoTree.scrollOffset += scroll;
             // update gui
+            refocusTick = 0.0f;
             UpdateScrollBarsFromTreeValues();
         }
 

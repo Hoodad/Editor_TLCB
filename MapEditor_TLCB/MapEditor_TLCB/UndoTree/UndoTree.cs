@@ -370,7 +370,7 @@ namespace MapEditor_TLCB.Actions
 
         public Vector2 getCurrentNodeContextPosition()
         {
-            return (m_nodes[m_currentNodeId].m_renderPos) * m_zoomValue;
+            return (m_nodes[m_currentNodeId].m_renderPos);
         }
 
         // add a single action

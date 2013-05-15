@@ -63,24 +63,6 @@ namespace MapEditor_TLCB.CustomControls
              * */
         }
 
-		// THIS WAS EVIL ITSELF ->
-//        protected override void OnMouseMove(TomShane.Neoforce.Controls.MouseEventArgs e)
-//        {
-//            //Debug.Print("Mouse " + e.Position.ToString());
-//            //Debug.Print( "Scrollvalue {X "+windowParent.ScrollBarValue.Horizontal + ", Y "+ windowParent.ScrollBarValue.Vertical+"}");
-//
-//            //selectorRect.X = (e.Position.X / tileSize.X);
-//            //selectorRect.Y = (e.Position.Y / tileSize.Y);
-//            ////Debug.Print( "Resulting Tile {X: "+selectorRect.X +" Y: "+ selectorRect.Y+"}");
-//            //selectorRect.X *= tileSize.X;
-//            //selectorRect.Y *= tileSize.Y;
-//            //selectorRect.X += 6;	//Window thickness
-//            //selectorRect.Y += 28;	// -||-
-//            //selectorRect.X -= windowParent.ScrollBarValue.Horizontal;	//
-//            //selectorRect.Y -= windowParent.ScrollBarValue.Vertical;		//
-//            //
-//            Refresh();
-//        }
 
 
     }
