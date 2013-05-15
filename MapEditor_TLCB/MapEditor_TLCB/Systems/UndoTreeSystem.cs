@@ -81,7 +81,8 @@ namespace MapEditor_TLCB.Systems
             undoTreeContainer.CanFocus = false;
             undoTreeContainer.Click += new TomShane.Neoforce.Controls.EventHandler(OnContainerClickBehavior);
             undoTreeContainer.MouseScroll += new TomShane.Neoforce.Controls.MouseEventHandler(OnContainerScrollBehaviour);
-            undoTreeContainer.MousePress += new TomShane.Neoforce.Controls.MouseEventHandler(OnContainerPanBehaviour);
+            //undoTreeContainer.MousePress += new TomShane.Neoforce.Controls.MouseEventHandler(OnContainerPanBehaviour);
+			undoTreeContainer.MouseMove += new MouseEventHandler(OnContainerPanBehaviour);
             undoTreeContainer.DoubleClicks = false;
 
             undoBtn = new Button(manager);
