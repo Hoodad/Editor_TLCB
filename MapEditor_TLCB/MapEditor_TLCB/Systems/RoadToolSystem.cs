@@ -140,24 +140,6 @@ namespace MapEditor_TLCB.Systems
 			{
 				m_lmbPressed = true;
 
-                m_mouseDownPosition = new Vector2(e.Position.X, e.Position.Y);
-                Entity camera = world.TagManager.GetEntity("mainCamera");
-                if (camera != null)
-                {
-                    Transform camTransform = camera.GetComponent<Transform>();
-                    if (camTransform != null)
-                    {
-                        m_mouseDownPosition = Vector2.Transform(m_mouseDownPosition, Matrix.Invert(camTransform.getMatrix()));
-                    }
-                }
-
-                bool ctrl = Keyboard.GetState().IsKeyDown(Keys.LeftControl);
-                bool shift = Keyboard.GetState().IsKeyDown(Keys.LeftShift);
-                if (ctrl)
-                    m_limitHorizontal = true;
-                if (shift)
-                    m_limitVertical = true;
-
 				ActionSystem actionSys = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
                 ActionNode.NodeType nodeType=ActionNode.NodeType.NONE; Tool currentTool = m_toolSys.GetCurrentTool();
                 switch (currentTool)
@@ -204,18 +186,6 @@ namespace MapEditor_TLCB.Systems
 			{
 				if (m_lmbPressed)
 				{
-                    bool ctrl = Keyboard.GetState().IsKeyDown(Keys.LeftControl);
-                    bool shift = Keyboard.GetState().IsKeyDown(Keys.LeftShift);
-                    if (!ctrl)
-                        m_limitHorizontal = false;
-                    if (!shift)
-                        m_limitVertical = false;
-
-                    if (m_limitHorizontal)
-                        mousePos.X = m_mouseDownPosition.X;
-                    if (m_limitVertical)
-                        mousePos.Y = m_mouseDownPosition.Y;
-
 					Tool currentTool = m_toolSys.GetCurrentTool();
 					if (mainTilemap != null && roadTilemap != null && wallTilemap != null &&
 						canvasTransform != null)
