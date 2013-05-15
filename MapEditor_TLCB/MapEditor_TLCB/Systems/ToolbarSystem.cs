@@ -7,6 +7,7 @@ using TomShane.Neoforce.Controls;
 using Microsoft.Xna.Framework.Graphics;
 using MapEditor_TLCB.Components;
 using MapEditor_TLCB.CustomControls;
+using Microsoft.Xna.Framework;
 
 namespace MapEditor_TLCB.Systems
 {
@@ -23,7 +24,10 @@ namespace MapEditor_TLCB.Systems
 		Button exportMap;
 		Button backToStartScreen;
 		Button exitButton;
-		CheckBox canvasGridCheckBox;
+		Container validationInfo;
+		public CheckBox pathsValid;
+		public CheckBox playerValid;
+		public CheckBox switchesValid;
 
 		Window newMapConfirmationWindow;
 		Button accept;
@@ -43,7 +47,7 @@ namespace MapEditor_TLCB.Systems
 			toolbarWindow.Init();
 			toolbarWindow.Text = "Toolbar";
 			toolbarWindow.Width = 100;
-			toolbarWindow.Height = (int)((float)viewport.Height * 0.3f);
+			toolbarWindow.Height = (int)((float)viewport.Height * 0.35f);
 			toolbarWindow.Top = 10;
 			toolbarWindow.Left = viewport.Width - toolbarWindow.Width;
 			toolbarWindow.Resizable = false;
@@ -87,6 +91,55 @@ namespace MapEditor_TLCB.Systems
 			paintTool.Text = "";
 			paintTool.image = sys.LoadTexture("PaintingIcon");
             paintTool.Click += new TomShane.Neoforce.Controls.EventHandler(PaintToolBehavior);
+
+			//
+			int top = toolbarWindow.Height - 24 * 6 + 10;
+			pathsValid = new CheckBox(manager);
+			pathsValid.Init();
+			pathsValid.Parent = toolbarWindow;
+			pathsValid.Text = "";
+			pathsValid.Left = 1;
+			pathsValid.Top = top;
+			pathsValid.Width = 15;
+			pathsValid.Enabled = false;
+			pathsValid.TextColor = Color.Red;
+			pathsValid.ToolTip = new ToolTip(manager);
+			pathsValid.ToolTip.Init();
+			pathsValid.ToolTip.Text = "0";
+			pathsValid.ToolTip.TextColor = Color.White;
+			pathsValid.ToolTip.Left = -100;
+			pathsValid.ToolTip.Color = Color.Red;
+
+			playerValid = new CheckBox(manager);
+			playerValid.Init();
+			playerValid.Parent = toolbarWindow;
+			playerValid.Text = "";
+			playerValid.Left = 16;
+			playerValid.Top = top;
+			playerValid.Width = 15;
+			playerValid.Enabled = false;
+			playerValid.TextColor = Color.Red;
+			playerValid.ToolTip = new ToolTip(manager);
+			playerValid.ToolTip.Init();
+			playerValid.ToolTip.Text = "1";
+			playerValid.ToolTip.TextColor = Color.White;
+			playerValid.ToolTip.Color = Color.Red;
+
+			switchesValid = new CheckBox(manager);
+			switchesValid.Init();
+			switchesValid.Parent = toolbarWindow;
+			switchesValid.Text = "";
+			switchesValid.Left = 31;
+			switchesValid.Top = top;
+			switchesValid.Width = 15;
+			switchesValid.Enabled = false;
+			switchesValid.TextColor = Color.Red;
+			switchesValid.ToolTip = new ToolTip(manager);
+			switchesValid.ToolTip.Init();
+			switchesValid.ToolTip.Text = "2";
+			switchesValid.ToolTip.TextColor = Color.White;
+			switchesValid.ToolTip.Color = Color.Red;
+			//
 
 			exportMap = new Button(manager);
 			exportMap.Init();
