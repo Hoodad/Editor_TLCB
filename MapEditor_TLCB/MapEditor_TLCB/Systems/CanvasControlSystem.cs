@@ -40,7 +40,6 @@ namespace MapEditor_TLCB.Systems
 			m_canvasWindow.Width = m_manager.Window.Width;
 			m_canvasWindow.Height = m_manager.Window.Height;
 			m_canvasWindow.Parent = null;
-			//m_canvasWindow.BorderVisible = false;
 			m_canvasWindow.Resizable = false;
 			m_canvasWindow.StayOnBack = true;
             m_canvasWindow.DoubleClicks = false;
@@ -67,7 +66,8 @@ namespace MapEditor_TLCB.Systems
 		private void canvasWindow_MouseMove(object sender, MouseEventArgs e)
 		{
 			MouseState currentState = e.State;
-			if (e.State.MiddleButton == ButtonState.Pressed)
+			if (e.State.MiddleButton == ButtonState.Pressed ||
+				Keyboard.GetState().IsKeyDown(Keys.Space))
 			{
 				Transform camTransform = world.TagManager.GetEntity("mainCamera").GetComponent<Transform>();
 				if (camTransform != null)
@@ -108,7 +108,6 @@ namespace MapEditor_TLCB.Systems
 				limitCameraPosition(camTransform);
 			}
 		}
-
 		private void limitCameraPosition(Transform p_camTransform)
 		{
 			Entity mainTilemap = World.TagManager.GetEntity("mainTilemap");

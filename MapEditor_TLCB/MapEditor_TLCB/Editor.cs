@@ -94,6 +94,7 @@ namespace MapEditor_TLCB
 		public void InitializeAllSystem()
 		{
 			SystemManager systemManager = world.SystemManager;
+			systemManager.SetSystem(new InputDeltaSystem(), ExecutionType.Update);
             systemManager.SetSystem(new EventSystem(), ExecutionType.Update);
 			systemManager.SetSystem(new CanvasControlSystem(manager, canvasRender), ExecutionType.Update); // Canvas window is furthest back.
 			systemManager.SetSystem(new ContentSystem(Content,graphics), ExecutionType.Update);
@@ -146,6 +147,11 @@ namespace MapEditor_TLCB
 			entity = world.CreateEntity();
 			entity.Tag = "wallTilemap";
 			entity.AddComponent(new Tilemap(60, 31, 32, 32, Tilemap.TilemapType.WallTilemap));
+			entity.Refresh();
+			
+			entity = world.CreateEntity();
+			entity.Tag = "input";
+			entity.AddComponent(new InputDelta());
 			entity.Refresh();
 		}
 
