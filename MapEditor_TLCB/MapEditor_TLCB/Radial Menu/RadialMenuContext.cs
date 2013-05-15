@@ -273,10 +273,12 @@ namespace MapEditor_TLCB
                     }
                 }
             }
+        }
+        public void requestMenu(RadialMenu p_menu)
+        {
             for (int i = 0; i < m_menus.Count; i++)
             {
-                if (KeyDelta.getDelta(m_menus[i].getHotkey()) > 0.0f &&
-                    !Keyboard.GetState().IsKeyDown(Keys.LeftControl))
+                if (m_menus[i] == p_menu)
                 {
                     if (m_current == i && m_active)
                     {

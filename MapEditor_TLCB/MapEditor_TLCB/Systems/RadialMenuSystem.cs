@@ -18,14 +18,12 @@ using MapEditor_TLCB.CustomControls;
 
 namespace MapEditor_TLCB.Systems
 {
-	class RadialMenuSystem : EntitySystem
+	public class RadialMenuSystem : EntitySystem
 	{
 		RadialMenuContext m_context;
 
 		GraphicsDevice m_device;
 		ContentManager m_content;
-
-        List<EventData> m_events;
 
         Texture2D m_tilemap;
 
@@ -71,23 +69,22 @@ namespace MapEditor_TLCB.Systems
 
             Texture2D question = m_content.Load<Texture2D>("Question");
 
-            m_events = new List<EventData>();
+            EventSystem ev = (EventSystem)world.SystemManager.GetSystem<EventSystem>()[0];
             int start = 3 * 30;
 
-            for (int i = 0; i < 6; i++)
+            List<EventData> events = new List<EventData>();
+            for (int i = 0; i < 3; i++)
             {
                 for (int j = 0; j < 3; j++)
                 {
                     IntPair pair;
                     pair.i1 = start + i + j * 30;
                     pair.i2 = start + i + j * 30;
-                    m_events.Add(new EventData(setToolCallback, pair));
+                    EventData eventData = new EventData(setToolCallback, pair);
+                    ev.addEvent(eventData);
+                    events.Add(eventData);
                 }
             }
-            IntPair pair2;
-            pair2.i1 = start + 7;
-            pair2.i2 = start + 7;
-            m_events.Add(new EventData(setToolCallback, pair2));
 
 			EventData tempEvent = new EventData(null, null);
 
@@ -98,14 +95,14 @@ namespace MapEditor_TLCB.Systems
             characterList.Add(new RadialMenuItem("Napoleon", napoleon, tempEvent));
             characterList.Add(new RadialMenuItem("Rat", rat1, tempEvent));
             characterList.Add(new RadialMenuItem("Infected Rat", rat2, tempEvent));
-            RadialMenu charactersMenu = new RadialMenu(m_device, m_content, characterList, characters, null);
+            RadialMenu charactersMenu = new RadialMenu(m_device, m_content, characterList, characters, null, ev, this);
 
             //POWER-UPS MENU
             List<RadialMenuItem> powerupsList = new List<RadialMenuItem>();
             powerupsList.Add(new RadialMenuItem("Bomb", bomb, tempEvent));
             powerupsList.Add(new RadialMenuItem("Speed", speed, tempEvent));
             powerupsList.Add(new RadialMenuItem("Strength", powerful, tempEvent));
-            RadialMenu powerupsMenu = new RadialMenu(m_device, m_content, powerupsList, powerups, null);
+            RadialMenu powerupsMenu = new RadialMenu(m_device, m_content, powerupsList, powerups, null, ev, this);
 
             //ROAD TILES MENU
             /*List<RadialMenuItem> roadTileList = new List<RadialMenuItem>();
@@ -133,7 +130,7 @@ namespace MapEditor_TLCB.Systems
 
             //CUSTOM MENU
             List<RadialMenuItem> customList = new List<RadialMenuItem>();
-            RadialMenu customMenu = new RadialMenu(m_device, m_content, customList, question, null);
+            RadialMenu customMenu = new RadialMenu(m_device, m_content, customList, question, null, ev, this);
 
             //COLLECTION MENU
 			List<RadialMenuItem> collectionList = new List<RadialMenuItem>();
@@ -141,27 +138,27 @@ namespace MapEditor_TLCB.Systems
             collectionList.Add(new RadialMenuItem("Power-Ups", powerups, powerupsMenu));
             //collectionList.Add(new RadialMenuItem("Road Tiles", m_tilemap, RoadTileMenu, new Rectangle(0, 96, 96, 96)));
             collectionList.Add(new RadialMenuItem("Custom Selections", question, customMenu));
-            RadialMenu collectionMenu = new RadialMenu(m_device, m_content, collectionList, tileCollection, null);
+            RadialMenu collectionMenu = new RadialMenu(m_device, m_content, collectionList, tileCollection, null, ev, this);
 
             //MAIN MENU
 			List<RadialMenuItem> items = new List<RadialMenuItem>();
             items.Add(new RadialMenuItem("Tile Collection", tileCollection, collectionMenu));
-            items.Add(new RadialMenuItem("Recent 1", m_tilemap, m_events[0], new Rectangle(0, 96, 32, 32)));
-            items.Add(new RadialMenuItem("Recent 2", m_tilemap, m_events[1], new Rectangle(0, 128, 32, 32)));
-            items.Add(new RadialMenuItem("Recent 3", m_tilemap, m_events[2], new Rectangle(0, 160, 32, 32)));
-            items.Add(new RadialMenuItem("Recent 4", m_tilemap, m_events[3], new Rectangle(32, 96, 32, 32)));
-            items.Add(new RadialMenuItem("Recent 5", m_tilemap, m_events[4], new Rectangle(32, 128, 32, 32)));
-            items.Add(new RadialMenuItem("Recent 6", m_tilemap, m_events[5], new Rectangle(32, 160, 32, 32)));
-            items.Add(new RadialMenuItem("Recent 7", m_tilemap, m_events[6], new Rectangle(64, 96, 32, 32)));
-            items.Add(new RadialMenuItem("Recent 8", m_tilemap, m_events[7], new Rectangle(64, 128, 32, 32)));
-            items.Add(new RadialMenuItem("Recent 9", m_tilemap, m_events[8], new Rectangle(64, 160, 32, 32)));
+            items.Add(new RadialMenuItem("Recent 1", m_tilemap, events[0], new Rectangle(0, 96, 32, 32)));
+            items.Add(new RadialMenuItem("Recent 2", m_tilemap, events[1], new Rectangle(0, 128, 32, 32)));
+            items.Add(new RadialMenuItem("Recent 3", m_tilemap, events[2], new Rectangle(0, 160, 32, 32)));
+            items.Add(new RadialMenuItem("Recent 4", m_tilemap, events[3], new Rectangle(32, 96, 32, 32)));
+            items.Add(new RadialMenuItem("Recent 5", m_tilemap, events[4], new Rectangle(32, 128, 32, 32)));
+            items.Add(new RadialMenuItem("Recent 6", m_tilemap, events[5], new Rectangle(32, 160, 32, 32)));
+            items.Add(new RadialMenuItem("Recent 7", m_tilemap, events[6], new Rectangle(64, 96, 32, 32)));
+            items.Add(new RadialMenuItem("Recent 8", m_tilemap, events[7], new Rectangle(64, 128, 32, 32)));
+            items.Add(new RadialMenuItem("Recent 9", m_tilemap, events[8], new Rectangle(64, 160, 32, 32)));
             m_usesTilemap = new List<RadialMenuItem>();
             for (int i = 1; i < items.Count; i++)
             {
                 m_usesTilemap.Add(items[i]);
             }
 
-			RadialMenu menu = new RadialMenu(m_device, m_content, items, main, null);
+            RadialMenu menu = new RadialMenu(m_device, m_content, items, main, null, ev, this);
 
             //DETERMINE ALL PARENTING
             collectionMenu.setParent(menu);
@@ -201,15 +198,7 @@ namespace MapEditor_TLCB.Systems
 
 		public override void Process()
 		{
-            for (int i = 0; i < m_events.Count; i++)
-            {
-                if (KeyDelta.getDelta(m_events[i].hotkey) > 0.0f)
-                {
-                    m_events[i].callback(m_events[i].data);
-                }
-            }
-
-			float dt = World.Delta / 1000.0f;
+    		float dt = World.Delta / 1000.0f;
 			m_context.update(dt);
 
             if (m_context.isActive())
@@ -224,6 +213,10 @@ namespace MapEditor_TLCB.Systems
         public bool isRadialActive()
         {
             return m_context.isActive();
+        }
+        public void requestMenu(Object p_menu)
+        {
+            m_context.requestMenu((RadialMenu)p_menu);
         }
         public void setToolCallback(Object p_toolIndex)
         {
@@ -249,7 +242,8 @@ namespace MapEditor_TLCB.Systems
             RadialMenu customMenu = m_context.getRadialMenu(customID);
             RadialMenuItem newItem = new RadialMenuItem("Custom Selection", m_tilemap, ev, rect);
             customMenu.addItem(newItem);
-            m_events.Add(ev);
+            EventSystem evSys = (EventSystem)world.SystemManager.GetSystem<EventSystem>()[0];
+            evSys.addEvent(ev);
 
             NotificationBarSystem note = (NotificationBarSystem)world.SystemManager.GetSystem<NotificationBarSystem>()[0];
             note.AddNotification(new Notification("Added custom selection to radial menu", NotificationType.INFO));
@@ -276,6 +270,8 @@ namespace MapEditor_TLCB.Systems
         }
         public void currentToolChanged(IntPair p_current)
         {
+            if (p_current.i1 < 0 || p_current.i2 < 0)
+                return;
             for (int i = 0; i < m_usesTilemap.Count; i++)
             {
                 EventData ev = m_usesTilemap[i].activateEvent;

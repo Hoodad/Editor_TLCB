@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using MapEditor_TLCB.Systems;
 
 namespace MapEditor_TLCB
 {
@@ -40,16 +41,19 @@ namespace MapEditor_TLCB
 
         private RadialMenu m_parent;
 
-        private Keys m_hotKey;
+        //private Keys m_hotKey;
+        private EventData m_openEvent;
 
         public RadialMenu(GraphicsDevice p_gd, ContentManager p_content,
                             List<RadialMenuItem> p_items, Texture2D p_symbol,
-                                RadialMenu p_parent)
+                                RadialMenu p_parent, EventSystem p_eventSystem, RadialMenuSystem p_rmSystem)
         {
             m_symbol = p_symbol;
             m_items = p_items;
             m_parent = p_parent;
-            m_hotKey = Keys.None;
+            //m_hotKey = Keys.None;
+            m_openEvent = new EventData(p_rmSystem.requestMenu, this);
+            p_eventSystem.addEvent(m_openEvent);
         }
 
         public void addItem(RadialMenuItem p_item)
@@ -129,16 +133,18 @@ namespace MapEditor_TLCB
                 Keys[] pressed = Keyboard.GetState().GetPressedKeys();
                 for (int i = 0; i < pressed.Length; i++)
                 {
-                    if (pressed[i] >= Keys.A && pressed[i] <= Keys.Z)
+                    if ((pressed[i] >= Keys.A && pressed[i] <= Keys.Z) ||
+                        (pressed[i] >= Keys.D1 && pressed[i] <= Keys.D9))
                     {
                         if (m_items[arrowTarget].activateEvent != null)
                         {
-                            m_items[arrowTarget].activateEvent.hotkey = pressed[i];
+                            m_items[arrowTarget].activateEvent.setHotkey(pressed[i]);
                             break;
                         }
                         else if (m_items[arrowTarget].submenu != null)
                         {
-                            m_items[arrowTarget].submenu.m_hotKey = pressed[i];
+                            //m_items[arrowTarget].submenu.m_hotKey = pressed[i];
+                            m_items[arrowTarget].submenu.m_openEvent.hotkey = pressed[i];
                         }
                     }
                 }
@@ -149,9 +155,13 @@ namespace MapEditor_TLCB
             prevMouseX = Mouse.GetState().X;
             prevMouseY = Mouse.GetState().Y;
         }
-        public Keys getHotkey()
+        /*public Keys getHotkey()
         {
             return m_hotKey;
+        }*/
+        public EventData getOpenEvent()
+        {
+            return m_openEvent;
         }
         public void setCurrentWithTarget(RadialMenu p_menu)
         {
@@ -455,7 +465,7 @@ namespace MapEditor_TLCB
                 {
                     string hotKey = Enum.GetName(typeof(Keys), Keys.None);
                     if (m_items[arrowTarget].submenu != null)
-                        hotKey = Enum.GetName(typeof(Keys), m_items[arrowTarget].submenu.getHotkey());
+                        hotKey = Enum.GetName(typeof(Keys), m_items[arrowTarget].submenu.m_openEvent.hotkey);
                     text = "Hotkey(" + hotKey + ")";
                     sp.DrawString(m_font, text, drawTextPos + new Vector2(0, wordSize.Y), drawColor, 0, Vector2.Zero, textSize, SpriteEffects.None, 0);
                 }
@@ -605,7 +615,7 @@ namespace MapEditor_TLCB
             {
                 string hotKey = Enum.GetName(typeof(Keys), Keys.None);
                 if (m_items[arrowTarget].submenu != null)
-                    hotKey = Enum.GetName(typeof(Keys), m_items[arrowTarget].submenu.getHotkey());
+                    hotKey = Enum.GetName(typeof(Keys), m_items[arrowTarget].submenu.m_openEvent.hotkey);
                 text = "Hotkey(" + hotKey + ")";
                 sp.DrawString(m_font, text, drawTextPos + new Vector2(0, wordSize.Y), drawColor, 0, Vector2.Zero, textSize, SpriteEffects.None, 0);
             }

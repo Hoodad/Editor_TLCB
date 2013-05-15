@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace MapEditor_TLCB.CustomControls
 {
-    struct IntPair
+    public struct IntPair
     {
         public int i1;
         public int i2;

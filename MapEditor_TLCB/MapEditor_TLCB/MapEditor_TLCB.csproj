@@ -152,6 +152,7 @@
     <Compile Include="Systems\CanvasControlSystem.cs" />
     <Compile Include="Systems\ContentSystem.cs" />
     <Compile Include="Systems\CurrentToolSystem.cs" />
+    <Compile Include="Systems\EventSystem.cs" />
     <Compile Include="Systems\MapValidationSystem.cs" />
     <Compile Include="Systems\RadialMenuSystem.cs" />
     <Compile Include="Systems\DrawCanvasSystem.cs" />

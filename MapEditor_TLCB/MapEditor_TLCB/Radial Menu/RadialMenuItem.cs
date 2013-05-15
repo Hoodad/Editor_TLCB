@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using MapEditor_TLCB.Systems;
 
 namespace MapEditor_TLCB
 {
@@ -19,12 +20,18 @@ namespace MapEditor_TLCB
         public EventCallback callback;
         public Object data;
         public Keys hotkey;
+        public EventSystem system;
 
         public EventData(EventCallback p_callback, Object p_data)
         {
             callback = p_callback;
             data = p_data;
             hotkey = Keys.None;
+            system = null;
+        }
+        public void setHotkey(Keys p_hotkey)
+        {
+            system.setHotKey(this, p_hotkey);
         }
     }
 
