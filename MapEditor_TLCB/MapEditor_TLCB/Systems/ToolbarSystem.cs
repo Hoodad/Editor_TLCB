@@ -23,6 +23,7 @@ namespace MapEditor_TLCB.Systems
 		Button exportMap;
 		Button backToStartScreen;
 		Button exitButton;
+		CheckBox canvasGridCheckBox;
 
 		Window newMapConfirmationWindow;
 		Button accept;
@@ -42,7 +43,7 @@ namespace MapEditor_TLCB.Systems
 			toolbarWindow.Init();
 			toolbarWindow.Text = "Toolbar";
 			toolbarWindow.Width = 100;
-			toolbarWindow.Height = (int)((float)viewport.Height * 0.3f);
+			toolbarWindow.Height = (int)((float)viewport.Height * 0.35f);
 			toolbarWindow.Top = 10;
 			toolbarWindow.Left = viewport.Width - toolbarWindow.Width;
 			toolbarWindow.Resizable = false;
@@ -94,7 +95,7 @@ namespace MapEditor_TLCB.Systems
 			exportMap.Width = toolbarWindow.Width;
 			exportMap.Height = 24;
 			exportMap.Left = 0;
-			exportMap.Top = toolbarWindow.Height - 24 * 5;
+			exportMap.Top = toolbarWindow.Height - 24 * 6;
 			exportMap.Click += new TomShane.Neoforce.Controls.EventHandler(ExportMapBehavior);
 
 			saveMap = new Button(manager);
@@ -104,7 +105,7 @@ namespace MapEditor_TLCB.Systems
 			saveMap.Width = toolbarWindow.Width;
 			saveMap.Height = 24;
 			saveMap.Left = 0;
-			saveMap.Top = toolbarWindow.Height - 24 * 4;
+			saveMap.Top = toolbarWindow.Height - 24 * 5;
 			saveMap.Click += new TomShane.Neoforce.Controls.EventHandler(SaveMapBehavior);
 
 			newMap = new Button(manager);
@@ -114,7 +115,7 @@ namespace MapEditor_TLCB.Systems
 			newMap.Width = toolbarWindow.Width;
 			newMap.Height = 24;
 			newMap.Left = 0;
-			newMap.Top = toolbarWindow.Height - 24 * 3;
+			newMap.Top = toolbarWindow.Height - 24 * 4;
 			newMap.Click += new TomShane.Neoforce.Controls.EventHandler(NewMapBehavior);
 
 			backToStartScreen = new Button(manager);
@@ -124,9 +125,20 @@ namespace MapEditor_TLCB.Systems
 			backToStartScreen.Width = toolbarWindow.Width;
 			backToStartScreen.Height = 24;
 			backToStartScreen.Left = 0;
-			backToStartScreen.Top = toolbarWindow.Height - 24 * 2;
+			backToStartScreen.Top = toolbarWindow.Height - 24 * 3;
 			backToStartScreen.Click += new TomShane.Neoforce.Controls.EventHandler(BackToStartScreenBehavior);
 			
+			canvasGridCheckBox = new CheckBox(manager);
+			canvasGridCheckBox.Init();
+			canvasGridCheckBox.Parent = toolbarWindow;
+			canvasGridCheckBox.Text = "Grid";
+			canvasGridCheckBox.Width = toolbarWindow.Width;
+			canvasGridCheckBox.Height = 25;
+			canvasGridCheckBox.Left = 0;
+			canvasGridCheckBox.Checked = false;
+			canvasGridCheckBox.Top = toolbarWindow.Height - 24 * 2;
+			canvasGridCheckBox.CheckedChanged += new TomShane.Neoforce.Controls.EventHandler(canvasGridCheckBox_CheckedChanged);
+
 			exitButton = new Button(manager);
 			exitButton.Init();
 			exitButton.Parent = toolbarWindow;
@@ -136,7 +148,7 @@ namespace MapEditor_TLCB.Systems
 			exitButton.Left = 0;
 			exitButton.Top = toolbarWindow.Height - exitButton.Height;
 			exitButton.Click += new TomShane.Neoforce.Controls.EventHandler(ExitBehavior);
-
+			
 
 			newMapConfirmationWindow = new Window(manager);
 			newMapConfirmationWindow.Init();
@@ -272,6 +284,10 @@ namespace MapEditor_TLCB.Systems
 			roadTool.Mode = ButtonMode.Normal;
 			paintTool.Mode = ButtonMode.Normal;
 			eraserTool.Mode = ButtonMode.Normal;
+		}
+		private void canvasGridCheckBox_CheckedChanged(object sender, TomShane.Neoforce.Controls.EventArgs e)
+		{
+			((DrawCanvasSystem)world.SystemManager.GetSystem<DrawCanvasSystem>()[0]).setGridVisible(canvasGridCheckBox.Checked);
 		}
 		private void HighligthButton(ImageBasedButton p_button)
 		{

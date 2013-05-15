@@ -24,6 +24,7 @@ namespace MapEditor_TLCB.Systems
 			m_graphicsDevice = p_graphicsDevice;
 			m_canvasRender = p_canvasRender;
 			m_lastMovedMousePos = Vector2.Zero;
+			m_gridVisible = false;
 		}
 
 		protected override void ProcessEntities(Dictionary<int, Entity> entities)
@@ -86,8 +87,9 @@ namespace MapEditor_TLCB.Systems
 						m_spriteBatch.Draw(texture, mouseGridPosition, m_toolSys.getTilemapIconRectangle(), transparent);
 					}
 				}
-
-				m_spriteBatch.Draw(m_textures["canvas_grid"], Vector2.Zero, transparent);
+				if (m_gridVisible) {
+					m_spriteBatch.Draw(m_textures["canvas_grid"], Vector2.Zero, transparent);
+				}
 			}
 
 		}
@@ -117,7 +119,7 @@ namespace MapEditor_TLCB.Systems
 			}
 			
 			m_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend,
-				SamplerState.PointWrap, null, null, null, cameraMatrix);
+				SamplerState.PointClamp, null, null, null, cameraMatrix);
 		}
 
 		protected override void End()
@@ -137,6 +139,11 @@ namespace MapEditor_TLCB.Systems
 			m_lastMovedMousePos = p_mousePos;
 		}
 
+		public void setGridVisible(bool p_visible)
+		{
+			m_gridVisible = p_visible;
+		}
+
 		Dictionary<string, Texture2D> m_textures;
 		SpriteBatch m_spriteBatch;
 		GraphicsDevice m_graphicsDevice;
@@ -146,5 +153,6 @@ namespace MapEditor_TLCB.Systems
 		ComponentMapper<TilemapRender> m_tilemapRenderMapper;
 		Vector2 m_lastMovedMousePos;
 		CurrentToolSystem m_toolSys;
+		bool m_gridVisible;
 	}
 }
