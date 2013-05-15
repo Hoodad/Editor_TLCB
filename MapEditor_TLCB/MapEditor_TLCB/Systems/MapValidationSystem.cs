@@ -14,7 +14,6 @@ namespace MapEditor_TLCB.Systems
 		public MapValidationSystem(Manager p_manager)
 			: base(typeof(Tilemap), typeof(TilemapValidate))
 		{
-			m_manager = p_manager;
 		}
 
 		protected override void ProcessEntities(Dictionary<int, Entity> entities)
@@ -30,29 +29,13 @@ namespace MapEditor_TLCB.Systems
 					valid.pathsValid = validatePaths(tilemap);
 					valid.playerValid = validatePlayer(tilemap);
 					valid.switchesValid = validateSwitches(tilemap);
-
+					ToolbarSystem toolSys = ((ToolbarSystem)World.SystemManager.GetSystem<
+						ToolbarSystem>()[0]);
 					if (e.Tag == "mainTilemap")
 					{
-						if(valid.pathsValid) {
-							m_pathsValidLabel.TextColor = Color.DarkGreen;
-						}
-						else {
-							m_pathsValidLabel.TextColor = Color.DarkRed;
-						}
-						
-						if(valid.playerValid) {
-							m_playerValidLabel.TextColor = Color.DarkGreen;
-						}
-						else {
-							m_playerValidLabel.TextColor = Color.DarkRed;
-						}
-						
-						if(valid.switchesValid) {
-							m_switchesValidLabel.TextColor = Color.DarkGreen;
-						}
-						else {
-							m_switchesValidLabel.TextColor = Color.DarkRed;
-						}
+						toolSys.pathsValid.Checked = valid.pathsValid;
+						toolSys.playerValid.Checked = valid.playerValid;
+						toolSys.switchesValid.Checked = valid.switchesValid;
 					}
 				}
 			}
@@ -197,49 +180,9 @@ namespace MapEditor_TLCB.Systems
 		{
 			m_tilemapMapper = new ComponentMapper<Tilemap>(world);
 			m_validateMapper = new ComponentMapper<TilemapValidate>(world);
-
-			m_validateControl = new Window(m_manager);
-			m_validateControl.Init();
-			m_validateControl.Width = 150;
-			m_validateControl.Height = 50;
-			m_validateControl.Text = "Validation";
-			m_validateControl.Center();
-			m_validateControl.Top = 0;
-			m_validateControl.BorderVisible = false;
-			m_validateControl.Resizable = false;
-			m_manager.Add(m_validateControl);
-
-			m_pathsValidLabel = new Label(m_manager);
-			m_pathsValidLabel.Init();
-			m_pathsValidLabel.Parent = m_validateControl;
-			m_pathsValidLabel.Text = "Paths";
-			m_pathsValidLabel.Left = 10;
-			m_pathsValidLabel.Top = 5;
-			m_pathsValidLabel.TextColor = Color.DarkRed;
-
-			m_playerValidLabel = new Label(m_manager);
-			m_playerValidLabel.Init();
-			m_playerValidLabel.Parent = m_validateControl;
-			m_playerValidLabel.Text = "Player";
-			m_playerValidLabel.Left = 10;
-			m_playerValidLabel.Top = 20;
-			m_playerValidLabel.TextColor = Color.DarkRed;
-
-			m_switchesValidLabel = new Label(m_manager);
-			m_switchesValidLabel.Init();
-			m_switchesValidLabel.Parent = m_validateControl;
-			m_switchesValidLabel.Text = "Switches";
-			m_switchesValidLabel.Left = 10;
-			m_switchesValidLabel.Top = 35;
-			m_switchesValidLabel.TextColor = Color.DarkRed;
 		}
 
 		ComponentMapper<Tilemap> m_tilemapMapper;
 		ComponentMapper<TilemapValidate> m_validateMapper;
-		Manager m_manager;
-		Window m_validateControl;
-		Label m_pathsValidLabel;
-		Label m_playerValidLabel;
-		Label m_switchesValidLabel;
 	}
 }
