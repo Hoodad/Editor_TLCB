@@ -104,6 +104,7 @@ namespace MapEditor_TLCB.Systems
             redoBtn.Text = "Redo";
             redoBtn.Click += new TomShane.Neoforce.Controls.EventHandler(RedoBehaviour);
 
+            /*
             viewMode = new RadioButton(manager);
             viewMode.Init();
             viewMode.Parent = undoTreeWindow;
@@ -114,17 +115,9 @@ namespace MapEditor_TLCB.Systems
             viewMode.Checked = true;
             viewMode.Text = "Tree view";
             viewMode.Click += new TomShane.Neoforce.Controls.EventHandler(ViewModeBehaviour);
+             * */
 
-            /*viewMode = new RadioButton(manager);
-            viewMode.Init();
-            viewMode.Parent = undoTreeWindow;
-            viewMode.Width = undoTreeWindow.Width / 2;
-            viewMode.Height = 24;
-            viewMode.Left = 0;
-            viewMode.Top = 48;
-            viewMode.Checked = false;
-            viewMode.Text = "Mini view";
-            viewMode.Click += new TomShane.Neoforce.Controls.EventHandler(ZoomModeBehaviour);*/
+
 
             sbVert = new ScrollBar(manager, Orientation.Vertical);
             sbVert.Init();
