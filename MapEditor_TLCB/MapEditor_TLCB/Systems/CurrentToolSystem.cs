@@ -55,10 +55,26 @@ namespace MapEditor_TLCB.Systems
             m_container.Parent = currentToolWindow;
             m_container.CanFocus = false;
             m_container.Click += new TomShane.Neoforce.Controls.EventHandler(OnWindowClickBehavior);
+
+            //Initialize some hotkeys
+            EventSystem ev = (EventSystem)world.SystemManager.GetSystem<EventSystem>()[0];
+            EventData ev1 = new EventData(SetCurrentToolCB, Tool.ROAD_TOOL);
+            EventData ev2 = new EventData(SetCurrentToolCB, Tool.PAINT_TOOL);
+            EventData ev3 = new EventData(SetCurrentToolCB, Tool.ERASE_TOOL);
+            ev.addEvent(ev1);
+            ev.addEvent(ev2);
+            ev.addEvent(ev3);
+            ev.setHotKey(ev1, Microsoft.Xna.Framework.Input.Keys.D1);
+            ev.setHotKey(ev2, Microsoft.Xna.Framework.Input.Keys.D2);
+            ev.setHotKey(ev3, Microsoft.Xna.Framework.Input.Keys.D3);
 		}
 		public override void Process()
 		{
 		}
+        public void SetCurrentToolCB(object p_tool)
+        {
+            SetCurrentTool((Tool)p_tool);
+        }
         public void SetCurrentTool(Tool p_tool)
         {
             m_container.SetCurrentTool(p_tool);
