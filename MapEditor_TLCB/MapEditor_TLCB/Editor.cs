@@ -181,6 +181,7 @@ namespace MapEditor_TLCB
 			textures.Add("canvas_shadow_10px", Content.Load<Texture2D>("canvas_shadow_10px"));
 			textures.Add("canvas_shadow_30px", Content.Load<Texture2D>("canvas_shadow_30px"));
 			textures.Add("TileSelector", Content.Load<Texture2D>("TileSelector_v3"));
+			textures.Add("canvas_grid", Content.Load<Texture2D>("canvas_grid"));
 
 			InitializeAllSystem();
 			InitializeEntities();

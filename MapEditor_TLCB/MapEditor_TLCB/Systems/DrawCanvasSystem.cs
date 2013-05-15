@@ -86,6 +86,8 @@ namespace MapEditor_TLCB.Systems
 						m_spriteBatch.Draw(texture, mouseGridPosition, m_toolSys.getTilemapIconRectangle(), transparent);
 					}
 				}
+
+				m_spriteBatch.Draw(m_textures["canvas_grid"], Vector2.Zero, transparent);
 			}
 
 		}
