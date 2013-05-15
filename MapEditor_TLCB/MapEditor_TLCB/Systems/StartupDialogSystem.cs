@@ -35,6 +35,9 @@ namespace MapEditor_TLCB.Systems
 			{
 				hasChangedTilemap = true;
 				requestToChangeTilemap = false;
+
+                RadialMenuSystem rms = (RadialMenuSystem)world.SystemManager.GetSystem<RadialMenuSystem>()[0];
+                rms.setTilemap(tilemap);
 			}
 			else
 			{

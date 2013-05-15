@@ -30,6 +30,9 @@ namespace MapEditor_TLCB.Systems
         Texture2D m_tilemap;
 
         int customID;
+        int toReplace = 0;
+
+        List<RadialMenuItem> m_usesTilemap;
 
 
         RadialWindow m_radialWindow;
@@ -152,6 +155,11 @@ namespace MapEditor_TLCB.Systems
             items.Add(new RadialMenuItem("Recent 7", m_tilemap, m_events[6], new Rectangle(64, 96, 32, 32)));
             items.Add(new RadialMenuItem("Recent 8", m_tilemap, m_events[7], new Rectangle(64, 128, 32, 32)));
             items.Add(new RadialMenuItem("Recent 9", m_tilemap, m_events[8], new Rectangle(64, 160, 32, 32)));
+            m_usesTilemap = new List<RadialMenuItem>();
+            for (int i = 1; i < items.Count; i++)
+            {
+                m_usesTilemap.Add(items[i]);
+            }
 
 			RadialMenu menu = new RadialMenu(m_device, m_content, items, main, null);
 
@@ -170,7 +178,7 @@ namespace MapEditor_TLCB.Systems
             m_context.addRadialMenu(powerupsMenu);
             //m_context.addRadialMenu(RoadTileMenu);
             m_context.addRadialMenu(customMenu);
-            customID = 5;
+            customID = 4;
 
 
 
@@ -257,6 +265,35 @@ namespace MapEditor_TLCB.Systems
             {
                 toggleRadialMenu();
             }
+        }
+        public void setTilemap(Texture2D p_tilemap)
+        {
+            m_tilemap = p_tilemap;
+            for (int i = 0; i < m_usesTilemap.Count; i++)
+            {
+                m_usesTilemap[i].texture = m_tilemap;
+            }
+        }
+        public void currentToolChanged(IntPair p_current)
+        {
+            for (int i = 0; i < m_usesTilemap.Count; i++)
+            {
+                EventData ev = m_usesTilemap[i].activateEvent;
+                IntPair pair = (IntPair)ev.data;
+                if (pair.i1 == p_current.i1 && pair.i2 == p_current.i2)
+                    return;
+            }
+            m_usesTilemap[toReplace].activateEvent.data = p_current;
+            Vector2 min = new Vector2(p_current.i1 - 30 * (p_current.i1 / 30), p_current.i1 / 30);
+            Vector2 max = new Vector2(p_current.i2 - 30 * (p_current.i2 / 30), p_current.i2 / 30);
+            m_usesTilemap[toReplace].sourceRect.X = (int)(32 * min.X);
+            m_usesTilemap[toReplace].sourceRect.Width = 32 * (int)(max.X - min.X + 1);
+            m_usesTilemap[toReplace].sourceRect.Y = (int)(32 * min.Y);
+            m_usesTilemap[toReplace].sourceRect.Height = 32 * (int)(max.Y - min.Y + 1);
+
+            toReplace++;
+            if (toReplace >= m_usesTilemap.Count)
+                toReplace = 0;
         }
 	}
 }

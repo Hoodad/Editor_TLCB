@@ -69,11 +69,19 @@ namespace MapEditor_TLCB.Systems
                 m_container.SetTilemapTexture(tilemapTex);
                 //m_container.SetTilemapRectangle(tbs.GetTilemapContainer().GetTilemapSourceRectangle());
                 m_container.SetCurrentDrawTileIndex(tbs.GetTilemapContainer().GetCurrentIndex());
+
+                RadialMenuSystem rms = (RadialMenuSystem)(world.SystemManager.GetSystem<RadialMenuSystem>()[0]);
+                rms.currentToolChanged(tbs.GetTilemapContainer().GetCurrentIndex());
             }
         }
         public void SetCurrentDrawToolIndex(IntPair p_index)
         {
+            //Does it ever enter this? Yes through Radial menu
             m_container.SetCurrentDrawTileIndex(p_index);
+
+            RadialMenuSystem rms = (RadialMenuSystem)(world.SystemManager.GetSystem<RadialMenuSystem>()[0]);
+            rms.currentToolChanged(p_index);
+
         }
 		public Tool GetCurrentTool()
 		{
