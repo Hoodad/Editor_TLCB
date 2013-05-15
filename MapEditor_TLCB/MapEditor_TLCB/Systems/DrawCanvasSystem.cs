@@ -24,7 +24,6 @@ namespace MapEditor_TLCB.Systems
 			m_graphicsDevice = p_graphicsDevice;
 			m_canvasRender = p_canvasRender;
 			m_lastMovedMousePos = Vector2.Zero;
-			m_gridVisible = false;
 		}
 
 		protected override void ProcessEntities(Dictionary<int, Entity> entities)
@@ -33,7 +32,8 @@ namespace MapEditor_TLCB.Systems
 
 			m_spriteBatch.Draw(m_textures["canvas_shadow_30px"], new Vector2(-30.0f, -30.0f), new Color(0, 0, 0, 0.5f));
 
-			Color transparent = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+			Color transparent = new Color(0.5f, 0.5f, 0.8f, 0.5f);
+			Color gridColor = new Color(0.2f, 0.2f, 0.2f, 0.5f);
 			foreach (Entity e in entities.Values)
 			{
 				Transform transform = m_transformMapper.Get(e);
@@ -87,8 +87,8 @@ namespace MapEditor_TLCB.Systems
 						m_spriteBatch.Draw(texture, mouseGridPosition, m_toolSys.getTilemapIconRectangle(), transparent);
 					}
 				}
-				if (m_gridVisible) {
-					m_spriteBatch.Draw(m_textures["canvas_grid"], Vector2.Zero, transparent);
+				if (m_camTransform.scale >= 1.0f) {
+					m_spriteBatch.Draw(m_textures["canvas_grid"], Vector2.Zero, gridColor);
 				}
 			}
 
@@ -111,10 +111,10 @@ namespace MapEditor_TLCB.Systems
 			Entity camera = world.TagManager.GetEntity("mainCamera");
 			if (camera != null)
 			{
-				Transform camTransform = camera.GetComponent<Transform>();
-				if (camTransform != null)
+				m_camTransform = camera.GetComponent<Transform>();
+				if (m_camTransform != null)
 				{
-					cameraMatrix = camTransform.getMatrix();
+					cameraMatrix = m_camTransform.getMatrix();
 				}
 			}
 			
@@ -139,11 +139,6 @@ namespace MapEditor_TLCB.Systems
 			m_lastMovedMousePos = p_mousePos;
 		}
 
-		public void setGridVisible(bool p_visible)
-		{
-			m_gridVisible = p_visible;
-		}
-
 		Dictionary<string, Texture2D> m_textures;
 		SpriteBatch m_spriteBatch;
 		GraphicsDevice m_graphicsDevice;
@@ -153,6 +148,6 @@ namespace MapEditor_TLCB.Systems
 		ComponentMapper<TilemapRender> m_tilemapRenderMapper;
 		Vector2 m_lastMovedMousePos;
 		CurrentToolSystem m_toolSys;
-		bool m_gridVisible;
+		Transform m_camTransform;
 	}
 }
