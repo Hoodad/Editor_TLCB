@@ -34,27 +34,32 @@ namespace MapEditor_TLCB.Actions
 
         public Rectangle m_renderArea;
 
-        private float m_nodeOrigWidth = 90.0f;
-        private float m_nodeOrigHeight = 30.0f;
-        private float m_nodeMiniWidth = 10.0f;
-        private float m_nodeMiniHeight = 10.0f;
+        public float m_nodeOrigWidth = 90.0f;
+        public float m_nodeOrigHeight = 30.0f;
+        public float m_nodeMiniWidth = 30.0f;
+        public float m_nodeMiniHeight = 30.0f;
 
-        private float m_nodeWidth;
-        private float m_nodeHeight;
+        public float m_nodeWidth;
+        public float m_nodeHeight;
         private Vector2 m_nodeMargin;
-        private Vector2 scrollOffset = Vector2.Zero;
+        public Vector2 scrollOffset = Vector2.Zero;
         private Vector2 scrollInputBuffer=Vector2.Zero;
-        private Vector2 m_renderOffset;
+        public Vector2 m_renderOffset;
         private Vector2 m_lineRenderOffset;
 
         Color m_activeBranchCol = new Color(58, 174, 163);
         Color m_currentNodeCol = new Color(58, 255, 163);
         Color m_inactiveNodeCol = Color.White;
 
+        public float m_zoomValue = 1.0f;
+
+        //
+        bool newNodeDirty = false; // has checked if there is new node
+
         // stats
         int maxSiblings = 0;
         int maxLevel = 0;
-        private Vector2 m_totalSize = Vector2.Zero;
+        public Vector2 m_totalSize = Vector2.Zero;
 
         // resources
         Texture2D m_nodeBoxTex;
@@ -105,11 +110,51 @@ namespace MapEditor_TLCB.Actions
             m_actions = p_actions;
         }
 
+        public void RefreshZoom(float p_dt=-1.0f)
+        {
+            if (m_zoomValue <= 0.5f)
+            {
+                if (m_zoom != Zoom.MINI)
+                    setZoom(Zoom.MINI);
+
+                if (m_zoomValue <= 0.1f)
+                    m_zoomValue = 0.1f;
+            }
+            else
+            {
+                if (m_zoomValue > 1.0f)
+                    m_zoomValue = 1.0f;
+
+                if (m_zoom != Zoom.NORMAL)
+                    setZoom(Zoom.NORMAL);
+            }
+            //
+            if (p_dt > 0.0f)
+            {
+                if (m_zoom == Zoom.NORMAL)
+                {
+                    m_nodeWidth = MathHelper.Lerp(m_nodeWidth, m_nodeOrigWidth, 10.0f * p_dt);
+                    m_nodeHeight = MathHelper.Lerp(m_nodeHeight, m_nodeOrigHeight, 10.0f * p_dt);
+                    m_nodeMargin = new Vector2(m_nodeWidth * 1.1f, m_nodeHeight * 1.5f);
+                }
+                else
+                {
+                    m_nodeWidth = MathHelper.Lerp(m_nodeWidth, m_nodeMiniWidth, 10.0f * p_dt);
+                    m_nodeHeight = MathHelper.Lerp(m_nodeHeight, m_nodeMiniHeight, 10.0f * p_dt);
+                    m_nodeMargin = new Vector2(m_nodeWidth * 3.0f, m_nodeHeight * 1.5f);
+                }
+            }
+        }
+
         public void update(float p_dt)
         {
+            //
+            RefreshZoom(p_dt);
+            //
+
             // update sub sizes dependant on any changes
             m_lineRenderOffset = new Vector2(m_nodeWidth / 2, m_nodeHeight / 2);
-            m_nodeMargin = new Vector2(m_nodeWidth * 1.1f, m_nodeHeight * 1.5f);
+            
             // position
             Queue<int> batch = new Queue<int>();
             m_renderBatch.Clear();
@@ -173,9 +218,11 @@ namespace MapEditor_TLCB.Actions
 
 
                 // render cull
-                Vector2 renderpos = currentProcNode.m_renderPos + scrollOffset + m_renderOffset;
-                if (renderpos.X < m_renderArea.X + m_renderArea.Width + m_nodeWidth && renderpos.X > m_renderArea.X - m_nodeWidth &&
-                    renderpos.Y < m_renderArea.Y + m_renderArea.Height + m_nodeHeight && renderpos.Y > m_renderArea.Y - m_nodeHeight)
+                Vector2 renderpos = currentProcNode.m_renderPos + scrollOffset;
+                if (renderpos.X * m_zoomValue + m_renderOffset.X < (m_renderArea.X + m_renderArea.Width + m_nodeWidth * m_zoomValue) &&
+                    renderpos.X * m_zoomValue + m_renderOffset.X > (m_renderArea.X - m_nodeWidth * m_zoomValue) &&
+                    renderpos.Y * m_zoomValue + m_renderOffset.Y < (m_renderArea.Y + m_renderArea.Height + m_nodeHeight * m_zoomValue) &&
+                    renderpos.Y * m_zoomValue + m_renderOffset.Y > (m_renderArea.Y - m_nodeHeight * m_zoomValue))
                 {
                     if (currentProcNode.m_activeBranch>0 || m_mode == Mode.TREE)
                         m_renderBatch.Add(currentId);
@@ -222,7 +269,7 @@ namespace MapEditor_TLCB.Actions
                     if (currentRender.m_activeBranch>0) tint = m_activeBranchCol;
                     if (i == m_currentNodeId) tint = m_currentNodeCol;
                     //tint = Color.Lerp(tint,Color.Red,currentRender.traversedflash);
-                    drawNode(p_spriteBatch, scrollOffset + m_renderOffset + currentRender.m_renderPos, tint);
+                    drawNode(p_spriteBatch, scrollOffset + currentRender.m_renderPos, tint);
                     // draw action info as well
                     if (m_zoom != Zoom.MINI)
                     {
@@ -235,13 +282,13 @@ namespace MapEditor_TLCB.Actions
                             else
                                 info += action.GetInfo();    // single action info
                             Vector2 strSz = m_font.MeasureString(info);
-                            float scale = Math.Min(1.0f, m_nodeWidth / strSz.X);
+                            float scale = Math.Min(1.0f, (m_nodeWidth / strSz.X));
                             strSz *= scale;
-                            Vector2 intpos = scrollOffset + m_renderOffset + currentRender.m_renderPos;
+                            Vector2 intpos = (scrollOffset + currentRender.m_renderPos) * m_zoomValue + m_renderOffset;
                             intpos.X = (int)intpos.X; intpos.Y = (int)intpos.Y;
                             //
                             p_spriteBatch.DrawString(m_font, info, intpos, Color.White,
-                                0, new Vector2((int)((-m_nodeWidth + strSz.X) * 0.5f), (int)((-m_nodeHeight + strSz.Y) * 0.5f) ),
+                                0, new Vector2((int)((-m_nodeWidth * m_zoomValue + strSz.X) * 0.5f), (int)((-m_nodeHeight * m_zoomValue + strSz.Y) * 0.5f)),
                                 scale, SpriteEffects.None, 0);
                         }
                     }
@@ -254,8 +301,9 @@ namespace MapEditor_TLCB.Actions
 
         private void drawNode(SpriteBatch p_spriteBatch,Vector2 p_pos,Color p_tint)
         {
-            p_spriteBatch.Draw(m_nodeBoxTex, 
-                new Rectangle((int)p_pos.X, (int)p_pos.Y, (int)m_nodeWidth, (int)m_nodeHeight), 
+            float scale = scale = m_zoomValue;
+            p_spriteBatch.Draw(m_nodeBoxTex,
+                new Rectangle((int)(p_pos.X * scale + m_renderOffset.X), (int)(p_pos.Y * scale + m_renderOffset.Y), (int)(m_nodeWidth * scale), (int)(m_nodeHeight * scale)),
                 p_tint);
         }
 
@@ -282,8 +330,8 @@ namespace MapEditor_TLCB.Actions
             for (int i = 1; i < 10; i++)
             {
                 m_lineRenderer.Draw(p_spriteBatch,
-                    scrollOffset + m_lineRenderOffset + m_renderOffset + pos[i-1],
-                    scrollOffset + m_lineRenderOffset + m_renderOffset + pos[i],
+                    (scrollOffset + m_lineRenderOffset + pos[i-1])*m_zoomValue + m_renderOffset,
+                    (scrollOffset + m_lineRenderOffset+ pos[i]) * m_zoomValue + m_renderOffset ,
                     p_color, 1.0f, true);
             }
         }
@@ -303,21 +351,26 @@ namespace MapEditor_TLCB.Actions
         public void setZoom(Zoom p_zoom)
         {
             m_zoom = p_zoom;
-            if (m_zoom == Zoom.NORMAL)
-            {
-                m_nodeWidth = m_nodeOrigWidth;
-                m_nodeHeight = m_nodeOrigHeight;
-            }
-            else
-            {
-                m_nodeWidth = m_nodeMiniWidth;
-                m_nodeHeight = m_nodeMiniHeight;
-            }
         }
 
         public Zoom getZoom()
         {
             return m_zoom;
+        }
+
+        public bool isThereANewNode()
+        {
+            if (newNodeDirty)
+            {
+                newNodeDirty=false;
+                return true;
+            }
+            return false;
+        }
+
+        public Vector2 getCurrentNodeContextPosition()
+        {
+            return (m_nodes[m_currentNodeId].m_renderPos) * m_zoomValue;
         }
 
         // add a single action
@@ -342,6 +395,7 @@ namespace MapEditor_TLCB.Actions
                 nodeId = m_nodes.add(new ActionNode(actionId, m_currentNodeId, 0));
             }
             m_currentNodeId = nodeId;
+            newNodeDirty = true;
             return nodeId;
         }
 
@@ -376,6 +430,7 @@ namespace MapEditor_TLCB.Actions
                 nodeId = m_nodes.add(groupNode);
             }
             m_currentNodeId = nodeId;
+            newNodeDirty = true;
             return nodeId;
         }
 
@@ -394,6 +449,7 @@ namespace MapEditor_TLCB.Actions
                 actions = new List<ActionInterface>();
                 foreach (int n in currentNodeRef.m_actionIds)
                     actions.Add(m_actions[n]);
+                newNodeDirty = true;
             }
             // return
             return actions;
@@ -415,6 +471,7 @@ namespace MapEditor_TLCB.Actions
                 actions.Reverse(); // actions must be reversed when executed for undo (executed from start to end)
                 // change current node
                 currentNodeRef = m_nodes[m_currentNodeId];
+                newNodeDirty = true;
             }
             // return
             return actions;
@@ -541,13 +598,14 @@ namespace MapEditor_TLCB.Actions
         public void setCurrent(int p_id)
         {
             m_currentNodeId = p_id;
+            newNodeDirty = true;
         }
 
         public List<ActionInterface> setCurrentByPosition(int p_x, int p_y)
         {
             List<ActionInterface> returnPath = null;
-            p_x -= (int)(scrollOffset.X + m_renderOffset.X);
-            p_y -= (int)(scrollOffset.Y + m_renderOffset.Y);
+            p_x -= (int)((scrollOffset.X)*m_zoomValue + m_renderOffset.X);
+            p_y -= (int)((scrollOffset.Y)*m_zoomValue + m_renderOffset.Y);
             // only check the visible for collision
             foreach (int i in m_renderBatch)
             {
@@ -555,15 +613,16 @@ namespace MapEditor_TLCB.Actions
                 {
                     ActionNode currentRender = m_nodes[i];
                     // ye olde box collision, forgive the continues
-                    if (p_x > currentRender.m_renderPos.X + m_nodeWidth)  continue;
-                    if (p_x < currentRender.m_renderPos.X)                continue;
-                    if (p_y > currentRender.m_renderPos.Y + m_nodeHeight) continue;
-                    if (p_y < currentRender.m_renderPos.Y)                continue;
+                    if (p_x > (currentRender.m_renderPos.X + m_nodeWidth)*m_zoomValue)  continue;
+                    if (p_x < currentRender.m_renderPos.X*m_zoomValue)                continue;
+                    if (p_y > (currentRender.m_renderPos.Y + m_nodeHeight)*m_zoomValue) continue;
+                    if (p_y < currentRender.m_renderPos.Y*m_zoomValue)                continue;
                     // if passed, click hit
                     if (m_currentNodeId != i)
                     {
                         returnPath = traverse(i);
                         m_currentNodeId = i;
+                        newNodeDirty = true;
                     }
                     break;
                 }
@@ -571,22 +630,23 @@ namespace MapEditor_TLCB.Actions
             return returnPath;
         }
 
-        public void ScrollX(int p_dx, int p_max)
+        public void ScrollX(float p_dx, float p_max)
         {
-            scrollInputBuffer.X = (float)p_dx / (float)p_max;
+            scrollInputBuffer.X = p_dx / p_max;
             scrollOffset.X = -m_totalSize.X * scrollInputBuffer.X;
         }
 
-        public void ScrollY(int p_dy, int p_max)
+
+        public void ScrollY(float p_dy, float p_max)
         {
-            scrollInputBuffer.Y = (float)p_dy / (float)p_max;
+            scrollInputBuffer.Y = p_dy / p_max;
             scrollOffset.Y = -m_totalSize.Y * scrollInputBuffer.Y;
         }
 
         public void ScrollRefresh(float p_dt)
         {
-            scrollOffset = Vector2.Lerp(scrollOffset, -m_totalSize * scrollInputBuffer,
-                                               10.0f * p_dt); ;
+            /*scrollOffset = Vector2.Lerp(scrollOffset, -m_totalSize * scrollInputBuffer,
+                                               10.0f * p_dt);*/
         }
     }
 }

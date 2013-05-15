@@ -12,7 +12,7 @@ using MapEditor_TLCB.Actions;
 namespace MapEditor_TLCB.CustomControls
 {
 
-    class UndoTreeContainer : Container
+    class UndoTreeContainer : Control
     {        
         public int m_startId = 0;
         public bool m_treestate = true;

@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Content;
 using MapEditor_TLCB.CustomControls;
 using MapEditor_TLCB.Actions;
 using MapEditor_TLCB.Actions.Interface;
+using Microsoft.Xna.Framework.Input;
 
 namespace MapEditor_TLCB.Systems
 {
@@ -29,14 +30,18 @@ namespace MapEditor_TLCB.Systems
         public UndoTreeContainer undoTreeContainer;
         GraphicsDevice m_gd;
         ContentManager m_content;
+        private MouseState previousMouseState;
 
         private int m_scrollWheelValue = 0;
         private int m_previousScrollWheelValue = 0;
 
         private ActionSystem m_actionsystem;
 
+        float refocusTick = 0.0f;
+
         public UndoTreeSystem(Manager p_manager, GraphicsDevice p_gd, ContentManager p_content)
         {
+            previousMouseState = Mouse.GetState();
             manager = p_manager;
             m_gd = p_gd;
             m_content = p_content;
@@ -75,6 +80,8 @@ namespace MapEditor_TLCB.Systems
             undoTreeContainer.Parent = undoTreeWindow;
             undoTreeContainer.CanFocus = false;
             undoTreeContainer.Click += new TomShane.Neoforce.Controls.EventHandler(OnContainerClickBehavior);
+            undoTreeContainer.MouseScroll += new TomShane.Neoforce.Controls.MouseEventHandler(OnContainerScrollBehaviour);
+            undoTreeContainer.MouseMove += new TomShane.Neoforce.Controls.MouseEventHandler(OnContainerPanBehaviour);
             undoTreeContainer.DoubleClicks = false;
 
             undoBtn = new Button(manager);
@@ -108,7 +115,7 @@ namespace MapEditor_TLCB.Systems
             viewMode.Text = "Tree view";
             viewMode.Click += new TomShane.Neoforce.Controls.EventHandler(ViewModeBehaviour);
 
-            viewMode = new RadioButton(manager);
+            /*viewMode = new RadioButton(manager);
             viewMode.Init();
             viewMode.Parent = undoTreeWindow;
             viewMode.Width = undoTreeWindow.Width / 2;
@@ -117,7 +124,7 @@ namespace MapEditor_TLCB.Systems
             viewMode.Top = 48;
             viewMode.Checked = false;
             viewMode.Text = "Mini view";
-            viewMode.Click += new TomShane.Neoforce.Controls.EventHandler(ZoomModeBehaviour);
+            viewMode.Click += new TomShane.Neoforce.Controls.EventHandler(ZoomModeBehaviour);*/
 
             sbVert = new ScrollBar(manager, Orientation.Vertical);
             sbVert.Init();
@@ -127,7 +134,7 @@ namespace MapEditor_TLCB.Systems
             sbVert.SetPosition(undoTreeWindow.ClientWidth - sbVert.Width, 0);
             sbVert.Anchor = Anchors.Top | Anchors.Right | Anchors.Bottom;
             sbVert.ValueChanged += new TomShane.Neoforce.Controls.EventHandler(ScrollBarValueChangedY);
-            sbVert.MouseScroll += new TomShane.Neoforce.Controls.MouseEventHandler(ScrollBarMouseScroll);
+            // sbVert.MouseScroll += new TomShane.Neoforce.Controls.MouseEventHandler(ScrollBarMouseScroll);
             sbVert.Range = scrollMax;
             sbVert.PageSize = 0;
             sbVert.Value = 0;
@@ -155,7 +162,21 @@ namespace MapEditor_TLCB.Systems
         public override void Process()
         {
             undoTreeContainer.m_undoTree.m_renderArea = undoTreeWindow.ClientRect;
-            undoTreeContainer.Update((float)world.Delta / 1000.0f);
+            float dt = (float)world.Delta / 1000.0f;
+            undoTreeContainer.Update(dt);
+            //
+            if (undoTreeContainer.m_undoTree.isThereANewNode())
+            {
+                refocusTick = 1.0f;
+            }
+            if (refocusTick > 0.0f)
+            {
+                refocusTick -= dt;
+                Vector2 newPos = undoTreeContainer.m_undoTree.getCurrentNodeContextPosition() / (undoTreeContainer.m_undoTree.m_zoomValue);
+                // newPos -= new Vector2(undoTreeWindow.Width, undoTreeWindow.Height) * 0.15f;
+                undoTreeContainer.m_undoTree.scrollOffset = Vector2.Lerp(undoTreeContainer.m_undoTree.scrollOffset,-newPos,10.0f*dt);
+                UpdateScrollBarsFromTreeValues();
+            }
         }
         public void OnWindowClickBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
@@ -204,6 +225,7 @@ namespace MapEditor_TLCB.Systems
             }
         }
 
+        /*
         public void ZoomModeBehaviour(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
             RadioButton rb = sender as RadioButton;
@@ -217,7 +239,7 @@ namespace MapEditor_TLCB.Systems
                 undoTreeContainer.m_undoTree.setZoom(UndoTree.Zoom.MINI); // checked
                 rb.Checked = true;
             }
-        }
+        }*/
 
         public void ScrollBarValueChangedY(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
@@ -231,14 +253,52 @@ namespace MapEditor_TLCB.Systems
             undoTreeContainer.m_undoTree.ScrollX(sb.Value, scrollMax);
         }
 
-        public void ScrollBarMouseScroll(object sender, TomShane.Neoforce.Controls.EventArgs e)
+        public void OnContainerPanBehaviour(object sender, TomShane.Neoforce.Controls.MouseEventArgs e)
         {
-            MouseEventArgs me = e as MouseEventArgs;
-            ScrollBar sb = sender as ScrollBar;
-            m_scrollWheelValue = me.State.ScrollWheelValue;
-            int scrollDiff = m_scrollWheelValue - m_previousScrollWheelValue;
+            MouseState currentState = e.State;
+            if (e.State.MiddleButton == ButtonState.Pressed)
+            {
+                Vector2 mouseDiff = new Vector2(e.Position.X - previousMouseState.X, e.Position.Y - previousMouseState.Y);
+                undoTreeContainer.m_undoTree.scrollOffset += mouseDiff;
+                // update gui
+                UpdateScrollBarsFromTreeValues();
+            }
+            previousMouseState = currentState;
+        }
+
+        public void OnContainerScrollBehaviour(object sender, TomShane.Neoforce.Controls.MouseEventArgs e)
+        {
+            m_scrollWheelValue=e.State.ScrollWheelValue;
+            Vector2 mousePos = new Vector2(e.Position.X, e.Position.Y)-new Vector2(undoTreeContainer.AbsoluteLeft,undoTreeContainer.AbsoluteTop);
+            mousePos -= undoTreeContainer.m_undoTree.m_renderOffset;
+            Vector2 border = new Vector2(undoTreeWindow.Width, undoTreeWindow.Height);
+            //mousePos /= border;
+            Vector2 mousePosOldScale = mousePos/(undoTreeContainer.m_undoTree.m_zoomValue/*(undoTreeContainer.m_undoTree.m_nodeWidth/undoTreeContainer.m_undoTree.m_nodeOrigWidth)*/);
+
+            int diff = m_scrollWheelValue - m_previousScrollWheelValue;
             m_previousScrollWheelValue = m_scrollWheelValue;
-            sb.Value += scrollDiff;
+
+            if (diff > 0)
+            {
+                undoTreeContainer.m_undoTree.m_zoomValue *= 1.15f; // use same values as canvas zoom
+            }
+            else if (diff < 0)
+            {
+                undoTreeContainer.m_undoTree.m_zoomValue /= 1.15f;
+            }
+            undoTreeContainer.m_undoTree.RefreshZoom(); // update conditions and apply boundaries
+            // recalc offsets
+            Vector2 mousePosNewScale = mousePos / (undoTreeContainer.m_undoTree.m_zoomValue /* (undoTreeContainer.m_undoTree.m_nodeWidth / undoTreeContainer.m_undoTree.m_nodeOrigWidth)*/);
+            Vector2 scroll = (mousePosNewScale - mousePosOldScale);
+            undoTreeContainer.m_undoTree.scrollOffset += scroll;
+            // update gui
+            UpdateScrollBarsFromTreeValues();
+        }
+
+        public void UpdateScrollBarsFromTreeValues()
+        {
+            sbHorz.Value = (int)((undoTreeContainer.m_undoTree.scrollOffset.X / -undoTreeContainer.m_undoTree.m_totalSize.X) * (float)scrollMax);
+            sbVert.Value = (int)((undoTreeContainer.m_undoTree.scrollOffset.Y / -undoTreeContainer.m_undoTree.m_totalSize.Y) * (float)scrollMax);
         }
 
 		public void ClearTheUndoTree()
