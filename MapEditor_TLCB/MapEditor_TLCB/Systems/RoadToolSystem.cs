@@ -19,6 +19,10 @@ namespace MapEditor_TLCB.Systems
 		public RoadToolSystem(): base(typeof(Tilemap))
 		{
 			m_lmbPressed = false;
+			m_horizontalLock = -1.0f;
+			m_verticalLock = -1.0f;
+			m_lockStartingPointWorld = Vector2.Zero;
+			m_lookingForLock = false;
 		}
 
 		public override void Initialize()
@@ -68,21 +72,52 @@ namespace MapEditor_TLCB.Systems
 
 		public override void Process()
 		{
+			m_mouseWorldPos = new Vector2((float)Mouse.GetState().X, (float)Mouse.GetState().Y);
+			Entity camera = world.TagManager.GetEntity("mainCamera");
+			if (camera != null)
+			{
+				Transform camTransform = camera.GetComponent<Transform>();
+				if (camTransform != null)
+				{
+					m_mouseWorldPos = Vector2.Transform(m_mouseWorldPos, Matrix.Invert(camTransform.getMatrix()));
+				}
+			}
+
+			InputDelta delta = World.TagManager.GetEntity("input").GetComponent<InputDelta>();
+			if (delta.getDeltaKey(Keys.LeftShift) > 0.0f)
+			{
+				m_lockStartingPointWorld = m_mouseWorldPos;
+				m_lockStartingPoint = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
+				m_lookingForLock = true;
+			}
+			else if (delta.getDeltaKey(Keys.LeftShift) < 0.0f)
+			{
+				m_lookingForLock = false;
+				m_horizontalLock = -1.0f;
+				m_verticalLock = -1.0f;
+			}
+
+			if (m_lookingForLock)
+			{
+				Vector2 deltaMouse = new Vector2(Mouse.GetState().X, Mouse.GetState().Y) - m_lockStartingPoint;
+				if (deltaMouse.LengthSquared() >= 10.0f * 10.0f)
+				{
+					if (Math.Abs(deltaMouse.X) > Math.Abs(deltaMouse.Y))
+					{
+						m_horizontalLock = m_lockStartingPointWorld.Y;
+					}
+					else
+					{
+						m_verticalLock = m_lockStartingPointWorld.X;
+					}
+					m_lookingForLock = false;
+				}
+			}
+
 			Tool currentTool = m_toolSys.GetCurrentTool();
 			if (mainTilemap != null && roadTilemap != null && wallTilemap != null &&
 				canvasTransform != null)
 			{
-				Vector2 mousePos = new Vector2((float)Mouse.GetState().X, (float)Mouse.GetState().Y);
-				Entity camera = world.TagManager.GetEntity("mainCamera");
-				if (camera != null)
-				{
-					Transform camTransform = camera.GetComponent<Transform>();
-					if (camTransform != null)
-					{
-						mousePos = Vector2.Transform(mousePos, Matrix.Invert(camTransform.getMatrix()));
-					}
-				}
-
 				RadialMenuSystem rms = (RadialMenuSystem)(world.SystemManager.GetSystem<RadialMenuSystem>()[0]);
 
 				generateWallmapFromRoadmap(wallTilemap, roadTilemap);
@@ -133,6 +168,12 @@ namespace MapEditor_TLCB.Systems
 				if (camTransform != null)
 				{
 					mousePos = Vector2.Transform(mousePos, Matrix.Invert(camTransform.getMatrix()));
+					if (m_horizontalLock > 0.0f) {
+						mousePos.Y = m_horizontalLock;
+					}
+					else if (m_verticalLock > 0.0f) {
+						mousePos.X = m_verticalLock;
+					}
 					m_drawCanvasSys.setLastMousePos(mousePos);
 				}
 			}
@@ -408,5 +449,11 @@ namespace MapEditor_TLCB.Systems
 		CurrentToolSystem m_toolSys;
 		DrawCanvasSystem m_drawCanvasSys;
 		bool m_lmbPressed;
+		float m_horizontalLock;
+		float m_verticalLock;
+		Vector2 m_lockStartingPointWorld;
+		Vector2 m_lockStartingPoint;
+		bool m_lookingForLock;
+		Vector2 m_mouseWorldPos;
 	}
 }
