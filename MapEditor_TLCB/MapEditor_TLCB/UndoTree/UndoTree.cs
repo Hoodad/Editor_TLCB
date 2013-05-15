@@ -493,9 +493,11 @@ namespace MapEditor_TLCB.Actions
             {
                 // if fail, try find in parent
                 upNodes = getStepsFromChildToParent(m_currentNodeId,p_newId);
-                if (upNodes[upNodes.Count - 1] != m_nodes[p_newId]) // if fail, use parent path to root and append child search from root
+                if (upNodes[upNodes.Count - 1] != m_nodes[p_newId]) // if fail, use parent path to root and append root search from child
                 {
-                    downNodes = getStepsFromParentToChild(0, p_newId);
+                    downNodes = getStepsFromChildToParent(p_newId, 0);
+                    downNodes.Reverse();
+                        // getStepsFromParentToChild(0, p_newId);
                 }
 
             }
