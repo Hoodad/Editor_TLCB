@@ -122,6 +122,7 @@
     <Compile Include="Actions\Interface\ActionInterface.cs" />
     <Compile Include="ActionsSerialized.cs" />
     <Compile Include="Actions\ModifyTile.cs" />
+    <Compile Include="Components\InputDelta.cs" />
     <Compile Include="Components\TilemapValidate.cs" />
     <Compile Include="CustomControls\CanvasWindow.cs" />
     <Compile Include="CustomControls\CurrentToolContainer.cs" />
@@ -152,6 +153,7 @@
     <Compile Include="Systems\CanvasControlSystem.cs" />
     <Compile Include="Systems\ContentSystem.cs" />
     <Compile Include="Systems\CurrentToolSystem.cs" />
+    <Compile Include="Systems\InputDeltaSystem.cs" />
     <Compile Include="Systems\EventSystem.cs" />
     <Compile Include="Systems\MapValidationSystem.cs" />
     <Compile Include="Systems\RadialMenuSystem.cs" />

@@ -24,31 +24,35 @@ namespace MapEditor_TLCB.Systems
 				Tilemap tilemap = m_tilemapMapper.Get(e);
 				TilemapValidate valid = m_validateMapper.Get(e);
 
-				valid.pathsValid = validatePaths(tilemap);
-				valid.playerValid = validatePlayer(tilemap);
-				valid.switchesValid = validateSwitches(tilemap);
-
-				if (e.Tag == "mainTilemap")
+				if (valid.validateThisTick)
 				{
-					if(valid.pathsValid) {
-						m_pathsValidLabel.TextColor = Color.DarkGreen;
-					}
-					else {
-						m_pathsValidLabel.TextColor = Color.DarkRed;
-					}
-					
-					if(valid.playerValid) {
-						m_playerValidLabel.TextColor = Color.DarkGreen;
-					}
-					else {
-						m_playerValidLabel.TextColor = Color.DarkRed;
-					}
-					
-					if(valid.switchesValid) {
-						m_switchesValidLabel.TextColor = Color.DarkGreen;
-					}
-					else {
-						m_switchesValidLabel.TextColor = Color.DarkRed;
+					valid.validateThisTick = false;
+					valid.pathsValid = validatePaths(tilemap);
+					valid.playerValid = validatePlayer(tilemap);
+					valid.switchesValid = validateSwitches(tilemap);
+
+					if (e.Tag == "mainTilemap")
+					{
+						if(valid.pathsValid) {
+							m_pathsValidLabel.TextColor = Color.DarkGreen;
+						}
+						else {
+							m_pathsValidLabel.TextColor = Color.DarkRed;
+						}
+						
+						if(valid.playerValid) {
+							m_playerValidLabel.TextColor = Color.DarkGreen;
+						}
+						else {
+							m_playerValidLabel.TextColor = Color.DarkRed;
+						}
+						
+						if(valid.switchesValid) {
+							m_switchesValidLabel.TextColor = Color.DarkGreen;
+						}
+						else {
+							m_switchesValidLabel.TextColor = Color.DarkRed;
+						}
 					}
 				}
 			}

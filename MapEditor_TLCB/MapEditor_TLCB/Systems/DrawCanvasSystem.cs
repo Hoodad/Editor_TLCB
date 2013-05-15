@@ -32,7 +32,8 @@ namespace MapEditor_TLCB.Systems
 
 			m_spriteBatch.Draw(m_textures["canvas_shadow_30px"], new Vector2(-30.0f, -30.0f), new Color(0, 0, 0, 0.5f));
 
-			Color transparent = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+			Color transparent = new Color(0.5f, 0.5f, 0.8f, 0.5f);
+			Color gridColor = new Color(0.2f, 0.2f, 0.2f, 0.5f);
 			foreach (Entity e in entities.Values)
 			{
 				Transform transform = m_transformMapper.Get(e);
@@ -86,6 +87,9 @@ namespace MapEditor_TLCB.Systems
 						m_spriteBatch.Draw(texture, mouseGridPosition, m_toolSys.getTilemapIconRectangle(), transparent);
 					}
 				}
+				if (m_camTransform.scale >= 1.0f) {
+					m_spriteBatch.Draw(m_textures["canvas_grid"], Vector2.Zero, gridColor);
+				}
 			}
 
 		}
@@ -107,15 +111,15 @@ namespace MapEditor_TLCB.Systems
 			Entity camera = world.TagManager.GetEntity("mainCamera");
 			if (camera != null)
 			{
-				Transform camTransform = camera.GetComponent<Transform>();
-				if (camTransform != null)
+				m_camTransform = camera.GetComponent<Transform>();
+				if (m_camTransform != null)
 				{
-					cameraMatrix = camTransform.getMatrix();
+					cameraMatrix = m_camTransform.getMatrix();
 				}
 			}
 			
 			m_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend,
-				SamplerState.PointWrap, null, null, null, cameraMatrix);
+				SamplerState.PointClamp, null, null, null, cameraMatrix);
 		}
 
 		protected override void End()
@@ -144,5 +148,6 @@ namespace MapEditor_TLCB.Systems
 		ComponentMapper<TilemapRender> m_tilemapRenderMapper;
 		Vector2 m_lastMovedMousePos;
 		CurrentToolSystem m_toolSys;
+		Transform m_camTransform;
 	}
 }

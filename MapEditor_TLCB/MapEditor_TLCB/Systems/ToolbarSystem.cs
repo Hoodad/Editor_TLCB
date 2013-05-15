@@ -23,6 +23,7 @@ namespace MapEditor_TLCB.Systems
 		Button exportMap;
 		Button backToStartScreen;
 		Button exitButton;
+		CheckBox canvasGridCheckBox;
 
 		Window newMapConfirmationWindow;
 		Button accept;
@@ -126,7 +127,7 @@ namespace MapEditor_TLCB.Systems
 			backToStartScreen.Left = 0;
 			backToStartScreen.Top = toolbarWindow.Height - 24 * 2;
 			backToStartScreen.Click += new TomShane.Neoforce.Controls.EventHandler(BackToStartScreenBehavior);
-			
+
 			exitButton = new Button(manager);
 			exitButton.Init();
 			exitButton.Parent = toolbarWindow;
@@ -136,7 +137,7 @@ namespace MapEditor_TLCB.Systems
 			exitButton.Left = 0;
 			exitButton.Top = toolbarWindow.Height - exitButton.Height;
 			exitButton.Click += new TomShane.Neoforce.Controls.EventHandler(ExitBehavior);
-
+			
 
 			newMapConfirmationWindow = new Window(manager);
 			newMapConfirmationWindow.Init();
@@ -273,6 +274,7 @@ namespace MapEditor_TLCB.Systems
 			paintTool.Mode = ButtonMode.Normal;
 			eraserTool.Mode = ButtonMode.Normal;
 		}
+
 		private void HighligthButton(ImageBasedButton p_button)
 		{
 			if (p_button != eraserTool)
