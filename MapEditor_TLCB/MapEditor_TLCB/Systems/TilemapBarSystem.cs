@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using MapEditor_TLCB.CustomControls;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
+using System.Diagnostics;
 
 namespace MapEditor_TLCB.Systems
 {

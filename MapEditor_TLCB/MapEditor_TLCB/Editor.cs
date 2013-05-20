@@ -13,6 +13,7 @@ using Artemis;
 using TomShane.Neoforce.Controls;
 using MapEditor_TLCB.Systems;
 using MapEditor_TLCB.Components;
+using System.Diagnostics;
 
 namespace MapEditor_TLCB
 {
@@ -85,10 +86,14 @@ namespace MapEditor_TLCB
 
 			graphics.IsFullScreen = useFullScreen;
 			graphics.SynchronizeWithVerticalRetrace = true;
-
 			graphics.ApplyChanges();
 
+            Window.AllowUserResizing = false; //DONT CHANGE!
+            Window.ClientSizeChanged +=new EventHandler<System.EventArgs>(Window_ClientSizeChanged);
+
 			base.Initialize();
+
+			Debug.Print("Finished Initializing");
 		}
 
 		public void InitializeAllSystem()
@@ -155,6 +160,16 @@ namespace MapEditor_TLCB
 			entity.Refresh();
 		}
 
+        void Window_ClientSizeChanged(object sender, System.EventArgs e)
+        {
+            manager.Graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
+            manager.Graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
+
+            canvasRender = new RenderTarget2D(graphics.GraphicsDevice, Window.ClientBounds.Width, Window.ClientBounds.Height);
+            ((DrawCanvasSystem)world.SystemManager.GetSystem<DrawCanvasSystem>()[0]).updateWindowSize(canvasRender);
+            manager.Graphics.ApplyChanges();     
+        }
+
 		/// <summary>
 		/// LoadContent will be called once per game and is the place to load
 		/// all of your content.
@@ -169,7 +184,7 @@ namespace MapEditor_TLCB
 			System.Windows.Forms.Form f = System.Windows.Forms.Form.FromHandle(Window.Handle) as System.Windows.Forms.Form;
 			if (f != null)
 			{
-				f.FormClosing += f_FormClosing;
+				f.FormClosing += f_FormClosing;				
 			}
 
 			f.Text = "The Little Cheese Boy Editor - Pre Alpha";

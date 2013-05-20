@@ -83,11 +83,10 @@ namespace MapEditor_TLCB.Systems
                 TilemapBarSystem tbs = (TilemapBarSystem)world.SystemManager.GetSystem<TilemapBarSystem>()[0];
                 Texture2D tilemapTex = tbs.GetTilemapContainer().GetTilemapTexture();
                 m_container.SetTilemapTexture(tilemapTex);
-                //m_container.SetTilemapRectangle(tbs.GetTilemapContainer().GetTilemapSourceRectangle());
-                m_container.SetCurrentDrawTileIndex(tbs.GetTilemapContainer().GetCurrentIndex());
+				m_container.SetCurrentDrawTileIndex(tbs.GetTilemapContainer().GetCurrentIndex());
 
                 RadialMenuSystem rms = (RadialMenuSystem)(world.SystemManager.GetSystem<RadialMenuSystem>()[0]);
-                rms.currentToolChanged(tbs.GetTilemapContainer().GetCurrentIndex());
+				rms.currentToolChanged(tbs.GetTilemapContainer().GetCurrentIndex());
             }
         }
         public void SetCurrentDrawToolIndex(IntPair p_index)

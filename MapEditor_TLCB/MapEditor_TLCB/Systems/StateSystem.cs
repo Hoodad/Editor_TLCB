@@ -66,6 +66,7 @@ namespace MapEditor_TLCB.Systems
 		{
 			confirmWindow.Visible = true;
 			confirmWindow.ShowModal();
+            confirmWindow.Center();
 			cancelButton.Focused = true;
 			canvasCanBeReached = false;
 		}

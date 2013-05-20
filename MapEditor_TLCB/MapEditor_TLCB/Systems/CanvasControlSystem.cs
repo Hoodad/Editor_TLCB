@@ -25,7 +25,7 @@ namespace MapEditor_TLCB.Systems
 		}
 
 		public override void Process(Artemis.Entity e)
-		{
+        {
 			m_canvasWindow.Refresh();
 		}
 
@@ -53,7 +53,17 @@ namespace MapEditor_TLCB.Systems
 			m_canvasWindow.MouseScroll += new MouseEventHandler(canvasWindow_MouseScroll);
             m_canvasWindow.Click += new TomShane.Neoforce.Controls.EventHandler(canvasWindow_MouseClick);
 			m_manager.Add(m_canvasWindow);
+
+            m_manager.DeviceSettingsChanged +=new DeviceEventHandler(resizeEvent);
 		}
+
+        private void resizeEvent(DeviceEventArgs e)
+        {
+            m_canvasWindow.Width = m_manager.Window.Width;
+            m_canvasWindow.Height = m_manager.Window.Height;
+            m_canvasRender = new RenderTarget2D(m_manager.GraphicsDevice, m_manager.Window.Width, m_manager.Window.Height);
+        }
+
         private void canvasWindow_MouseClick(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
             TomShane.Neoforce.Controls.MouseEventArgs ev = (TomShane.Neoforce.Controls.MouseEventArgs)(e);
