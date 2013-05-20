@@ -19,6 +19,10 @@ namespace MapEditor_TLCB.Systems
 		Window tilemapWindow;
 
 		TilemapContainer tilemap;
+        Point startingPosition;
+        Point startingScrollLocation;
+        Point currentPosition;
+        bool panningEnable = false;
 
         ContentManager m_content;
 
@@ -61,7 +65,9 @@ namespace MapEditor_TLCB.Systems
 			tilemap.Click += new TomShane.Neoforce.Controls.EventHandler(OnClick);
             tilemap.DoubleClicks = false;
             tilemap.MouseDown += new TomShane.Neoforce.Controls.MouseEventHandler(OnMouseDown);
-            //tilemap.va += new TomShane.Neoforce.Controls.MouseEventHandler(OnScroll);
+            tilemap.MouseDown += new MouseEventHandler(PanningMouseDownBehavior);
+            tilemap.MouseMove += new MouseEventHandler(PanningMouseMoveBehavior);
+            tilemap.MouseUp += new MouseEventHandler(PanningMouseUpBehavior);
 			tilemap.Init(contentSystem.GetViewportSize());
 
 		}
@@ -74,9 +80,43 @@ namespace MapEditor_TLCB.Systems
 			{
 				tilemap.tilemapImage = dialogSystem.tilemap;
 				tilemap.Refresh();
-			}
-            
+			}            
 		}
+        public void PanningMouseDownBehavior(object sender, TomShane.Neoforce.Controls.MouseEventArgs e)
+        {
+            if (e.State.MiddleButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
+            {
+                startingPosition = e.Position;
+
+                startingScrollLocation = new Point();
+                startingScrollLocation.X = tilemapWindow.ScrollBarValue.Horizontal;
+                startingScrollLocation.Y = tilemapWindow.ScrollBarValue.Vertical;
+
+                panningEnable = true;
+            }
+        }
+
+        public void PanningMouseMoveBehavior(object sender, TomShane.Neoforce.Controls.MouseEventArgs e)
+        {
+            if ( panningEnable )
+            {
+                currentPosition = e.Position;
+
+                Point difference = new Point();
+                difference.X = startingPosition.X - currentPosition.X;
+                difference.Y = startingPosition.Y - currentPosition.Y;
+
+                startingScrollLocation.X += difference.X;
+                startingScrollLocation.Y += difference.Y;
+
+                tilemapWindow.ScrollTo(startingScrollLocation.X, startingScrollLocation.Y);
+            }
+        }
+
+        public void PanningMouseUpBehavior(object sender, TomShane.Neoforce.Controls.MouseEventArgs e)
+        {
+            panningEnable = false;
+        }
         public void OnMouseDown(object sender, TomShane.Neoforce.Controls.MouseEventArgs e)
         {
             if (e.Button == MouseButton.Left)
@@ -98,6 +138,8 @@ namespace MapEditor_TLCB.Systems
             CurrentToolSystem toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
             toolSys.SetCurrentTool(CustomControls.Tool.PAINT_TOOL);
         }
+
+
 		public void OnClick(object sender, TomShane.Neoforce.Controls.EventArgs e)
 		{
             TomShane.Neoforce.Controls.MouseEventArgs ev = (TomShane.Neoforce.Controls.MouseEventArgs)(e);

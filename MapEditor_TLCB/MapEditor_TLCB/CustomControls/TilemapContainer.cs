@@ -191,6 +191,7 @@ namespace MapEditor_TLCB.CustomControls
 
 		protected override void OnMouseMove(TomShane.Neoforce.Controls.MouseEventArgs e)
 		{
+            base.OnMouseMove(e);
 			currentPos = new Vector2(e.Position.X, e.Position.Y);
 			if (e.State.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Released)
 			{
@@ -227,7 +228,7 @@ namespace MapEditor_TLCB.CustomControls
 			debugText += "High (" + highlightRect.X + ", " + highlightRect.Y + ")";
 			debugText += "(" + (highlightRect.Width) + ", " + (highlightRect.Height) + ")";
 
-			Debug.Print(debugText);
+			//Debug.Print(debugText);
 
 			highlightRect.X += 6;
 			highlightRect.Y += 28;
