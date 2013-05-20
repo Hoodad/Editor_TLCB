@@ -128,6 +128,7 @@
     <Compile Include="CustomControls\CurrentToolContainer.cs" />
     <Compile Include="Common\InvariableIndexList.cs" />
     <Compile Include="Common\LineRenderer.cs" />
+    <Compile Include="CustomControls\CustomToolTip.cs" />
     <Compile Include="CustomControls\HalfTransparentOverlay.cs" />
     <Compile Include="CustomControls\NotificationBarContainer.cs" />
     <Compile Include="Components\Tilemap.cs" />
