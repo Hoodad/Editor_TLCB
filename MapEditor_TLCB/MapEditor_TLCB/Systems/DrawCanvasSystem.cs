@@ -139,6 +139,11 @@ namespace MapEditor_TLCB.Systems
 			m_lastMovedMousePos = p_mousePos;
 		}
 
+        public void updateWindowSize(RenderTarget2D p_newCanvas)
+        {
+            m_canvasRender = p_newCanvas;
+        }
+
 		Dictionary<string, Texture2D> m_textures;
 		SpriteBatch m_spriteBatch;
 		GraphicsDevice m_graphicsDevice;
