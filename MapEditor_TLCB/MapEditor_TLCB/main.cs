@@ -12,21 +12,16 @@ namespace MapEditor_TLCB
 		[STAThreadAttribute] // Needed in order to open dialogs using windows forms
 		static void Main(string[] args)
 		{
-			bool useFullscreen = false;
 			bool useMaxiumRes = false;
 
 			foreach (string arg in args)
 			{
-				if (arg == "useFullscreen")
-				{
-					useFullscreen = true;
-				}
-				else if (arg == "useMaxResolution")
+				if (arg == "useMaxResolution")
 				{
 					useMaxiumRes = true;
 				}
 			}
-			using (Editor game = new Editor(useFullscreen, useMaxiumRes))
+			using (Editor game = new Editor(false, useMaxiumRes))
 			{
 				game.Run();
 			}
