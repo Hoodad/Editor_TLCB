@@ -18,6 +18,7 @@ namespace MapEditor_TLCB.Systems
 		private GroupPanel possibleMaps;
 		private ImageBasedButton tileMapGarden;
 		private ImageBasedButton tileMapCellar;
+		private
 
 		public Texture2D tilemap;
 		private bool hasChangedTilemap;
