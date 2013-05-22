@@ -33,7 +33,7 @@ namespace MapEditor_TLCB
 		float repeatDelay;
 		float repeatTime;
 
-		private	KeyboardState oldState;
+		private KeyboardState oldState;
 
 		public Editor(bool p_useFullScreen, bool p_useMaxRes)
 		{
@@ -44,7 +44,7 @@ namespace MapEditor_TLCB
 			useMaxRes = p_useMaxRes;
 
 			repeatDelay = 0.3f;
-			repeatTime = 0;
+			repeatTime = 0;			
 		}
 
 		/// <summary>
@@ -68,13 +68,14 @@ namespace MapEditor_TLCB
 
 			world = new EntityWorld();
 
+
 			if (useMaxRes)
 			{
 				graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-				graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+				graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height-22;
 				canvasRender = new RenderTarget2D(GraphicsDevice,
 					GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width,
-					GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
+					GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height - 22);
 			}
 			else
 			{
@@ -88,8 +89,21 @@ namespace MapEditor_TLCB
 			graphics.SynchronizeWithVerticalRetrace = true;
 			graphics.ApplyChanges();
 
-            Window.AllowUserResizing = false; //DONT CHANGE!
-            Window.ClientSizeChanged +=new EventHandler<System.EventArgs>(Window_ClientSizeChanged);
+			Window.AllowUserResizing = false; //DONT CHANGE!
+			Window.ClientSizeChanged += new EventHandler<System.EventArgs>(Window_ClientSizeChanged);
+
+
+			System.Windows.Forms.Form xnaWindow = System.Windows.Forms.Form.FromHandle(Window.Handle) as System.Windows.Forms.Form;
+			if (xnaWindow != null)
+			{
+				xnaWindow.FormClosing += f_FormClosing;
+				xnaWindow.Text = "The Little Cheese Boy Editor - Pre Alpha";
+
+				if (useMaxRes)
+				{
+					xnaWindow.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+				}
+			}
 
 			base.Initialize();
 
@@ -100,12 +114,12 @@ namespace MapEditor_TLCB
 		{
 			SystemManager systemManager = world.SystemManager;
 			systemManager.SetSystem(new InputDeltaSystem(), ExecutionType.Update);
-            systemManager.SetSystem(new EventSystem(), ExecutionType.Update);
+			systemManager.SetSystem(new EventSystem(), ExecutionType.Update);
 			systemManager.SetSystem(new CanvasControlSystem(manager, canvasRender), ExecutionType.Update); // Canvas window is furthest back.
-			systemManager.SetSystem(new ContentSystem(Content,graphics), ExecutionType.Update);
+			systemManager.SetSystem(new ContentSystem(Content, graphics), ExecutionType.Update);
 			systemManager.SetSystem(new ToolbarSystem(manager), ExecutionType.Update);
-			systemManager.SetSystem(new UndoTreeSystem(manager,GraphicsDevice,Content), ExecutionType.Update);
-            systemManager.SetSystem(new ActionSystem(), ExecutionType.Update);
+			systemManager.SetSystem(new UndoTreeSystem(manager, GraphicsDevice, Content), ExecutionType.Update);
+			systemManager.SetSystem(new ActionSystem(), ExecutionType.Update);
 			systemManager.SetSystem(new NotificationBarSystem(manager, GraphicsDevice, Content), ExecutionType.Update);
 			systemManager.SetSystem(new TilemapBarSystem(manager, Content), ExecutionType.Update);
 			systemManager.SetSystem(new XNAInputSystem(), ExecutionType.Update);
@@ -117,7 +131,7 @@ namespace MapEditor_TLCB
 			systemManager.SetSystem(new RadialMenuSystem(GraphicsDevice, Content, manager), ExecutionType.Update);
 			systemManager.SetSystem(new ExportMapSystem(), ExecutionType.Update); //Have to be run after tilemaphandling systems
 			systemManager.SetSystem(new MapValidationSystem(manager), ExecutionType.Update);
-			
+
 			world.SystemManager.SetSystem(new DrawCanvasSystem(textures, GraphicsDevice,
 				canvasRender, manager), ExecutionType.Draw);
 			world.SystemManager.InitializeAll();
@@ -127,7 +141,17 @@ namespace MapEditor_TLCB
 		{
 			Entity entity = world.CreateEntity();
 			entity.Tag = "mainCamera";
-            entity.AddComponent(new Transform(new Vector2(GraphicsDevice.Viewport.Width / 8, GraphicsDevice.Viewport.Height / 8), 0.5f));
+
+			float zoomLevel = GraphicsDevice.Viewport.Width / 2500.0f;
+
+			Vector2 pos = new Vector2();
+			pos.X = Window.ClientBounds.Width/2; //center position
+			pos.Y = Window.ClientBounds.Height/2; // -||-
+
+			pos.X -= (1920 * zoomLevel) / 2; //offset the center dependent of the zoom level
+			pos.Y -= (992 * zoomLevel) / 2; // -||-
+
+			entity.AddComponent(new Transform(pos, zoomLevel));
 			entity.Refresh();
 
 			entity = world.CreateEntity();
@@ -137,7 +161,7 @@ namespace MapEditor_TLCB
 			entity.AddComponent(new TilemapRender("tilemap_garden", false));
 			entity.AddComponent(new TilemapValidate());
 			entity.Refresh();
-			
+
 			entity = world.CreateEntity();
 			entity.Tag = "singlesTilemap";
 			entity.AddComponent(new Tilemap(60, 31, 32, 32, Tilemap.TilemapType.SingleTilemap));
@@ -148,27 +172,27 @@ namespace MapEditor_TLCB
 			entity.AddComponent(new Tilemap(60, 31, 32, 32, Tilemap.TilemapType.RoadTilemap));
 			entity.AddComponent(new Transform(new Vector2(0, 0)));
 			entity.Refresh();
-			
+
 			entity = world.CreateEntity();
 			entity.Tag = "wallTilemap";
 			entity.AddComponent(new Tilemap(60, 31, 32, 32, Tilemap.TilemapType.WallTilemap));
 			entity.Refresh();
-			
+
 			entity = world.CreateEntity();
 			entity.Tag = "input";
 			entity.AddComponent(new InputDelta());
 			entity.Refresh();
 		}
 
-        void Window_ClientSizeChanged(object sender, System.EventArgs e)
-        {
-            manager.Graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
-            manager.Graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
+		void Window_ClientSizeChanged(object sender, System.EventArgs e)
+		{
+			/*manager.Graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
+			manager.Graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
 
-            canvasRender = new RenderTarget2D(graphics.GraphicsDevice, Window.ClientBounds.Width, Window.ClientBounds.Height);
-            ((DrawCanvasSystem)world.SystemManager.GetSystem<DrawCanvasSystem>()[0]).updateWindowSize(canvasRender);
-            manager.Graphics.ApplyChanges();     
-        }
+			canvasRender = new RenderTarget2D(graphics.GraphicsDevice, Window.ClientBounds.Width, Window.ClientBounds.Height);
+			((DrawCanvasSystem)world.SystemManager.GetSystem<DrawCanvasSystem>()[0]).updateWindowSize(canvasRender);
+			manager.Graphics.ApplyChanges();*/
+		}
 
 		/// <summary>
 		/// LoadContent will be called once per game and is the place to load
@@ -181,14 +205,6 @@ namespace MapEditor_TLCB
 
 			KeyDelta.initialize();
 
-			System.Windows.Forms.Form f = System.Windows.Forms.Form.FromHandle(Window.Handle) as System.Windows.Forms.Form;
-			if (f != null)
-			{
-				f.FormClosing += f_FormClosing;				
-			}
-
-			f.Text = "The Little Cheese Boy Editor - Pre Alpha";
-			
 			textures.Add("tilemap_garden", Content.Load<Texture2D>("TileSheets/tilemap_garden"));
 			textures.Add("tilemap_winecellar", Content.Load<Texture2D>("TileSheets/tilemap_winecellar"));
 			textures.Add("debugBlock", Content.Load<Texture2D>("debugBlock"));
@@ -200,7 +216,7 @@ namespace MapEditor_TLCB
 
 			InitializeAllSystem();
 			InitializeEntities();
-			
+
 			// TODO: use this.Content to load your game content here
 		}
 
@@ -265,7 +281,7 @@ namespace MapEditor_TLCB
 							sys.RedoLastAction();
 							repeatTime = 0;
 						}
-					}					
+					}
 					//Repeat delay
 					if (newState.IsKeyDown(Keys.Z) && oldState.IsKeyDown(Keys.Z))
 					{
@@ -289,7 +305,7 @@ namespace MapEditor_TLCB
 							repeatTime -= 0.1f;
 						}
 					}
-					
+
 				}
 			}
 			// Call manager updates.
@@ -311,7 +327,7 @@ namespace MapEditor_TLCB
 			world.SystemManager.UpdateSynchronous(ExecutionType.Draw);
 			base.Draw(gameTime);
 			manager.EndDraw();
-			
+
 			spriteBatch.Begin();
 			RadialMenuSystem radial = (RadialMenuSystem)world.SystemManager.GetSystem<RadialMenuSystem>()[0];
 			radial.Render(spriteBatch);
@@ -326,6 +342,6 @@ namespace MapEditor_TLCB
 				e.Cancel = true;
 				stateSys.RequestToShutdown();
 			}
-		}  
+		}
 	}
 }
