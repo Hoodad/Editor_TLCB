@@ -91,7 +91,7 @@ namespace MapEditor_TLCB.Systems
 			btn.Focused = false;
 			System.Windows.Forms.OpenFileDialog exportMapDialog = new System.Windows.Forms.OpenFileDialog();
 			exportMapDialog.InitialDirectory = Convert.ToString(Environment.SpecialFolder.CommonProgramFilesX86);
-			exportMapDialog.Filter = "Map files (*.cheeseboy)|*.cheeseboy";
+			exportMapDialog.Filter = "Save files (*.cheeseboy)|*.cheeseboy";
 			exportMapDialog.FilterIndex = 1;
 			exportMapDialog.Title = "Load your saved map";
 			exportMapDialog.FileOk += new System.ComponentModel.CancelEventHandler(SuccessfullySelectedSaveFile);
