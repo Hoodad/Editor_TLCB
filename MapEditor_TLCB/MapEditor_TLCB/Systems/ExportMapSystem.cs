@@ -29,48 +29,90 @@ namespace MapEditor_TLCB.Systems
 					string mapName;
 					string mapArrangerPath = ""; //Used to access maps.tx
 					string mapCorrectedPath = ""; //Will contain the corrected name of the newly exported map
+					string unlockedMapsPath = ""; //The path used to open the number of unlocked maps
+
 					string[] seperated = completePath.Split('\\');
 
 					for (int i = 0; i < seperated.Length - 1; i++)
 					{
 						mapArrangerPath += seperated[i] + "\\";
 						mapCorrectedPath += seperated[i] + "\\";
+						unlockedMapsPath += seperated[i] + "\\";
 					}
 					mapArrangerPath += "maps.txt";
-					mapCorrectedPath += seperated[seperated.Length - 1].Replace(' ', '_');
+					unlockedMapsPath += "unlocked.txt";
+					mapName = CorrectMapName(seperated[seperated.Length - 1]);
+					mapCorrectedPath += mapName;
 
-					mapName = seperated[seperated.Length - 1].Replace(' ', '_');
-
-					Tilemap tilemap = mainTilemap.GetComponent <Tilemap>();
-
-					File.WriteAllText(mapCorrectedPath, SaveTheTileMapToFile(tilemap).ToString());
-					requestedToSaveMap = false;
-
-					List<Paragraph> exportedInfo = new List<Paragraph>();
-					exportedInfo.Add(new Paragraph("Your map was now successfully exported to "+ mapCorrectedPath));
-					Notification alreadySaving = new Notification("Successfully exported the map!", NotificationType.SUCCESS, exportedInfo);
-					((NotificationBarSystem)(world.SystemManager.GetSystem<NotificationBarSystem>()[0])).AddNotification(alreadySaving);
-
-					if (File.Exists(mapArrangerPath))
+					if (ExportMapToFile(mapCorrectedPath, mainTilemap))
 					{
-						using (StreamWriter w = File.AppendText(mapArrangerPath))
+						SendInfoToNotificationBar("Successfully exported the map!", NotificationType.SUCCESS, "Your map was now successfully exported to " + mapCorrectedPath);
+
+						if (File.Exists(mapArrangerPath) && File.Exists(unlockedMapsPath))
 						{
-							w.Write("\r\n");
+							string[] linesContained = File.ReadAllLines(mapArrangerPath);
+							string numberOfUnlocked = File.ReadAllLines(unlockedMapsPath)[0];
+
 							string[] formatedMapName = mapName.Split('.');
 							formatedMapName[0] = formatedMapName[0].ToUpper();
-							w.Write(formatedMapName[0] + " " + mapName + " " + 20 + " " + "POL-rescue-short.wav");
+							string newMapData = formatedMapName[0] + " " + mapName + " " + 20 + " " + "POL-rescue-short.wav";
+
+							bool isItANewMap = true;
+							for (int i = 0; i < linesContained.Length; i++)
+							{
+								if (newMapData == linesContained[i]) 
+								{
+									isItANewMap = false;
+									break;
+								}
+							}
+
+							if (isItANewMap)
+							{
+								SendInfoToNotificationBar("This was a new map so added it to maps.txt", NotificationType.INFO);
+								if (Convert.ToInt32(numberOfUnlocked) <= linesContained.Length)
+								{
+									File.WriteAllText(unlockedMapsPath, (linesContained.Length + 1).ToString()); // Plus one is for the new map being exported
+								}
+								using (StreamWriter w = File.AppendText(mapArrangerPath))
+								{
+									w.Write("\r\n");
+									w.Write(newMapData);
+								}
+							}
+							else
+							{
+								SendInfoToNotificationBar("There is already any existing entry of this map.", NotificationType.INFO,"The file maps.txt wasn't changed due to it already containg a file named exactly the same.");
+							}
+						}
+						else
+						{
+							SendInfoToNotificationBar("Sorry, wasn't able to import the map to The Little Cheese Boy!", NotificationType.WARNING,
+								"Unfortunately the file \"maps.txt\" wasn't found in the same folder as the exported map. This means you will have to add it yourself, manually. Error Code: Missing Maps");
 						}
 					}
 					else
 					{
-						List<Paragraph> info = new List<Paragraph>();
-						info.Add(new Paragraph("Unfortunately the file \"maps.txt\" wasn't found in the same folder as the exported map. This means you will have to add it yourself, manually. Error Code: Missing Maps"));
-						Notification unableFindMapFile = new Notification("Sorry, wasn't able to import the map to The Little Cheese Boy!", NotificationType.WARNING, info);
-						((NotificationBarSystem)(world.SystemManager.GetSystem<NotificationBarSystem>()[0])).AddNotification(unableFindMapFile);
+						SendInfoToNotificationBar("Failed to export file, please click for more for details.", NotificationType.WARNING,
+							"Due to unknown error exportation of the file was unsuccessful and please make sure you run the program as administrator!");
 					}
-					
 				}
 			}
+		}
+		private void SendInfoToNotificationBar(string p_message, NotificationType p_type, string p_additionalInformation = "")
+		{
+			Notification newNotification;
+			if (p_additionalInformation != "")
+			{
+				List<Paragraph> info = new List<Paragraph>();
+				info.Add(new Paragraph(p_additionalInformation));
+				newNotification = new Notification(p_message, p_type, info);
+			}
+			else
+			{
+				newNotification = new Notification(p_message, p_type);
+			}
+			((NotificationBarSystem)(world.SystemManager.GetSystem<NotificationBarSystem>()[0])).AddNotification(newNotification);
 		}
 		public void RequestToSaveMap(string p_completePath)
 		{
@@ -85,6 +127,29 @@ namespace MapEditor_TLCB.Systems
 				((NotificationBarSystem)(world.SystemManager.GetSystem<NotificationBarSystem>()[0])).AddNotification(alreadySaving);
 			}
 		}
+		private string CorrectMapName(string p_mapName)
+		{
+			string correctedMapName = "";
+			correctedMapName = p_mapName.Replace(' ', '_');
+			return correctedMapName;
+		}
+		private bool ExportMapToFile(string p_path, Entity p_mainTileMap)
+		{
+			Tilemap tilemap = p_mainTileMap.GetComponent<Tilemap>();
+
+			try
+			{
+				File.WriteAllText(p_path, SaveTheTileMapToFile(tilemap).ToString());
+			}
+			catch (System.Exception ex)
+			{
+				requestedToSaveMap = false;
+				return false;
+			}
+
+			requestedToSaveMap = false;
+			return true;
+		}
 		private StringBuilder SaveTheTileMapToFile(Tilemap p_tileMap)
 		{
 			StartupDialogSystem sys = (StartupDialogSystem)world.SystemManager.GetSystem<StartupDialogSystem>()[0];
@@ -93,12 +158,12 @@ namespace MapEditor_TLCB.Systems
 			sb.AppendLine("Height= " + p_tileMap.getRows());
 			sb.AppendLine("TileMapTheme= " + sys.tilemap.Name);
 			sb.AppendLine("Data");
-			for (int row = 0; row < p_tileMap.getRows(); row++ )
+			for (int row = 0; row < p_tileMap.getRows(); row++)
 			{
-				string resultingRow="";
+				string resultingRow = "";
 				for (int col = 0; col < p_tileMap.getColumns(); col++)
 				{
-					int state = p_tileMap.getState(col, row)+1;
+					int state = p_tileMap.getState(col, row) + 1;
 					resultingRow += state + ",";
 				}
 				sb.AppendLine(resultingRow);
