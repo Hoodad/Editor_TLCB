@@ -252,14 +252,6 @@ namespace MapEditor_TLCB
 				}
 			}
 
-			if (newState.IsKeyUp(Keys.O))
-			{
-				if (oldState.IsKeyDown(Keys.O))
-				{
-					actionSys.LoadSerialiazedActions();
-				}
-			}
-
 			if (stateSys.CanCanvasBeReached())
 			{
 				if (newState.IsKeyDown(Keys.LeftControl))

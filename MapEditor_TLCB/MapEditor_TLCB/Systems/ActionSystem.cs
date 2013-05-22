@@ -148,11 +148,11 @@ namespace MapEditor_TLCB
             }
 		}
 
-		public void LoadSerialiazedActions()
+		public void LoadSerialiazedActions(string p_completePath)
 		{
 			ActionsSerialized obj = new ActionsSerialized();
 			Serializer seri = new Serializer();
-			obj = seri.DeSerializeObject("test.cheeseboy");
+			obj = seri.DeSerializeObject(p_completePath);
 
 
 			for (int i = 1; i < obj.actions.getSize(); i++ )
@@ -161,6 +161,11 @@ namespace MapEditor_TLCB
 			}
 
 			actionTree.SetData(obj.nodes, obj.actions);
+
+			List<Paragraph> info = new List<Paragraph>();
+			info.Add(new Paragraph("Successfully loaded saved map from\n" + p_completePath));
+			Notification alreadySaving = new Notification("Successfully loaded saved map!", NotificationType.SUCCESS, info);
+			((NotificationBarSystem)(world.SystemManager.GetSystem<NotificationBarSystem>()[0])).AddNotification(alreadySaving);
 
 		}
 		public void SaveSerialiazedActions(string p_completePath)

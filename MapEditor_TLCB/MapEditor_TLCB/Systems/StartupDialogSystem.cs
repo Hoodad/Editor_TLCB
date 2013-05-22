@@ -18,7 +18,7 @@ namespace MapEditor_TLCB.Systems
 		private GroupPanel possibleMaps;
 		private ImageBasedButton tileMapGarden;
 		private ImageBasedButton tileMapCellar;
-		private
+		private Button openMap;
 
 		public Texture2D tilemap;
 		private bool hasChangedTilemap;
@@ -85,11 +85,28 @@ namespace MapEditor_TLCB.Systems
 			}
 		}
 
+		void LoadMapFromFile(object p_sender, TomShane.Neoforce.Controls.EventArgs p_args)
+		{
+			Button btn = (Button)p_sender;
+			btn.Focused = false;
+			System.Windows.Forms.OpenFileDialog exportMapDialog = new System.Windows.Forms.OpenFileDialog();
+			exportMapDialog.InitialDirectory = Convert.ToString(Environment.SpecialFolder.CommonProgramFilesX86);
+			exportMapDialog.Filter = "Map files (*.cheeseboy)|*.cheeseboy";
+			exportMapDialog.FilterIndex = 1;
+			exportMapDialog.Title = "Load your saved map";
+			exportMapDialog.FileOk += new System.ComponentModel.CancelEventHandler(SuccessfullySelectedSaveFile);
+			exportMapDialog.ShowDialog();
+		}
+
+		void SuccessfullySelectedSaveFile(object p_sender, System.EventArgs e)
+		{
+			startupDialog.Close();
+			System.Windows.Forms.OpenFileDialog dialog = (System.Windows.Forms.OpenFileDialog)p_sender;
+			((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]).LoadSerialiazedActions(dialog.FileName);
+		}
+
 		public override void Initialize()
 		{
-			int yOffset = 0;
-			int xOffset = 50;
-
 			ContentSystem contentSystem = ((ContentSystem)world.SystemManager.GetSystem<ContentSystem>()[0]);
 			Viewport viewport = contentSystem.GetViewport();
 
@@ -102,11 +119,11 @@ namespace MapEditor_TLCB.Systems
 
 			startupDialog = new Window(manager);
 			startupDialog.Init();
+			startupDialog.ShowModal();
 			startupDialog.Width = 400;
 			startupDialog.Height = 158;
 			startupDialog.Center();
-			startupDialog.Text = "What would you like to do?";
-			startupDialog.ShowModal();
+			startupDialog.Text = "Select what you would like to do...";
 			startupDialog.CloseButtonVisible = false;
 			startupDialog.Resizable = false;
 			startupDialog.Movable = false;
@@ -115,63 +132,67 @@ namespace MapEditor_TLCB.Systems
 			startupDialog.Closing += new WindowClosingEventHandler(WindowCloseBehavior);
 			manager.Add(startupDialog);
 
+			//LEFT PANEL
 			possibleMaps = new GroupPanel(manager);
 			possibleMaps.Init();
 			possibleMaps.Parent = startupDialog;
-			possibleMaps.Height = 104;
-			possibleMaps.Width = 158;
-			possibleMaps.Text = "Start a new Map";
-			//possibleMaps.Anchor = Anchors.Left | Anchors.Top;
-			possibleMaps.Top = yOffset;
-			possibleMaps.Left = 0;
+			possibleMaps.Width = 189;
+			possibleMaps.Height = 122;
+			possibleMaps.Text = "Start a new Map?";
+			possibleMaps.Top = 1;
 
-			recentMaps = new GroupPanel(manager);
-			recentMaps.Init();
-			recentMaps.Parent = startupDialog;
-			recentMaps.Width = startupDialog.Width / 2;
-			recentMaps.Height = startupDialog.Height - 38;
-			recentMaps.Text = "Load a recent Map";
-			//recentMaps.Anchor = Anchors.Left | Anchors.Top;
-			recentMaps.Top = yOffset;
-			recentMaps.Left = possibleMaps.Width + 8;
-
-			int buttonSize = 64;
+			int buttonSize = 80;
 
 			tileMapGarden = new ImageBasedButton(manager);
 			tileMapGarden.Init();
+			tileMapGarden.Parent = possibleMaps;
 			tileMapGarden.Width = buttonSize;
 			tileMapGarden.Height = buttonSize;
 			tileMapGarden.Top = buttonSize * 0 + 8;
 			tileMapGarden.Left = buttonSize * 0 + 8 * 1;
-			tileMapGarden.Parent = possibleMaps;
 			tileMapGarden.tilemap = contentSystem.LoadTexture("TileSheets/tilemap_garden");
 			tileMapGarden.tilemap.Name = "Tilemap_garden";
 			tileMapGarden.Click += new TomShane.Neoforce.Controls.EventHandler(OnTilemapButtonClickBehavior);
 			tileMapGarden.MouseOver += new MouseEventHandler(OnTilemapButtonMouseOverBehavior);
 			tileMapGarden.FocusGained += new TomShane.Neoforce.Controls.EventHandler(OnTilemapButtonMouseOverBehavior);
-			tileMapGarden.Text = "";
 			tileMapGarden.GenerateFirstTile(contentSystem);
 			tileMapGarden.Focused = true;
-			//manager.Add(tileMapGarden);
 
 			tileMapCellar = new ImageBasedButton(manager);
 			tileMapCellar.Init();
+			tileMapCellar.Parent = possibleMaps;
 			tileMapCellar.Width = buttonSize;
 			tileMapCellar.Height = buttonSize;
 			tileMapCellar.Top = buttonSize * 0 + 8;
 			tileMapCellar.Left = buttonSize * 1 + 8 * 2;
-			tileMapCellar.Parent = possibleMaps;
 			tileMapCellar.tilemap = contentSystem.LoadTexture("TileSheets/tilemap_winecellar");
 			tileMapCellar.tilemap.Name = "Tilemap_winecellar";
 			tileMapCellar.Click += new TomShane.Neoforce.Controls.EventHandler(OnTilemapButtonClickBehavior);
 			tileMapCellar.MouseOver += new MouseEventHandler(OnTilemapButtonMouseOverBehavior);
 			tileMapCellar.FocusGained += new TomShane.Neoforce.Controls.EventHandler(OnTilemapButtonMouseOverBehavior);
-			tileMapCellar.Text = "";
-
 			tileMapCellar.GenerateFirstTile(contentSystem);
-			//manager.Add(tileMapCellar);
 
 			tilemap = tileMapGarden.tilemap;
+
+			//RIGHT PANEL
+			recentMaps = new GroupPanel(manager);
+			recentMaps.Init();
+			recentMaps.Parent = startupDialog;
+			recentMaps.Width = possibleMaps.Width;
+			recentMaps.Height = possibleMaps.Height;
+			recentMaps.Text = "Load a recent Map?";
+			recentMaps.Left = possibleMaps.Width + 8;
+			recentMaps.Top = 1;
+
+			openMap = new Button(manager);
+			openMap.Init();
+			openMap.Parent = recentMaps;
+			openMap.Width = 150;
+			openMap.Height = 24;
+			openMap.Top = recentMaps.Height/2 - openMap.Height;
+			openMap.Left = recentMaps.Width/2 - openMap.Width/2;
+			openMap.Text = "Load Saved Map";
+			openMap.Click += new TomShane.Neoforce.Controls.EventHandler(LoadMapFromFile);
 		}
 		void WindowCloseBehavior(object sender, WindowClosingEventArgs e)
 		{

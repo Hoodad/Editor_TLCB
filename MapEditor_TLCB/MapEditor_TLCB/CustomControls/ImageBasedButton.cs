@@ -18,6 +18,7 @@ namespace MapEditor_TLCB.CustomControls
 			: base(p_manager)
 		{
 			imageOpacity = 96;
+			Text = "";
 		}
 
 		protected override void DrawControl(TomShane.Neoforce.Controls.Renderer renderer, Microsoft.Xna.Framework.Rectangle rect, Microsoft.Xna.Framework.GameTime gameTime)
