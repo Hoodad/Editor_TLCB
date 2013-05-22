@@ -16,7 +16,7 @@ namespace MapEditor_TLCB
 
 			foreach (string arg in args)
 			{
-				if (arg == "useMaxResolution")
+				if (arg == "maximizeWindow")
 				{
 					useMaxiumRes = true;
 				}
