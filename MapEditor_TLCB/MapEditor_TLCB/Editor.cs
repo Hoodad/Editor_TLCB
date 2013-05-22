@@ -141,14 +141,15 @@ namespace MapEditor_TLCB
 		{
 			Entity entity = world.CreateEntity();
 			entity.Tag = "mainCamera";
-			
-			float zoomLevel = GraphicsDevice.Viewport.Width/2500.0f;
+
+			float zoomLevel = GraphicsDevice.Viewport.Width / 2500.0f;
+
 			Vector2 pos = new Vector2();
 			pos.X = Window.ClientBounds.Width/2; //center position
 			pos.Y = Window.ClientBounds.Height/2; // -||-
 
-			pos.X = (1920 * zoomLevel - pos.X) / 2; //offest the center dependet of the zoom level
-			pos.Y = (992 * zoomLevel - pos.Y) / 2;
+			pos.X -= (1920 * zoomLevel) / 2; //offset the center dependent of the zoom level
+			pos.Y -= (992 * zoomLevel) / 2; // -||-
 
 			entity.AddComponent(new Transform(pos, zoomLevel));
 			entity.Refresh();
