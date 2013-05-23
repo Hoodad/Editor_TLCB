@@ -23,6 +23,7 @@ namespace MapEditor_TLCB.Systems
         Point startingScrollLocation;
         Point currentPosition;
         bool panningEnable = false;
+        bool spacePressed = false;
 
         ContentManager m_content;
 
@@ -80,11 +81,28 @@ namespace MapEditor_TLCB.Systems
 			{
 				tilemap.tilemapImage = dialogSystem.tilemap;
 				tilemap.Refresh();
-			}            
+			}
+
+            if (Keyboard.GetState(0).IsKeyDown(Keys.Space) && spacePressed == false)
+            {
+                spacePressed = true;
+                startingPosition.X = -1;
+                startingPosition.Y = -1;
+
+                spacePressed = true;
+                startingScrollLocation = new Point();
+                startingScrollLocation.X = tilemapWindow.ScrollBarValue.Horizontal;
+                startingScrollLocation.Y = tilemapWindow.ScrollBarValue.Vertical;
+            }
+            else if (Keyboard.GetState(0).IsKeyUp(Keys.Space) && spacePressed == true)
+            {
+                spacePressed = false;
+                panningEnable = false;
+            }
 		}
         public void PanningMouseDownBehavior(object sender, TomShane.Neoforce.Controls.MouseEventArgs e)
         {
-            if (e.State.MiddleButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
+            if (e.State.MiddleButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed && panningEnable == false)
             {
                 startingPosition = e.Position;
 
@@ -95,9 +113,36 @@ namespace MapEditor_TLCB.Systems
                 panningEnable = true;
             }
         }
+        public void PanningKeyDownBehavior(object sender, TomShane.Neoforce.Controls.KeyEventArgs e)
+        {
+            if (e.Key == Keys.Space && spacePressed == false && panningEnable == false)
+            {
+                startingPosition.X = -1;
+                startingPosition.Y = -1;
 
+                spacePressed = true;
+                startingScrollLocation = new Point();
+                startingScrollLocation.X = tilemapWindow.ScrollBarValue.Horizontal;
+                startingScrollLocation.Y = tilemapWindow.ScrollBarValue.Vertical;
+
+            }
+        }
+        void PanningKeyUpBehavior(object sender, TomShane.Neoforce.Controls.KeyEventArgs e){
+            if (e.Key == Keys.Space)
+            {
+                spacePressed = false;
+                panningEnable = false;
+            }
+        }
         public void PanningMouseMoveBehavior(object sender, TomShane.Neoforce.Controls.MouseEventArgs e)
         {
+            if (spacePressed && panningEnable == false)
+            {
+                startingPosition.X = e.Position.X;
+                startingPosition.Y = e.Position.Y;
+
+                panningEnable = true;
+            }
             if ( panningEnable )
             {
                 currentPosition = e.Position;

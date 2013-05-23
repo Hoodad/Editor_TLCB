@@ -81,9 +81,9 @@ namespace MapEditor_TLCB.CustomControls
 				renderer.Draw(tilemapImage, rect, Color.White);
 
 				Rectangle source;
-				source.X = 32 * highlightRect.X;
+				source.X = tileSize.X * highlightRect.X;
 				source.Width = highlightRect.Width;
-				source.Y = 32 * highlightRect.Y;
+				source.Y = tileSize.Y * highlightRect.Y;
 				source.Height = highlightRect.Height;
 
 				Rectangle highlightOffset = adjustToScroll(highlightRect);
@@ -98,9 +98,9 @@ namespace MapEditor_TLCB.CustomControls
 
 			Rectangle selectRect = adjustToScroll(selectorRect);
 			Rectangle markedRect;
-			markedRect.X = 32 * selectorRect.X;
+			markedRect.X = tileSize.X * selectorRect.X;
 			markedRect.Width = selectorRect.Width;
-			markedRect.Y = 32 * selectorRect.Y;
+			markedRect.Y = tileSize.Y * selectorRect.Y;
 			markedRect.Height = selectorRect.Height;
 			renderer.Draw(tileSelectorImage, selectRect, markedRect, Color.CornflowerBlue);
 
