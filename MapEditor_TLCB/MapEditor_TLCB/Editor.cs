@@ -69,7 +69,7 @@ namespace MapEditor_TLCB
 			world = new EntityWorld();
 
 
-			if (useMaxRes)
+			if (useMaxRes && GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height > 960)
 			{
 				graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
 				graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height-22;
@@ -99,7 +99,7 @@ namespace MapEditor_TLCB
 				xnaWindow.FormClosing += f_FormClosing;
 				xnaWindow.Text = "The Little Cheese Boy Editor - Pre Alpha";
 
-				if (useMaxRes)
+				if (useMaxRes && GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height > 960)
 				{
 					xnaWindow.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 				}
