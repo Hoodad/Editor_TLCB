@@ -15,6 +15,12 @@ namespace MapEditor_TLCB.CustomControls
 	{
 		public int i1;
 		public int i2;
+
+        public IntPair(int p_i1, int p_i2)
+        {
+            i1 = p_i1;
+            i2 = p_i2;
+        }
 	}
 
 	class TilemapContainer : Container

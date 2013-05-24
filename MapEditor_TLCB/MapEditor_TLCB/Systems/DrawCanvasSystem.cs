@@ -233,6 +233,7 @@ namespace MapEditor_TLCB.Systems
                 queued.Add(toQueue);
 
                 state = 8;
+                return true;
             }
             else if (state == 390)
             {

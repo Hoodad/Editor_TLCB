@@ -59,15 +59,23 @@ namespace MapEditor_TLCB.Systems
 
             
             Texture2D powerups = m_content.Load<Texture2D>("Radial/Powerups/powerups");
-            Texture2D speed = m_content.Load<Texture2D>("Radial/Powerups/speedup");
-            Texture2D powerful = m_content.Load<Texture2D>("Radial/Powerups/super");
-            Texture2D bomb = m_content.Load<Texture2D>("Radial/Powerups/bomb");
+            Texture2D speed = m_content.Load<Texture2D>("OtherSheets/speedpowerup");
+            Texture2D powerful = m_content.Load<Texture2D>("OtherSheets/Item_SuperCheesy");
+            Texture2D bomb = m_content.Load<Texture2D>("OtherSheets/bombitem");
 
             Texture2D road = m_content.Load<Texture2D>("RoadToolIcon");
+
+            Texture2D switches = m_content.Load<Texture2D>("OtherSheets/Switch_Tileset");
+            Texture2D blocks = m_content.Load<Texture2D>("OtherSheets/Blockade_Tileset");
 
             m_tilemap = m_content.Load<Texture2D>("TileSheets/tilemap_garden");
 
             Texture2D question = m_content.Load<Texture2D>("Question");
+
+            Texture2D switchPreview = m_content.Load<Texture2D>("OtherSheets/swiitchesPreview");
+            Texture2D blockPreview = m_content.Load<Texture2D>("OtherSheets/Blockade_Preview");
+
+            Texture2D trap = m_content.Load<Texture2D>("OtherSheets/Trap_Spikes");
 
             EventSystem ev = (EventSystem)world.SystemManager.GetSystem<EventSystem>()[0];
             int start = 3 * 30;
@@ -88,45 +96,92 @@ namespace MapEditor_TLCB.Systems
 
 			EventData tempEvent = new EventData(null, null);
 
+            //Character events
+            EventData avatarEvent = new EventData(setToolCallback, new IntPair(270, 270));
+            EventData robot = new EventData(setToolCallback, new IntPair(302, 302));
+            EventData rat1E = new EventData(setToolCallback, new IntPair(300, 300));
+            EventData rat2E = new EventData(setToolCallback, new IntPair(301, 301));
+            events.Add(avatarEvent);
+            events.Add(robot);
+            events.Add(rat1E);
+            events.Add(rat2E);
+
+            //Power-Ups Events
+            EventData speedE = new EventData(setToolCallback, new IntPair(360, 360));
+            EventData bombE = new EventData(setToolCallback, new IntPair(390, 390));
+            EventData superE = new EventData(setToolCallback, new IntPair(420, 420));
+            events.Add(speedE);
+            events.Add(bombE);
+            events.Add(superE);
+
+            //Switches Events
+            EventData s1E = new EventData(setToolCallback, new IntPair(180, 180));
+            EventData s2E = new EventData(setToolCallback, new IntPair(181, 181));
+            EventData s3E = new EventData(setToolCallback, new IntPair(182, 182));
+            EventData s4E = new EventData(setToolCallback, new IntPair(183, 183));
+            EventData s5E = new EventData(setToolCallback, new IntPair(184, 184));
+            EventData s6E = new EventData(setToolCallback, new IntPair(185, 185));
+            events.Add(s1E);
+            events.Add(s2E);
+            events.Add(s3E);
+            events.Add(s4E);
+            events.Add(s5E);
+            events.Add(s6E);
+
+            //Blocks Events
+            EventData b1E = new EventData(setToolCallback, new IntPair(210, 210));
+            EventData b2E = new EventData(setToolCallback, new IntPair(211, 211));
+            EventData b3E = new EventData(setToolCallback, new IntPair(212, 212));
+            EventData b4E = new EventData(setToolCallback, new IntPair(213, 213));
+            EventData b5E = new EventData(setToolCallback, new IntPair(214, 214));
+            EventData b6E = new EventData(setToolCallback, new IntPair(215, 215));
+            events.Add(b1E);
+            events.Add(b2E);
+            events.Add(b3E);
+            events.Add(b4E);
+            events.Add(b5E);
+            events.Add(b6E);
+
+            //Trap Event
+            EventData trapE = new EventData(setToolCallback, new IntPair(450, 450));
+            events.Add(trapE);
+
+
 
             //CHARACTERS MENU
             List<RadialMenuItem> characterList = new List<RadialMenuItem>();
-            characterList.Add(new RadialMenuItem("Avatar", cheeseboy, tempEvent));
-            characterList.Add(new RadialMenuItem("Napoleon", napoleon, tempEvent));
-            characterList.Add(new RadialMenuItem("Rat", rat1, tempEvent));
-            characterList.Add(new RadialMenuItem("Infected Rat", rat2, tempEvent));
+            characterList.Add(new RadialMenuItem("Avatar", cheeseboy, avatarEvent));
+            characterList.Add(new RadialMenuItem("Robotaparte", napoleon, robot));
+            characterList.Add(new RadialMenuItem("Rat", rat1, rat1E));
+            characterList.Add(new RadialMenuItem("Infected Rat", rat2, rat2E));
             RadialMenu charactersMenu = new RadialMenu(m_device, m_content, characterList, characters, null, ev, this);
 
             //POWER-UPS MENU
             List<RadialMenuItem> powerupsList = new List<RadialMenuItem>();
-            powerupsList.Add(new RadialMenuItem("Bomb", bomb, tempEvent));
-            powerupsList.Add(new RadialMenuItem("Speed", speed, tempEvent));
-            powerupsList.Add(new RadialMenuItem("Strength", powerful, tempEvent));
+            powerupsList.Add(new RadialMenuItem("Bomb", bomb, bombE));
+            powerupsList.Add(new RadialMenuItem("Speed", speed, speedE));
+            powerupsList.Add(new RadialMenuItem("Strength", powerful, superE));
             RadialMenu powerupsMenu = new RadialMenu(m_device, m_content, powerupsList, powerups, null, ev, this);
 
-            //ROAD TILES MENU
-            /*List<RadialMenuItem> roadTileList = new List<RadialMenuItem>();
-            roadTileList.Add(new RadialMenuItem("Upper Left", m_tilemap, m_events[0], new Rectangle(0, 96, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Vertical", m_tilemap, m_events[1], new Rectangle(0, 128, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Lower Left", m_tilemap, m_events[2], new Rectangle(0, 160, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Horizontal", m_tilemap, m_events[3], new Rectangle(32, 96, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Single Dot", m_tilemap, m_events[4], new Rectangle(32, 128, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Horizontal", m_tilemap, m_events[5], new Rectangle(32, 160, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Upper Right", m_tilemap, m_events[6], new Rectangle(64, 96, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Vertical", m_tilemap, m_events[7], new Rectangle(64, 128, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Lower Right", m_tilemap, m_events[8], new Rectangle(64, 160, 32, 32), 0.4f));
+            //SWITCHES MENU
+            List<RadialMenuItem> switchesList = new List<RadialMenuItem>();
+            switchesList.Add(new RadialMenuItem("Switch 1", switches, s1E, new Rectangle(0, 0, 64, 64)));
+            switchesList.Add(new RadialMenuItem("Switch 2", switches, s2E, new Rectangle(0, 64, 64, 64)));
+            switchesList.Add(new RadialMenuItem("Switch 3", switches, s3E, new Rectangle(0, 128, 64, 64)));
+            switchesList.Add(new RadialMenuItem("Switch 4", switches, s4E, new Rectangle(0, 192, 64, 64)));
+            switchesList.Add(new RadialMenuItem("Switch 5", switches, s5E, new Rectangle(0, 256, 64, 64)));
+            switchesList.Add(new RadialMenuItem("Switch 6", switches, s6E, new Rectangle(0, 320, 64, 64)));
+            RadialMenu switchesMenu = new RadialMenu(m_device, m_content, switchesList, switchPreview, null, ev, this);
 
-            roadTileList.Add(new RadialMenuItem("Dead End Left", m_tilemap, m_events[9], new Rectangle(96, 96, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Dead End Up", m_tilemap, m_events[10], new Rectangle(96, 128, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Dead End Down", m_tilemap, m_events[11], new Rectangle(96, 160, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Dead End Right", m_tilemap, m_events[12], new Rectangle(128, 96, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("T Up Right Down", m_tilemap, m_events[13], new Rectangle(128, 128, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Crossing", m_tilemap, m_events[14], new Rectangle(128, 160, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("T Left Right Down", m_tilemap, m_events[15], new Rectangle(160, 96, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("T Left Up Down", m_tilemap, m_events[16], new Rectangle(160, 128, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("T Left Up Right", m_tilemap, m_events[17], new Rectangle(160, 160, 32, 32), 0.4f));
-            roadTileList.Add(new RadialMenuItem("Horizontal", m_tilemap, m_events[18], new Rectangle(224, 96, 32, 32), 0.4f));
-            RadialMenu RoadTileMenu = new RadialMenu(m_device, m_content, roadTileList, road, null);*/
+            //BLOCKS MENU
+            List<RadialMenuItem> blockList = new List<RadialMenuItem>();
+            blockList.Add(new RadialMenuItem("Block 1", blocks, b1E, new Rectangle(0, 0, 64, 64)));
+            blockList.Add(new RadialMenuItem("Block 2", blocks, b2E, new Rectangle(0, 64, 64, 64)));
+            blockList.Add(new RadialMenuItem("Block 3", blocks, b3E, new Rectangle(0, 128, 64, 64)));
+            blockList.Add(new RadialMenuItem("Block 4", blocks, b4E, new Rectangle(0, 192, 64, 64)));
+            blockList.Add(new RadialMenuItem("Block 5", blocks, b5E, new Rectangle(0, 256, 64, 64)));
+            blockList.Add(new RadialMenuItem("Block 6", blocks, b6E, new Rectangle(0, 320, 64, 64)));
+            RadialMenu blockMenu = new RadialMenu(m_device, m_content, blockList, blockPreview, null, ev, this);
 
             //CUSTOM MENU
             List<RadialMenuItem> customList = new List<RadialMenuItem>();
@@ -136,7 +191,9 @@ namespace MapEditor_TLCB.Systems
 			List<RadialMenuItem> collectionList = new List<RadialMenuItem>();
             collectionList.Add(new RadialMenuItem("Characters", characters, charactersMenu));
             collectionList.Add(new RadialMenuItem("Power-Ups", powerups, powerupsMenu));
-            //collectionList.Add(new RadialMenuItem("Road Tiles", m_tilemap, RoadTileMenu, new Rectangle(0, 96, 96, 96)));
+            collectionList.Add(new RadialMenuItem("Switches", switchPreview, switchesMenu));
+            collectionList.Add(new RadialMenuItem("Blocks", blockPreview, blockMenu));
+            collectionList.Add(new RadialMenuItem("Trap", trap, trapE));
             collectionList.Add(new RadialMenuItem("Custom Selections", question, customMenu));
             RadialMenu collectionMenu = new RadialMenu(m_device, m_content, collectionList, tileCollection, null, ev, this);
 
@@ -164,8 +221,9 @@ namespace MapEditor_TLCB.Systems
             collectionMenu.setParent(menu);
             charactersMenu.setParent(collectionMenu);
             powerupsMenu.setParent(collectionMenu);
-            //RoadTileMenu.setParent(collectionMenu);
+            switchesMenu.setParent(collectionMenu);
             customMenu.setParent(collectionMenu);
+            blockMenu.setParent(collectionMenu);
 
 
             //ADD ALL MENUS
@@ -173,8 +231,9 @@ namespace MapEditor_TLCB.Systems
             m_context.addRadialMenu(collectionMenu);
             m_context.addRadialMenu(charactersMenu);
             m_context.addRadialMenu(powerupsMenu);
-            //m_context.addRadialMenu(RoadTileMenu);
             m_context.addRadialMenu(customMenu);
+            m_context.addRadialMenu(switchesMenu);
+            m_context.addRadialMenu(blockMenu);
             customID = 4;
 
 
