@@ -17,6 +17,7 @@ namespace MapEditor_TLCB.Systems
         public Texture2D tex;
         public Vector2 pos;
         public Rectangle sourceRect;
+        public Color color;
 
     }
 
@@ -58,39 +59,8 @@ namespace MapEditor_TLCB.Systems
                         Vector2 mapPosition = tilemap.getPosition(x, y);
 
                         //Ugly as hell but works
-                        if (state >= 270 && state < 302)
-                        {
-                            QueuedForRender toQueue = new QueuedForRender();
-
-                            toQueue.pos = transform.position + mapPosition - new Vector2(16, 32);
-                            toQueue.sourceRect.X = 0;
-                            toQueue.sourceRect.Y = 128;
-                            toQueue.sourceRect.Width = 64;
-                            toQueue.sourceRect.Height = 64;
-
-                            if (state == 270)
-                                toQueue.tex = m_textures["player"];
-                            else if (state == 300)
-                                toQueue.tex = m_textures["rat"];
-                            else if (state == 301)
-                                toQueue.tex = m_textures["rat2"];
-                            queued.Add(toQueue);
-
+                        if (checkAddQueueItem(state, transform.position + mapPosition, queued, Color.White))
                             state = 8;
-                        }
-                        else if (state == 302)
-                        {
-                            QueuedForRender toQueue = new QueuedForRender();
-                            toQueue.pos = transform.position + mapPosition - new Vector2(37.5f, 32);
-                            toQueue.sourceRect.X = 0;
-                            toQueue.sourceRect.Y = 200;
-                            toQueue.sourceRect.Width = 100;
-                            toQueue.sourceRect.Height = 100;
-                            toQueue.tex = m_textures["robot"];
-                            queued.Add(toQueue);
-
-                            state = 8;
-                        }
 
 
 						if (state >= 0 && !render.overlay)
@@ -130,7 +100,28 @@ namespace MapEditor_TLCB.Systems
 					}
 					else if (m_toolSys.GetCurrentTool() == Tool.PAINT_TOOL)
 					{
-						m_spriteBatch.Draw(texture, mouseGridPosition, m_toolSys.getTilemapIconRectangle(), transparent);
+                        IntPair toDraw = m_toolSys.GetCurrentDrawTileIndex();
+                        Vector2 min = new Vector2(toDraw.i1 - 30 * (toDraw.i1 / 30), toDraw.i1 / 30);
+                        Vector2 max = new Vector2(toDraw.i2 - 30 * (toDraw.i2 / 30), toDraw.i2 / 30);
+                        for (int i = (int)min.X; i <= max.X; i++)
+                        {
+                            for (int j = (int)min.Y; j <= max.Y; j++)
+                            {
+                                Vector2 mapPosition = tilemap.getPosition(mouseTilePos[0]+(int)(i-min.X), mouseTilePos[1]+(int)(j-min.Y));
+                                int state = j * 30 + i;
+                                if (checkAddQueueItem(state, mapPosition, queued, transparent))
+                                {
+                                    state = 8;
+                                }
+                                int sourceX = state % 30;
+                                int sourceY = state / 30;
+                                m_spriteBatch.Draw(texture, transform.position + mapPosition,
+                                    new Rectangle(sourceX * 32, sourceY * 32, 32, 32), transparent);
+                            }
+                        }
+
+
+						//m_spriteBatch.Draw(texture, mouseGridPosition, m_toolSys.getTilemapIconRectangle(), transparent);
 					}
 				}
 				if (m_camTransform.scale >= 1.0f) {
@@ -139,11 +130,142 @@ namespace MapEditor_TLCB.Systems
                 for (int i = 0; i < queued.Count; i++)
                 {
                     m_spriteBatch.Draw(queued[i].tex, queued[i].pos,
-                         queued[i].sourceRect, Color.White);
+                         queued[i].sourceRect, queued[i].color);
                 }
 			}
 
 		}
+
+        private bool checkAddQueueItem(int state, Vector2 position, List<QueuedForRender> queued, Color color)
+        {
+            if (state >= 270 && state < 302)
+            {
+                QueuedForRender toQueue = new QueuedForRender();
+
+                toQueue.pos = position - new Vector2(16, 32);
+                toQueue.sourceRect.X = 0;
+                toQueue.sourceRect.Y = 128;
+                toQueue.sourceRect.Width = 64;
+                toQueue.sourceRect.Height = 64;
+                toQueue.color = color;
+
+                if (state == 270)
+                    toQueue.tex = m_textures["player"];
+                else if (state == 300)
+                    toQueue.tex = m_textures["rat"];
+                else if (state == 301)
+                    toQueue.tex = m_textures["rat2"];
+                else
+                    return false;
+                queued.Add(toQueue);           
+
+                return true;
+            }
+            else if (state == 302)
+            {
+                QueuedForRender toQueue = new QueuedForRender();
+                toQueue.pos = position - new Vector2(37.5f, 32);
+                toQueue.sourceRect.X = 0;
+                toQueue.sourceRect.Y = 200;
+                toQueue.sourceRect.Width = 100;
+                toQueue.sourceRect.Height = 100;
+                toQueue.tex = m_textures["robot"];
+                toQueue.color = color;
+                queued.Add(toQueue);
+
+                return true;
+            }
+            else if (state == 450)
+            {
+                QueuedForRender toQueue = new QueuedForRender();
+                toQueue.pos = position - new Vector2(16, 16);
+                toQueue.sourceRect.X = 0;
+                toQueue.sourceRect.Y = 0;
+                toQueue.sourceRect.Width = 64;
+                toQueue.sourceRect.Height = 64;
+                toQueue.tex = m_textures["trap"];
+                toQueue.color = color;
+                queued.Add(toQueue);
+
+                return true;
+            }
+            else if (state >= 180 && state <= 185)
+            {
+                QueuedForRender toQueue = new QueuedForRender();
+
+                toQueue.pos = position - new Vector2(16, 16);
+                toQueue.sourceRect.X = 0;
+                toQueue.sourceRect.Y = 64 * (state - 180);
+                toQueue.sourceRect.Width = 64;
+                toQueue.sourceRect.Height = 64;
+                toQueue.tex = m_textures["switch"];
+                toQueue.color = color;
+                queued.Add(toQueue);
+
+                return true;
+            }
+            else if (state >= 210 && state <= 215)
+            {
+                QueuedForRender toQueue = new QueuedForRender();
+
+                toQueue.pos = position - new Vector2(16, 16);
+                toQueue.sourceRect.X = 0;
+                toQueue.sourceRect.Y = 64 * (state - 210);
+                toQueue.sourceRect.Width = 64;
+                toQueue.sourceRect.Height = 64;
+                toQueue.tex = m_textures["block"];
+                toQueue.color = color;
+                queued.Add(toQueue);
+
+                return true;
+            }
+            else if (state == 360)
+            {
+                QueuedForRender toQueue = new QueuedForRender();
+
+                toQueue.pos = position - new Vector2(16, 16);
+                toQueue.sourceRect.X = 0;
+                toQueue.sourceRect.Y = 0;
+                toQueue.sourceRect.Width = 64;
+                toQueue.sourceRect.Height = 64;
+                toQueue.tex = m_textures["speed"];
+                toQueue.color = color;
+                queued.Add(toQueue);
+
+                state = 8;
+            }
+            else if (state == 390)
+            {
+                QueuedForRender toQueue = new QueuedForRender();
+
+                toQueue.pos = position - new Vector2(16, 16);
+                toQueue.sourceRect.X = 0;
+                toQueue.sourceRect.Y = 0;
+                toQueue.sourceRect.Width = 64;
+                toQueue.sourceRect.Height = 64;
+                toQueue.tex = m_textures["bomb"];
+                toQueue.color = color;
+                queued.Add(toQueue);
+
+                return true;
+            }
+            else if (state == 420)
+            {
+                QueuedForRender toQueue = new QueuedForRender();
+
+                toQueue.pos = position - new Vector2(16, 16);
+                toQueue.sourceRect.X = 0;
+                toQueue.sourceRect.Y = 0;
+                toQueue.sourceRect.Width = 64;
+                toQueue.sourceRect.Height = 64;
+                toQueue.tex = m_textures["super"];
+                toQueue.color = color;
+                queued.Add(toQueue);
+
+                return true;
+            }
+            return false;
+        }
 
         public override void Initialize()
 		{

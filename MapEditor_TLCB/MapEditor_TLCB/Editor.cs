@@ -218,6 +218,13 @@ namespace MapEditor_TLCB
             textures.Add("rat", Content.Load<Texture2D>("OtherSheets/rat"));
             textures.Add("rat2", Content.Load<Texture2D>("OtherSheets/rat2"));
             textures.Add("robot", Content.Load<Texture2D>("OtherSheets/robotaparte"));
+            textures.Add("trap", Content.Load<Texture2D>("OtherSheets/Trap_Spikes"));
+            textures.Add("switch", Content.Load<Texture2D>("OtherSheets/Switch_Tileset"));
+            textures.Add("block", Content.Load<Texture2D>("OtherSheets/Blockade_Tileset"));
+
+            textures.Add("bomb", Content.Load<Texture2D>("OtherSheets/bombitem"));
+            textures.Add("speed", Content.Load<Texture2D>("OtherSheets/speedpowerup"));
+            textures.Add("super", Content.Load<Texture2D>("OtherSheets/Item_SuperCheesy"));
 
 			InitializeAllSystem();
 			InitializeEntities();
