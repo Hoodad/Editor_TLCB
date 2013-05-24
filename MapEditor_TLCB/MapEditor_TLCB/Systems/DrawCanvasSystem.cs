@@ -12,6 +12,14 @@ using Microsoft.Xna.Framework.Input;
 
 namespace MapEditor_TLCB.Systems
 {
+    struct QueuedForRender
+    {
+        public Texture2D tex;
+        public Vector2 pos;
+        public Rectangle sourceRect;
+
+    }
+
 	class DrawCanvasSystem: EntitySystem
 	{
 		public DrawCanvasSystem(Dictionary<string, Texture2D> p_textures,
@@ -41,12 +49,50 @@ namespace MapEditor_TLCB.Systems
 				TilemapRender render = m_tilemapRenderMapper.Get(e);
 
 				Texture2D texture = dialogSystem.tilemap;
+                List<QueuedForRender> queued = new List<QueuedForRender>();
 				for (int y = 0; y < tilemap.getRows(); y++)
 				{
 					for (int x = 0; x < tilemap.getColumns(); x++)
 					{
-						int state = tilemap.getState(x, y);
-						Vector2 mapPosition = tilemap.getPosition(x, y);
+                        int state = tilemap.getState(x, y);
+                        Vector2 mapPosition = tilemap.getPosition(x, y);
+
+                        //Ugly as hell but works
+                        if (state >= 270 && state < 302)
+                        {
+                            QueuedForRender toQueue = new QueuedForRender();
+
+                            toQueue.pos = transform.position + mapPosition - new Vector2(16, 32);
+                            toQueue.sourceRect.X = 0;
+                            toQueue.sourceRect.Y = 128;
+                            toQueue.sourceRect.Width = 64;
+                            toQueue.sourceRect.Height = 64;
+
+                            if (state == 270)
+                                toQueue.tex = m_textures["player"];
+                            else if (state == 300)
+                                toQueue.tex = m_textures["rat"];
+                            else if (state == 301)
+                                toQueue.tex = m_textures["rat2"];
+                            queued.Add(toQueue);
+
+                            state = 8;
+                        }
+                        else if (state == 302)
+                        {
+                            QueuedForRender toQueue = new QueuedForRender();
+                            toQueue.pos = transform.position + mapPosition - new Vector2(37.5f, 32);
+                            toQueue.sourceRect.X = 0;
+                            toQueue.sourceRect.Y = 200;
+                            toQueue.sourceRect.Width = 100;
+                            toQueue.sourceRect.Height = 100;
+                            toQueue.tex = m_textures["robot"];
+                            queued.Add(toQueue);
+
+                            state = 8;
+                        }
+
+
 						if (state >= 0 && !render.overlay)
 						{
 							int sourceX = state % 30;
@@ -90,11 +136,16 @@ namespace MapEditor_TLCB.Systems
 				if (m_camTransform.scale >= 1.0f) {
 					m_spriteBatch.Draw(m_textures["canvas_grid"], Vector2.Zero, gridColor);
 				}
+                for (int i = 0; i < queued.Count; i++)
+                {
+                    m_spriteBatch.Draw(queued[i].tex, queued[i].pos,
+                         queued[i].sourceRect, Color.White);
+                }
 			}
 
 		}
 
-		public override void Initialize()
+        public override void Initialize()
 		{
 			m_transformMapper = new ComponentMapper<Transform>(world);
 			m_tilemapMapper = new ComponentMapper<Tilemap>(world);

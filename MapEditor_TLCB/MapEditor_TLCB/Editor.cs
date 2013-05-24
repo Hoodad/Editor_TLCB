@@ -214,6 +214,11 @@ namespace MapEditor_TLCB
 			textures.Add("TileSelector", Content.Load<Texture2D>("TileSelector_v3"));
 			textures.Add("canvas_grid", Content.Load<Texture2D>("canvas_grid"));
 
+            textures.Add("player", Content.Load<Texture2D>("OtherSheets/player"));
+            textures.Add("rat", Content.Load<Texture2D>("OtherSheets/rat"));
+            textures.Add("rat2", Content.Load<Texture2D>("OtherSheets/rat2"));
+            textures.Add("robot", Content.Load<Texture2D>("OtherSheets/robotaparte"));
+
 			InitializeAllSystem();
 			InitializeEntities();
 
