@@ -214,9 +214,6 @@ namespace MapEditor_TLCB
 			{
 				textures.Add("tilemap_winecellar", Texture2D.FromStream(graphics.GraphicsDevice, fileStream));
 			}
-
-			//textures.Add("tilemap_garden", Content.Load<Texture2D>("TileSheets/tilemap_garden"));
-			//textures.Add("tilemap_winecellar", Content.Load<Texture2D>("TileSheets/tilemap_winecellar"));
 			textures.Add("debugBlock", Content.Load<Texture2D>("debugBlock"));
 			textures.Add("canvas_shadow", Content.Load<Texture2D>("canvas_shadow"));
 			textures.Add("canvas_shadow_10px", Content.Load<Texture2D>("canvas_shadow_10px"));
