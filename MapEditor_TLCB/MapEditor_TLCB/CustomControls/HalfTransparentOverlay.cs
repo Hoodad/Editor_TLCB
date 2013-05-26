@@ -18,7 +18,7 @@ namespace MapEditor_TLCB.CustomControls
 		protected override void DrawControl(TomShane.Neoforce.Controls.Renderer renderer,
 			Rectangle rect, GameTime gameTime)
 		{
-			renderer.Draw(BackGroundTexture, rect, new Color(0.5f, 0.5f, 0.5f, 0.6f));
+			renderer.Draw(BackGroundTexture, rect, new Color(0.0f, 0.0f, 0.0f, 0.6f));
 		}
 
 		public Texture2D BackGroundTexture;
