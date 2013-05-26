@@ -68,7 +68,13 @@ namespace MapEditor_TLCB.Systems
 			confirmWindow.Visible = true;
 			confirmWindow.ShowModal();
             confirmWindow.Center();
+			confirmWindow.BringToFront();
 			cancelButton.Focused = true;
+			RadialMenuSystem radiSys = ((RadialMenuSystem)world.SystemManager.GetSystem<RadialMenuSystem>()[0]);
+			if (radiSys.isRadialActive())
+			{
+				radiSys.toggleRadialMenu();
+			}
 			canvasCanBeReached = false;
 		}
 		public bool ShouldShutDown()
