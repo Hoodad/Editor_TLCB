@@ -141,7 +141,7 @@ namespace MapEditor_TLCB.Systems
 			possibleMaps.Parent = startupDialog;
 			possibleMaps.Width = 189;
 			possibleMaps.Height = 122;
-			possibleMaps.Text = "Start a new Map?";
+			possibleMaps.Text = "Select a Theme?";
 			possibleMaps.Top = 1;
 
 			int buttonSize = 80;
