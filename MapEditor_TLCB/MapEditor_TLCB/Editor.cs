@@ -76,7 +76,9 @@ namespace MapEditor_TLCB
 			manager.RenderTarget = new RenderTarget2D(GraphicsDevice, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.DiscardContents);
 			manager.TargetFrames = 120;
 			manager.Initialize();
-
+#if(!DEBUG)
+			manager.LogUnhandledExceptions = false;
+#endif
 			world = new EntityWorld();
 
 
