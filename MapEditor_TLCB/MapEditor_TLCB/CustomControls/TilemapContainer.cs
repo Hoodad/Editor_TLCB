@@ -76,6 +76,11 @@ namespace MapEditor_TLCB.CustomControls
 			selectorRect.Y = 0;
 			selectorRect.Width = 0;
 			selectorRect.Height = 0;
+
+            selectorRect.X = 6;
+            selectorRect.Y = 28;
+            selectorRect.Width = tileSize.X;
+            selectorRect.Height = tileSize.Y;
 		}
 
 		protected override void DrawControl(TomShane.Neoforce.Controls.Renderer renderer, Microsoft.Xna.Framework.Rectangle rect, Microsoft.Xna.Framework.GameTime gameTime)
@@ -152,9 +157,13 @@ namespace MapEditor_TLCB.CustomControls
 		public IntPair GetCurrentIndex()
 		{
 			int tileIndex = (selectorRect.Y-28)/tileSize.Y * 30 + (selectorRect.X-6)/tileSize.X;
+
 			IntPair pair;
 			pair.i1 = tileIndex;
 			pair.i2 = tileIndex + (int)(selectorRect.Height / tileSize.Y - 1) * 30 + (int)(selectorRect.Width / tileSize.X - 1);
+
+            pair.i1 = Math.Max(pair.i1, 0);
+            pair.i2 = Math.Max(pair.i2, 0);
 
 			return pair;
 		}

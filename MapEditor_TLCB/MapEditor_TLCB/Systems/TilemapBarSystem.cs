@@ -207,7 +207,7 @@ namespace MapEditor_TLCB.Systems
                         paragraphs.Add(new Paragraph("Some tiles may also be selected using the Radial Menu. You open the Radial Menu by pressing the right mouse button anywhere on the canvas in the middle of the screen. You can close it again by clicking the right mouse button or by clicking the close button in the middle of the menu. Try it out!"));
                         paragraphs.Add(new Paragraph("You can add tile selections to the Radial Menu. Select some tiles in the tilemap, right click and a pop-up text appears prompting you to add the selection to the Radial Menu."));
 
-                        Notification note = new Notification("You just selected your first tile. Press more for more information.", NotificationType.INFO, paragraphs);
+                        Notification note = new Notification("You just selected your first tile. Press more for more information.", NotificationType.INFO, paragraphs, "Tilemap");
                         noteSys.AddNotification(note);
                         m_haveShownTilemapMessage = true;
                     }

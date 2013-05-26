@@ -38,6 +38,7 @@ namespace MapEditor_TLCB
         public string message;
         public NotificationType type;
         public float age;
+        public string heading;
 
         public List<Paragraph> additionalInformationParagraphs;
 
@@ -47,13 +48,15 @@ namespace MapEditor_TLCB
             type = p_type;
             age = 0.0f;
             additionalInformationParagraphs = new List<Paragraph>();
+            heading = "";
         }
-        public Notification(string p_message, NotificationType p_type, List<Paragraph> p_additionalInformationParagraphs)
+        public Notification(string p_message, NotificationType p_type, List<Paragraph> p_additionalInformationParagraphs, string p_heading)
         {
             message = p_message;
             type = p_type;
             age = 0.0f;
             additionalInformationParagraphs = p_additionalInformationParagraphs;
+            heading = p_heading;
         }
     }
 }

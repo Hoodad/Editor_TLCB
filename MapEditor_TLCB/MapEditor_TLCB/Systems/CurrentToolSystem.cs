@@ -21,6 +21,8 @@ namespace MapEditor_TLCB.Systems
 
         CurrentToolContainer m_container;
 
+        bool penInfo = false;
+
         public CurrentToolSystem(Manager p_manager, GraphicsDevice p_device, ContentManager p_content)
 		{
 			manager = p_manager;
@@ -87,6 +89,18 @@ namespace MapEditor_TLCB.Systems
 
                 RadialMenuSystem rms = (RadialMenuSystem)(world.SystemManager.GetSystem<RadialMenuSystem>()[0]);
 				rms.currentToolChanged(tbs.GetTilemapContainer().GetCurrentIndex());
+            }
+
+            if (!penInfo)
+            {
+                NotificationBarSystem noteSys = (NotificationBarSystem)world.SystemManager.GetSystem<NotificationBarSystem>()[0];
+
+                List<Paragraph> paragraphs = new List<Paragraph>();
+                paragraphs.Add(new Paragraph("There are three pens in the editor. The tile pen lets you draw single tiles at desired locations on the tilemap. The road pen automatically creates roads where you draw. The clear tool clears desired tiles to their default values."));
+                paragraphs.Add(new Paragraph("The pens can be selected from the toolbar. You may also select them using the 1, 2 and 3 keys on the keyboard."));
+                Notification note = new Notification("You just pressed a drawing pen. Click more for more information.", NotificationType.INFO, paragraphs, "Drawing Pens");
+                noteSys.AddNotification(note);
+                penInfo = true;
             }
         }
         public void SetCurrentDrawToolIndex(IntPair p_index)

@@ -164,7 +164,7 @@ namespace MapEditor_TLCB
 
 			List<Paragraph> info = new List<Paragraph>();
 			info.Add(new Paragraph("Successfully loaded saved map from\n" + p_completePath));
-			Notification alreadySaving = new Notification("Successfully loaded saved map!", NotificationType.SUCCESS, info);
+			Notification alreadySaving = new Notification("Successfully loaded saved map!", NotificationType.SUCCESS, info, "Load");
 			((NotificationBarSystem)(world.SystemManager.GetSystem<NotificationBarSystem>()[0])).AddNotification(alreadySaving);
 
 		}
@@ -190,7 +190,7 @@ namespace MapEditor_TLCB
 
             List<Paragraph> info = new List<Paragraph>();
             info.Add(new Paragraph("Successfully saved the map to\n" + p_completePath));
-			Notification alreadySaving = new Notification("Successfully saved the map!", NotificationType.SUCCESS, info);
+			Notification alreadySaving = new Notification("Successfully saved the map!", NotificationType.SUCCESS, info, "Save");
 			((NotificationBarSystem)(world.SystemManager.GetSystem<NotificationBarSystem>()[0])).AddNotification(alreadySaving);
 		}
 		public void ClearAllActions()

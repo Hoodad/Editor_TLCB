@@ -106,7 +106,7 @@ namespace MapEditor_TLCB.Systems
 			{
 				List<Paragraph> info = new List<Paragraph>();
 				info.Add(new Paragraph(p_additionalInformation));
-				newNotification = new Notification(p_message, p_type, info);
+				newNotification = new Notification(p_message, p_type, info, "Export");
 			}
 			else
 			{

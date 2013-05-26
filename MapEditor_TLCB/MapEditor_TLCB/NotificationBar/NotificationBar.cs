@@ -27,6 +27,7 @@ namespace MapEditor_TLCB
         int m_height;
 
         SpriteFont m_font;
+        SpriteFont m_font2;
 
         List<Notification> m_notifications;
         Queue<Notification> m_queued;
@@ -106,6 +107,7 @@ namespace MapEditor_TLCB
             m_notifications.Add(new Notification("WELCOME TO THE LITTLE CHEESE BOY EDITOR!", NotificationType.INFO));
 
             m_font = p_content.Load<SpriteFont>("Arial10");
+            m_font2 = p_content.Load<SpriteFont>("Arial12");
 
 
             //Initialize surrounding border
@@ -375,10 +377,36 @@ namespace MapEditor_TLCB
         {
             List<Paragraph> paragraphs = m_notifications[m_showAdditionalInformation].additionalInformationParagraphs;
             float y = -p_scroll;
+
+            Vector2 textSize = m_font.MeasureString("Go Back");
+            Color backColor = Color.ForestGreen;
+            Rectangle backRect;
+            backRect.X = (int)m_position.X;
+            backRect.Y = (int)(m_position.Y + y);
+            backRect.Width = (int)(textSize.X);
+            backRect.Height = (int)(textSize.Y);
+
+            Vector2 mousePos = new Vector2(Mouse.GetState().X - p_topLeft.X, Mouse.GetState().Y - p_topLeft.Y);
+
+            if (backRect.Contains((int)mousePos.X, (int)mousePos.Y) && p_hasFocus)
+            {
+                backColor = Color.White;
+                if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                {
+                    m_showAdditionalInformation = -1;
+                    return;
+                }
+            }
+            p_sb.DrawString(m_font, "Go Back", m_position + new Vector2(0, y), backColor);
+            y += textSize.Y*1.5f;
+
+            textSize = m_font2.MeasureString(m_notifications[m_showAdditionalInformation].heading);
+            p_sb.DrawString(m_font2, m_notifications[m_showAdditionalInformation].heading, m_position + new Vector2(0, y), Color.White);
+            y += textSize.Y*1.1f;
+
             for (int i = 0; i < paragraphs.Count; i++)
             {
-                string text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
-                text = (i+1).ToString() + ": " + paragraphs[i].text;
+                string text = (i+1).ToString() + ": " + paragraphs[i].text;
 
                 List<string> rows = makeIntoRows(text);
 
@@ -407,19 +435,14 @@ namespace MapEditor_TLCB
                 y += m_font.MeasureString(rows[rows.Count - 1]).Y;
             }
 
-            Vector2 textSize = m_font.MeasureString("Go Back");
-            Color backColor = Color.White;
-            Rectangle backRect;
             backRect.X = (int)m_position.X;
             backRect.Y = (int)(m_position.Y + y);
             backRect.Width = (int)(textSize.X);
             backRect.Height = (int)(textSize.Y);
 
-            Vector2 mousePos = new Vector2(Mouse.GetState().X - p_topLeft.X, Mouse.GetState().Y - p_topLeft.Y);
-
             if (backRect.Contains((int)mousePos.X, (int)mousePos.Y) && p_hasFocus)
             {
-                backColor = Color.Green;
+                backColor = Color.White;
                 if (Mouse.GetState().LeftButton == ButtonState.Pressed)
                     m_showAdditionalInformation = -1;
             }
