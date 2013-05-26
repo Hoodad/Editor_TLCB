@@ -14,6 +14,7 @@ using TomShane.Neoforce.Controls;
 using MapEditor_TLCB.Systems;
 using MapEditor_TLCB.Components;
 using System.Diagnostics;
+using System.IO;
 
 namespace MapEditor_TLCB
 {
@@ -127,7 +128,7 @@ namespace MapEditor_TLCB
 			systemManager.SetSystem(new RoadAndWallMapperSystem(), ExecutionType.Update);
 			systemManager.SetSystem(new RoadToolSystem(), ExecutionType.Update);
 			systemManager.SetSystem(new CurrentToolSystem(manager, GraphicsDevice, Content), ExecutionType.Update);
-			systemManager.SetSystem(new StartupDialogSystem(manager), ExecutionType.Update);
+			systemManager.SetSystem(new StartupDialogSystem(manager, textures), ExecutionType.Update);
 			systemManager.SetSystem(new RadialMenuSystem(GraphicsDevice, Content, manager), ExecutionType.Update);
 			systemManager.SetSystem(new ExportMapSystem(), ExecutionType.Update); //Have to be run after tilemaphandling systems
 			systemManager.SetSystem(new MapValidationSystem(manager), ExecutionType.Update);
@@ -205,8 +206,17 @@ namespace MapEditor_TLCB
 
 			KeyDelta.initialize();
 
-			textures.Add("tilemap_garden", Content.Load<Texture2D>("TileSheets/tilemap_garden"));
-			textures.Add("tilemap_winecellar", Content.Load<Texture2D>("TileSheets/tilemap_winecellar"));
+			using (FileStream fileStream = new FileStream(@"Content\TileSheets\tilemap_garden.png", FileMode.Open))
+			{
+				textures.Add("tilemap_garden", Texture2D.FromStream(graphics.GraphicsDevice, fileStream));
+			}
+			using (FileStream fileStream = new FileStream(@"Content\TileSheets\tilemap_winecellar.png", FileMode.Open))
+			{
+				textures.Add("tilemap_winecellar", Texture2D.FromStream(graphics.GraphicsDevice, fileStream));
+			}
+
+			//textures.Add("tilemap_garden", Content.Load<Texture2D>("TileSheets/tilemap_garden"));
+			//textures.Add("tilemap_winecellar", Content.Load<Texture2D>("TileSheets/tilemap_winecellar"));
 			textures.Add("debugBlock", Content.Load<Texture2D>("debugBlock"));
 			textures.Add("canvas_shadow", Content.Load<Texture2D>("canvas_shadow"));
 			textures.Add("canvas_shadow_10px", Content.Load<Texture2D>("canvas_shadow_10px"));

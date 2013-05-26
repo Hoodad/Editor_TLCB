@@ -42,20 +42,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TileSheets\tilemap_garden.png">
-      <Name>tilemap_garden</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="TileSheets\tilemap_winecellar.png">
-      <Name>tilemap_winecellar</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="TileSelector_v3.png">
       <Name>TileSelector_v3</Name>
       <Importer>TextureImporter</Importer>

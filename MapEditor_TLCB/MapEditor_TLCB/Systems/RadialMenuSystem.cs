@@ -32,7 +32,6 @@ namespace MapEditor_TLCB.Systems
 
         List<RadialMenuItem> m_usesTilemap;
 
-
         RadialWindow m_radialWindow;
         Manager m_manager;
 
@@ -67,8 +66,6 @@ namespace MapEditor_TLCB.Systems
 
             Texture2D switches = m_content.Load<Texture2D>("OtherSheets/Switch_Tileset");
             Texture2D blocks = m_content.Load<Texture2D>("OtherSheets/Blockade_Tileset");
-
-            m_tilemap = m_content.Load<Texture2D>("TileSheets/tilemap_garden");
 
             Texture2D question = m_content.Load<Texture2D>("custom");
 
