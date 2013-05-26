@@ -36,6 +36,10 @@ namespace MapEditor_TLCB.Systems
         RadialWindow m_radialWindow;
         Manager m_manager;
 
+        bool m_hasShownRadialMessage = false;
+        bool m_hasShownCharacterMessage = false;
+        bool m_hasShownPickupsMessage = false;
+
 		public RadialMenuSystem(GraphicsDevice p_device, ContentManager p_content, Manager p_manager)
 		{
 			m_device = p_device;
@@ -261,7 +265,22 @@ namespace MapEditor_TLCB.Systems
 			m_context.update(dt);
 
             if (m_context.isActive())
+            {
                 m_radialWindow.Show();
+                if (!m_hasShownRadialMessage)
+                {
+                    NotificationBarSystem noteSys = (NotificationBarSystem)world.SystemManager.GetSystem<NotificationBarSystem>()[0];
+
+                    List<Paragraph> paragraphs = new List<Paragraph>();
+                    paragraphs.Add(new Paragraph("The Radial Menu can be toggled using the right mouse button or the close button on the menu. In the first level you can select from the most recently used tiles. There is also a submenu called 'Tile Collecions'."));
+                    paragraphs.Add(new Paragraph("In the 'Tile Collection' submenu you can find various types of special tiles categorized based on their function. Go ahead and check it out!"));
+
+                    Notification note = new Notification("You just opened the Radial Menu. Press more for more information.", NotificationType.INFO, paragraphs);
+                    noteSys.AddNotification(note);
+
+                    m_hasShownRadialMessage = true;
+                }
+            }
             else
                 m_radialWindow.Hide();
 		}

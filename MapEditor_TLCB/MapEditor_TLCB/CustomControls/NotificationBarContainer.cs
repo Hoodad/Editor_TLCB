@@ -16,6 +16,9 @@ namespace MapEditor_TLCB.CustomControls
 
         private bool m_hasFocus;
 
+        private int scrollValueOnSwitch;
+        private bool moveToScroll = false;
+
         public NotificationBarContainer(Manager p_manager, Window p_parent, NotificationBar p_bar)
 			: base(p_manager)
 		{
@@ -41,10 +44,18 @@ namespace MapEditor_TLCB.CustomControls
             if (m_bar.isShowingAdditionalInformation())
             {
                 Height = (int)m_bar.getAdditionalInformationHeight();
+                if (!moveToScroll)
+                    scrollValueOnSwitch = m_parentWindow.ScrollBarValue.Vertical;
+                moveToScroll = true;
             }
             else
             {
                 Height = (int)Math.Max(m_bar.getTotalHeight(), m_parentWindow.Height);
+                if (moveToScroll)
+                {
+                    m_parentWindow.ScrollTo(0, scrollValueOnSwitch);
+                    moveToScroll = false;
+                }
             }
         }
         public void AddNotification(Notification p_notification)

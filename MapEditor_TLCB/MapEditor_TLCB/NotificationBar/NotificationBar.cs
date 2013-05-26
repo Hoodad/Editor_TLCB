@@ -95,13 +95,15 @@ namespace MapEditor_TLCB
             m_notifications = new List<Notification>();
             m_queued = new Queue<Notification>();
 
-            List<Paragraph> paragraphs = new List<Paragraph>();
+            /*List<Paragraph> paragraphs = new List<Paragraph>();
             paragraphs.Add(new Paragraph("Information messages appear to inform you of some of the functionality of the editor."));
             paragraphs.Add(new Paragraph("Information messages' use the following symbol.", m_info, 50, 50));
             m_notifications.Add(new Notification("This is an information message.", NotificationType.INFO, paragraphs));
             m_notifications.Add(new Notification("This is a warning message", NotificationType.WARNING));
             m_notifications.Add(new Notification("This is an error message", NotificationType.ERROR));
-            m_notifications.Add(new Notification("This is a success message", NotificationType.SUCCESS));
+            m_notifications.Add(new Notification("This is a success message", NotificationType.SUCCESS));*/
+
+            m_notifications.Add(new Notification("WELCOME TO THE LITTLE CHEESE BOY EDITOR!", NotificationType.INFO));
 
             m_font = p_content.Load<SpriteFont>("Arial10");
 
@@ -306,7 +308,7 @@ namespace MapEditor_TLCB
                         highlight = warningHighlight;
                     }
 
-                    float grayness = Math.Min(n.age / m_maxAge, 1.0f);
+                    float grayness = 0.5f * Math.Min(n.age / m_maxAge, 1.0f);
 
                     Color barColor = Color.White;
                     Color moreinfoColor = Color.Black;

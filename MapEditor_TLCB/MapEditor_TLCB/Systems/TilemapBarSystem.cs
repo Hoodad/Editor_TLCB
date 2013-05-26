@@ -24,6 +24,7 @@ namespace MapEditor_TLCB.Systems
         Point currentPosition;
         bool panningEnable = false;
         bool spacePressed = false;
+        bool m_haveShownTilemapMessage = false;
 
         ContentManager m_content;
 
@@ -195,6 +196,21 @@ namespace MapEditor_TLCB.Systems
                     tilemap.setSelectorRect();
                     CurrentToolSystem toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
                     toolSys.SetCurrentTool(CustomControls.Tool.PAINT_TOOL);
+
+                    if (!m_haveShownTilemapMessage)
+                    {
+                        NotificationBarSystem noteSys = (NotificationBarSystem)world.SystemManager.GetSystem<NotificationBarSystem>()[0];
+
+                        List<Paragraph> paragraphs = new List<Paragraph>();
+                        paragraphs.Add(new Paragraph("You use the tilemap to select tiles and place them on the canvas in the center of the screen."));
+                        paragraphs.Add(new Paragraph("By clicking and dragging you may select multiple tiles at the same time."));
+                        paragraphs.Add(new Paragraph("Some tiles may also be selected using the Radial Menu. You open the Radial Menu by pressing the right mouse button anywhere on the canvas in the middle of the screen. You can close it again by clicking the right mouse button or by clicking the close button in the middle of the menu. Try it out!"));
+                        paragraphs.Add(new Paragraph("You can add tile selections to the Radial Menu. Select some tiles in the tilemap, right click and a pop-up text appears prompting you to add the selection to the Radial Menu."));
+
+                        Notification note = new Notification("You just selected your first tile. Press more for more information.", NotificationType.INFO, paragraphs);
+                        noteSys.AddNotification(note);
+                        m_haveShownTilemapMessage = true;
+                    }
                 }
                 else
                 {

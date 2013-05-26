@@ -193,6 +193,19 @@ namespace MapEditor_TLCB.Systems
 
 						if (currentTool == Tool.ROAD_TOOL)
 						{
+                            if (!m_haveShownRoadToolMessage)
+                            {
+                                NotificationBarSystem noteSys = (NotificationBarSystem)world.SystemManager.GetSystem<NotificationBarSystem>()[0];
+
+                                List<Paragraph> paragraphs = new List<Paragraph>();
+                                paragraphs.Add(new Paragraph("You just used the road tool. The road tool is a pen you can use to draw roads free hand."));
+                                paragraphs.Add(new Paragraph("By pressing and holding the left shift key before starting to draw you can limit your movement to either the horizontal or vertical axis. Try it out!"));
+
+                                Notification note = new Notification("Want more information about the road tool? Press more.", NotificationType.INFO, paragraphs);
+                                noteSys.AddNotification(note);
+                                m_haveShownRoadToolMessage = true;
+                            }
+
 							int[] mapPos = roadTilemap.getTilePosition(mousePos);
 							ModifyTile changeTile = new ModifyTile(world.SystemManager);
 							changeTile.col = mapPos[0];
@@ -460,5 +473,7 @@ namespace MapEditor_TLCB.Systems
 		Vector2 m_lockStartingPoint;
 		bool m_lookingForLock;
 		Vector2 m_mouseWorldPos;
+
+        bool m_haveShownRoadToolMessage = false;
 	}
 }
