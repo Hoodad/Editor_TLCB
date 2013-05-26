@@ -25,13 +25,16 @@ namespace MapEditor_TLCB.Systems
         bool panningEnable = false;
         bool spacePressed = false;
         bool m_haveShownTilemapMessage = false;
+		bool windowIsLarge = false;
+		bool enableWindowAutoSize = false;
 
         ContentManager m_content;
 
-		public TilemapBarSystem(Manager p_manager, ContentManager p_content)
+		public TilemapBarSystem(Manager p_manager, ContentManager p_content, bool p_enableWindowAutoSize = false)
 		{
 			manager = p_manager;
             m_content = p_content;
+			enableWindowAutoSize = p_enableWindowAutoSize;
 		}
 
 		public override void Initialize()
@@ -42,14 +45,25 @@ namespace MapEditor_TLCB.Systems
 			tilemapWindow = new Window(manager);
 			tilemapWindow.Init();
 			tilemapWindow.Text = "Tilemap";
-			tilemapWindow.Height = 224;
+			if (enableWindowAutoSize)
+			{
+				tilemapWindow.Resizable = false;
+				tilemapWindow.Movable = false;
+				tilemapWindow.Height = 160;
+				tilemapWindow.MouseOver += new TomShane.Neoforce.Controls.MouseEventHandler(OnMouseOverBehavior);
+				tilemapWindow.MouseOut += new TomShane.Neoforce.Controls.MouseEventHandler(OnMouseOutBehavior);
+			}
+			else
+			{
+				tilemapWindow.Height = 196;
+			}
 			tilemapWindow.Width = 576;
 			tilemapWindow.Visible = true;
 			tilemapWindow.Top = viewport.Height - tilemapWindow.Height;
 			tilemapWindow.Left = (int)((float)viewport.Width -tilemapWindow.Width);
 			tilemapWindow.CloseButtonVisible = false;
 			tilemapWindow.MaximumHeight = 960 + 54;
-			tilemapWindow.MaximumWidth = 960;
+			tilemapWindow.MaximumWidth = 960 + 32;
 			tilemapWindow.IconVisible = false;
             tilemapWindow.Click += new TomShane.Neoforce.Controls.EventHandler(OnWindowClickBehavior);
 			manager.Add(tilemapWindow);
@@ -70,6 +84,11 @@ namespace MapEditor_TLCB.Systems
             tilemap.MouseDown += new MouseEventHandler(PanningMouseDownBehavior);
             tilemap.MouseMove += new MouseEventHandler(PanningMouseMoveBehavior);
             tilemap.MouseUp += new MouseEventHandler(PanningMouseUpBehavior);
+			if (enableWindowAutoSize)
+			{
+				tilemap.MouseOver += new TomShane.Neoforce.Controls.MouseEventHandler(OnMouseOverBehavior);
+				tilemap.MouseOut += new TomShane.Neoforce.Controls.MouseEventHandler(OnMouseOutBehavior);
+			}
 			tilemap.Init(contentSystem.GetViewportSize());
 
 		}
@@ -237,5 +256,42 @@ namespace MapEditor_TLCB.Systems
         {
             return tilemap;
         }
+
+		private void OnMouseOverBehavior(object sender, TomShane.Neoforce.Controls.MouseEventArgs e)
+		{
+			Point position = e.Position;
+
+			if (windowIsLarge == false)
+			{
+				if (position.X >= tilemapWindow.Left && position.X <= tilemapWindow.Left + tilemapWindow.Width)
+				{
+					if (position.Y >= tilemapWindow.Top && position.Y <= tilemapWindow.Top + tilemapWindow.Height)
+					{
+						tilemapWindow.Width = 960+32;
+						tilemapWindow.Height = tilemapWindow.Height * 2;
+						tilemapWindow.Left = manager.ScreenWidth - tilemapWindow.Width;
+						tilemapWindow.Top = manager.ScreenHeight - tilemapWindow.Height;
+						windowIsLarge = true;
+					}
+				}
+			}
+		}
+		private void OnMouseOutBehavior(object sender, TomShane.Neoforce.Controls.MouseEventArgs e)
+		{
+			Point position = e.Position;
+			Debug.Print(position.ToString());
+			if (windowIsLarge == true)
+			{
+				if (position.X <= tilemapWindow.Left || position.X >= tilemapWindow.Left + tilemapWindow.Width 
+					|| position.Y <= tilemapWindow.Top || position.Y >= tilemapWindow.Top + tilemapWindow.Height)
+				{
+					tilemapWindow.Width = 576;
+					tilemapWindow.Height = tilemapWindow.Height / 2;
+					tilemapWindow.Left = manager.ScreenWidth - tilemapWindow.Width;
+					tilemapWindow.Top = manager.ScreenHeight - tilemapWindow.Height;
+					windowIsLarge = false;
+				}
+			}
+		}
 	}
 }
