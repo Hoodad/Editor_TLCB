@@ -37,6 +37,7 @@ namespace MapEditor_TLCB.Systems
 			confirmWindow.Center();
 			confirmWindow.Visible = false;
 			confirmWindow.Resizable = false;
+			confirmWindow.IconVisible = false;
 			confirmWindow.Closing += new WindowClosingEventHandler(WindowCloseBehavior);
 			manager.Add(confirmWindow);
 

@@ -230,6 +230,17 @@ namespace MapEditor_TLCB.Systems
 
 		public override void Process()
 		{
+			CurrentToolSystem toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
+			if (toolSys.GetDirtyTool())
+			{
+				if(toolSys.GetCurrentTool() == Tool.ERASE_TOOL)
+					HighligthButton(eraserTool);
+				else if(toolSys.GetCurrentTool() == Tool.PAINT_TOOL)
+					HighligthButton(paintTool);
+				else if(toolSys.GetCurrentTool() == Tool.ROAD_TOOL)
+					HighligthButton(roadTool);
+				toolSys.SetDirtyTool(false);
+			}
 		}
 
 		public void ExitBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
