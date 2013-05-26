@@ -32,7 +32,6 @@ namespace MapEditor_TLCB.Systems
 
         List<RadialMenuItem> m_usesTilemap;
 
-
         RadialWindow m_radialWindow;
         Manager m_manager;
 
@@ -54,7 +53,7 @@ namespace MapEditor_TLCB.Systems
 			//Textures
 			Texture2D dummy = m_content.Load<Texture2D>("radialTemp");
             Texture2D tileCollection = m_content.Load<Texture2D>("collection");
-			Texture2D main = m_content.Load<Texture2D>("cheese");
+			Texture2D main = m_content.Load<Texture2D>("close");
             Texture2D characters = m_content.Load<Texture2D>("Radial/Characters/characters");
             Texture2D cheeseboy = m_content.Load<Texture2D>("Radial/Characters/player");
             Texture2D napoleon = m_content.Load<Texture2D>("Radial/Characters/napoleon");
@@ -71,8 +70,6 @@ namespace MapEditor_TLCB.Systems
 
             Texture2D switches = m_content.Load<Texture2D>("OtherSheets/Switch_Tileset");
             Texture2D blocks = m_content.Load<Texture2D>("OtherSheets/Blockade_Tileset");
-
-            m_tilemap = m_content.Load<Texture2D>("TileSheets/tilemap_garden");
 
             Texture2D question = m_content.Load<Texture2D>("custom");
 
