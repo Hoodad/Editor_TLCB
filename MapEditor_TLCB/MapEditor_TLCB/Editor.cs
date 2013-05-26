@@ -72,7 +72,7 @@ namespace MapEditor_TLCB
 			manager = new Manager(this, graphics, "Blue");
 
 			// Setting up the shared skins directory
-			manager.SkinDirectory = "../../../Neoforce/Skins";
+			manager.SkinDirectory = "Content/Skins/";
 			manager.RenderTarget = new RenderTarget2D(GraphicsDevice, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.DiscardContents);
 			manager.TargetFrames = 120;
 			manager.Initialize();
