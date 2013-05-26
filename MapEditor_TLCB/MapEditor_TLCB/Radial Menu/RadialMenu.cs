@@ -442,7 +442,7 @@ namespace MapEditor_TLCB
             if (arrowTarget >= 0)
                 text = m_items[arrowTarget].text;
 
-            float textSize = size / 50.0f;
+            float textSize = size / 200.0f;// 50.0f;
 
             Vector2 wordSize = m_font.MeasureString(text) * textSize;
 

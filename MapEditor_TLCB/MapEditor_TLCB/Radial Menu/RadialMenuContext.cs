@@ -238,6 +238,8 @@ namespace MapEditor_TLCB
                 if (Mouse.GetState().ScrollWheelValue > prevMouseWheel)
                 {
                     size *= 1.2f;
+                    if (size > 125)
+                        size = 125;
                 }
                 else if (Mouse.GetState().ScrollWheelValue < prevMouseWheel)
                 {

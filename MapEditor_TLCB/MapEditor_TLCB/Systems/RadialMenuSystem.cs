@@ -49,7 +49,7 @@ namespace MapEditor_TLCB.Systems
 
 			//Textures
 			Texture2D dummy = m_content.Load<Texture2D>("radialTemp");
-            Texture2D tileCollection = m_content.Load<Texture2D>("chest");
+            Texture2D tileCollection = m_content.Load<Texture2D>("collection");
 			Texture2D main = m_content.Load<Texture2D>("cheese");
             Texture2D characters = m_content.Load<Texture2D>("Radial/Characters/characters");
             Texture2D cheeseboy = m_content.Load<Texture2D>("Radial/Characters/player");
@@ -70,7 +70,7 @@ namespace MapEditor_TLCB.Systems
 
             m_tilemap = m_content.Load<Texture2D>("TileSheets/tilemap_garden");
 
-            Texture2D question = m_content.Load<Texture2D>("Question");
+            Texture2D question = m_content.Load<Texture2D>("custom");
 
             Texture2D switchPreview = m_content.Load<Texture2D>("OtherSheets/swiitchesPreview");
             Texture2D blockPreview = m_content.Load<Texture2D>("OtherSheets/Blockade_Preview");
