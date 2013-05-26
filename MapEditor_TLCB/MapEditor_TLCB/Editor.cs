@@ -29,20 +29,30 @@ namespace MapEditor_TLCB
 		private Manager manager;
 		Dictionary<string, Texture2D> textures;
 		RenderTarget2D canvasRender;
-		bool useFullScreen;
-		bool useMaxRes;
+		bool enableTilemapAutoSize = false;
+		bool useMaxRes = false;
 		float repeatDelay;
 		float repeatTime;
 
 		private KeyboardState oldState;
 
-		public Editor(bool p_useFullScreen, bool p_useMaxRes)
+		public Editor(string[] arguments)
 		{
 			graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
 			textures = new Dictionary<string, Texture2D>();
-			useFullScreen = p_useFullScreen;
-			useMaxRes = p_useMaxRes;
+
+			foreach (string arg in arguments)
+			{
+				if (arg == "maximizeWindow")
+				{
+					useMaxRes = true;
+				}
+				else if (arg == "enableAutoSize")
+				{
+					enableTilemapAutoSize = true;
+				}
+			}
 
 			repeatDelay = 0.3f;
 			repeatTime = 0;			
@@ -86,7 +96,6 @@ namespace MapEditor_TLCB
 			}
 			IsMouseVisible = true;
 
-			graphics.IsFullScreen = useFullScreen;
 			graphics.SynchronizeWithVerticalRetrace = true;
 			graphics.ApplyChanges();
 
@@ -122,7 +131,7 @@ namespace MapEditor_TLCB
 			systemManager.SetSystem(new UndoTreeSystem(manager, GraphicsDevice, Content), ExecutionType.Update);
 			systemManager.SetSystem(new ActionSystem(), ExecutionType.Update);
 			systemManager.SetSystem(new NotificationBarSystem(manager, GraphicsDevice, Content), ExecutionType.Update);
-			systemManager.SetSystem(new TilemapBarSystem(manager, Content), ExecutionType.Update);
+			systemManager.SetSystem(new TilemapBarSystem(manager, Content, enableTilemapAutoSize), ExecutionType.Update);
 			systemManager.SetSystem(new XNAInputSystem(), ExecutionType.Update);
 			systemManager.SetSystem(new StateSystem(manager), ExecutionType.Update);
 			systemManager.SetSystem(new RoadAndWallMapperSystem(), ExecutionType.Update);

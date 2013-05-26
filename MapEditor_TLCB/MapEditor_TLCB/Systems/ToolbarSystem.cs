@@ -47,7 +47,7 @@ namespace MapEditor_TLCB.Systems
 			toolbarWindow.Init();
 			toolbarWindow.Text = "Toolbar";
 			toolbarWindow.Width = 100;
-			toolbarWindow.Height = (int)((float)viewport.Height * 0.35f);
+			toolbarWindow.Height = 250;
 			toolbarWindow.Top = 10;
 			toolbarWindow.Left = viewport.Width - toolbarWindow.Width;
 			toolbarWindow.Resizable = false;
