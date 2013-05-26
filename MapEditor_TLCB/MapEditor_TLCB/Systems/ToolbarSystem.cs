@@ -108,7 +108,7 @@ namespace MapEditor_TLCB.Systems
 			pathsValid.ToolTip.Init();
 			pathsValid.ToolTip.Text = "0";
 			pathsValid.ToolTip.TextColor = Color.White;
-			pathsValid.ToolTip.Left = -100;
+			pathsValid.ToolTip.Visible = false;
 			pathsValid.ToolTip.Color = Color.Red;
 
 			playerValid = new CheckBox(manager);
@@ -125,6 +125,7 @@ namespace MapEditor_TLCB.Systems
 			playerValid.ToolTip.Init();
 			playerValid.ToolTip.Text = "1";
 			playerValid.ToolTip.TextColor = Color.White;
+			playerValid.ToolTip.Visible = false;
 			playerValid.ToolTip.Color = Color.Red;
 
 			switchesValid = new CheckBox(manager);
@@ -141,6 +142,7 @@ namespace MapEditor_TLCB.Systems
 			switchesValid.ToolTip.Init();
 			switchesValid.ToolTip.Text = "2";
 			switchesValid.ToolTip.TextColor = Color.White;
+			switchesValid.ToolTip.Visible = false;
 			switchesValid.ToolTip.Color = Color.Red;
 			//
 

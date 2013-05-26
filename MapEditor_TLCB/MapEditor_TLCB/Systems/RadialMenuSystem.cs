@@ -50,7 +50,7 @@ namespace MapEditor_TLCB.Systems
 			//Textures
 			Texture2D dummy = m_content.Load<Texture2D>("radialTemp");
             Texture2D tileCollection = m_content.Load<Texture2D>("collection");
-			Texture2D main = m_content.Load<Texture2D>("cheese");
+			Texture2D main = m_content.Load<Texture2D>("close");
             Texture2D characters = m_content.Load<Texture2D>("Radial/Characters/characters");
             Texture2D cheeseboy = m_content.Load<Texture2D>("Radial/Characters/player");
             Texture2D napoleon = m_content.Load<Texture2D>("Radial/Characters/napoleon");
