@@ -187,10 +187,12 @@ namespace MapEditor_TLCB.Systems
         {
             TomShane.Neoforce.Controls.MouseEventArgs me = e as TomShane.Neoforce.Controls.MouseEventArgs;
 
+            undoTreeContainer.m_undoTree.m_currentMousePosX = me.Position.X - undoTreeWindow.AbsoluteLeft;
+            undoTreeContainer.m_undoTree.m_currentMousePosY = me.Position.Y - undoTreeWindow.AbsoluteTop;
+
             if (me.Button == MouseButton.Left)
             {
-                List<ActionInterface> actions = undoTreeContainer.m_undoTree.setCurrentByPosition(me.Position.X-undoTreeWindow.AbsoluteLeft,
-                                                                                                  me.Position.Y-undoTreeWindow.AbsoluteTop);
+                List<ActionInterface> actions = undoTreeContainer.m_undoTree.setCurrentByPosition();
                 m_actionsystem.PerformActionList(actions);
 
                 world.TagManager.GetEntity("mainTilemap").GetComponent<TilemapValidate>().validateThisTick = true;
@@ -254,7 +256,11 @@ namespace MapEditor_TLCB.Systems
         private void OnContainerPanBehaviour(object sender, TomShane.Neoforce.Controls.MouseEventArgs e)
         {
             MouseState currentState = e.State;
-            Vector2 mousePos = new Vector2(e.Position.X, e.Position.Y); ;
+            Vector2 mousePos = new Vector2(e.Position.X, e.Position.Y);
+            undoTreeContainer.m_undoTree.m_currentMousePosX = e.Position.X+undoTreeWindow.ClientLeft;
+            undoTreeContainer.m_undoTree.m_currentMousePosY = e.Position.Y+undoTreeWindow.ClientTop;
+
+
             if (e.State.MiddleButton == ButtonState.Pressed)
             {
                 Vector2 mouseDiff = mousePos - oldMousePos;
