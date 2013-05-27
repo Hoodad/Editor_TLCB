@@ -217,11 +217,11 @@ namespace MapEditor_TLCB
 
 			KeyDelta.initialize();
 
-			using (FileStream fileStream = new FileStream(@"Content\TileSheets\tilemap_garden.png", FileMode.Open))
+			using (FileStream fileStream = new FileStream(@"Content\TileSheets\tilemap_garden.png", FileMode.Open, FileAccess.Read, FileShare.Read))
 			{
 				textures.Add("tilemap_garden", Texture2D.FromStream(graphics.GraphicsDevice, fileStream));
 			}
-			using (FileStream fileStream = new FileStream(@"Content\TileSheets\tilemap_winecellar.png", FileMode.Open))
+			using (FileStream fileStream = new FileStream(@"Content\TileSheets\tilemap_winecellar.png", FileMode.Open, FileAccess.Read, FileShare.Read))
 			{
 				textures.Add("tilemap_winecellar", Texture2D.FromStream(graphics.GraphicsDevice, fileStream));
 			}
