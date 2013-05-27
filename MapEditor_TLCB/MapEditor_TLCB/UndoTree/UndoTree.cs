@@ -53,6 +53,9 @@ namespace MapEditor_TLCB.Actions
 
         public float m_zoomValue = 1.0f;
 
+        public int m_currentMousePosX = 0;
+        public int m_currentMousePosY = 0;
+
         //
         bool newNodeDirty = false; // has checked if there is new node
 
@@ -97,6 +100,17 @@ namespace MapEditor_TLCB.Actions
 			m_currentNodeId = addAction(null);
 			m_startNodeId = m_currentNodeId;
 		}
+
+        public void Clear(int p_startId=-1)
+        {
+            scrollOffset = Vector2.Zero;
+            scrollInputBuffer = Vector2.Zero;
+            m_renderOffset = new Vector2(30, 100);
+            m_currentNodeId = p_startId;
+            m_startNodeId = p_startId;
+            m_nodes = new InvariableIndexList<ActionNode>();
+            m_actions = new InvariableIndexList<ActionInterface>(); 
+        }
 
         public Tuple<InvariableIndexList<ActionNode>, InvariableIndexList<ActionInterface>> GetData()
         {
@@ -235,10 +249,11 @@ namespace MapEditor_TLCB.Actions
         }
 
         // draw the tree
-        public void draw(SpriteBatch p_spriteBatch,Vector2 p_offset)
+        public void draw(SpriteBatch p_spriteBatch, Vector2 p_offset)
         {
             Vector2 offset = p_offset;
-
+            int mousex = m_currentMousePosX - (int)((scrollOffset.X) * m_zoomValue + m_renderOffset.X);
+            int mousey = m_currentMousePosY - (int)((scrollOffset.Y) * m_zoomValue + m_renderOffset.Y);
 
             // render all lines(render first so they're behind the boxes)
             foreach (int i in m_renderBatch)
@@ -268,6 +283,9 @@ namespace MapEditor_TLCB.Actions
                     Color tint = m_inactiveNodeCol;
                     if (currentRender.m_activeBranch>0) tint = m_activeBranchCol;
                     if (i == m_currentNodeId) tint = m_currentNodeCol;
+                    if (isHit(i,mousex,mousey)) tint=Color.LightSkyBlue;
+                    //
+
                     //tint = Color.Lerp(tint,Color.Red,currentRender.traversedflash);
                     drawNode(p_spriteBatch, scrollOffset + currentRender.m_renderPos, tint);
                     // draw action info as well
@@ -276,7 +294,7 @@ namespace MapEditor_TLCB.Actions
                         if (currentRender.m_actionIds[0] != -1) action = m_actions[currentRender.m_actionIds[0]];
                         if (action != null)
                         {
-                            string info = i.ToString()+"| ";
+                            string info = /*i.ToString()+"| "*/"";
                             if (currentRender.m_actionIds.Count > 1)
                                 info += currentRender.GetInfo(); // action group info
                             else
@@ -440,7 +458,12 @@ namespace MapEditor_TLCB.Actions
             // step
             List<ActionInterface> actions = null;
             ActionNode currentNodeRef = m_nodes[m_currentNodeId];
-            if (currentNodeRef.m_children.Count > 0)
+            //if 
+            if (currentNodeRef.m_redoId > -1)
+            {
+                actions = setCurrent(currentNodeRef.m_redoId);
+            }
+            else if (currentNodeRef.m_children.Count > 0)
             {
                 m_currentNodeId = currentNodeRef.m_children[0];           
                 // change current node
@@ -463,7 +486,8 @@ namespace MapEditor_TLCB.Actions
             ActionNode currentNodeRef = m_nodes[m_currentNodeId];
             if (currentNodeRef.m_parentId>=0)
             {
-                m_currentNodeId = currentNodeRef.m_parentId;            
+                int old = m_currentNodeId;
+                m_currentNodeId = currentNodeRef.m_parentId;
                 // build a list from the indices for returning
                 actions = new List<ActionInterface>();
                 foreach (int n in currentNodeRef.m_actionIds)
@@ -471,6 +495,9 @@ namespace MapEditor_TLCB.Actions
                 actions.Reverse(); // actions must be reversed when executed for undo (executed from start to end)
                 // change current node
                 currentNodeRef = m_nodes[m_currentNodeId];
+                // change return index
+                currentNodeRef.m_redoId = old;
+                //
                 newNodeDirty = true;
             }
             // return
@@ -597,40 +624,53 @@ namespace MapEditor_TLCB.Actions
         }
 
 
-        public void setCurrent(int p_id)
-        {
-            m_currentNodeId = p_id;
-            newNodeDirty = true;
-        }
-
-        public List<ActionInterface> setCurrentByPosition(int p_x, int p_y)
+        public List<ActionInterface> setCurrent(int p_id)
         {
             List<ActionInterface> returnPath = null;
-            p_x -= (int)((scrollOffset.X)*m_zoomValue + m_renderOffset.X);
-            p_y -= (int)((scrollOffset.Y)*m_zoomValue + m_renderOffset.Y);
+            if (m_currentNodeId != p_id)
+            {
+                returnPath = traverse(p_id);
+                m_currentNodeId = p_id;
+                newNodeDirty = true;
+            }
+            return returnPath;
+        }
+
+        public List<ActionInterface> setCurrentByPosition()
+        {
+            List<ActionInterface> returnPath = null;
+            int mousex = m_currentMousePosX - (int)((scrollOffset.X)*m_zoomValue + m_renderOffset.X);
+            int mousey = m_currentMousePosY - (int)((scrollOffset.Y)*m_zoomValue + m_renderOffset.Y);
             // only check the visible for collision
             foreach (int i in m_renderBatch)
             {
                 if (i != -1 && i < m_nodes.getSize() && m_nodes[i] != null)
                 {
-                    ActionNode currentRender = m_nodes[i];
-                    // ye olde box collision, forgive the continues
-                    if (p_x > (currentRender.m_renderPos.X + m_nodeWidth)*m_zoomValue)  continue;
-                    if (p_x < currentRender.m_renderPos.X*m_zoomValue)                continue;
-                    if (p_y > (currentRender.m_renderPos.Y + m_nodeHeight)*m_zoomValue) continue;
-                    if (p_y < currentRender.m_renderPos.Y*m_zoomValue)                continue;
-                    // if passed, click hit
-                    if (m_currentNodeId != i)
+                    if (isHit(i,mousex,mousey))
                     {
-                        returnPath = traverse(i);
-                        m_currentNodeId = i;
-                        newNodeDirty = true;
+                        // if passed, click hit
+                        // int old = m_currentNodeId;
+                        returnPath = setCurrent(i);
+                        // m_nodes[m_currentNodeId].m_redoId = old;   Test without for now
+                        break;
                     }
-                    break;
                 }
             }
             return returnPath;
         }
+
+        public bool isHit(int p_nodeID, int p_x, int p_y)
+        {
+            ActionNode currentRender = m_nodes[p_nodeID];
+            // ye olde box collision
+            if (p_x > (currentRender.m_renderPos.X + m_nodeWidth) * m_zoomValue) return false;
+            if (p_x < currentRender.m_renderPos.X * m_zoomValue) return false;
+            if (p_y > (currentRender.m_renderPos.Y + m_nodeHeight) * m_zoomValue) return false;
+            if (p_y < currentRender.m_renderPos.Y * m_zoomValue) return false;
+            // if passed
+            return true;
+        }
+
 
         public void ScrollX(float p_dx, float p_max)
         {
