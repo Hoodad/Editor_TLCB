@@ -447,7 +447,12 @@ namespace MapEditor_TLCB.Actions
             // step
             List<ActionInterface> actions = null;
             ActionNode currentNodeRef = m_nodes[m_currentNodeId];
-            if (currentNodeRef.m_children.Count > 0)
+            //if 
+            if (currentNodeRef.m_redoId > -1)
+            {
+                actions = setCurrent(currentNodeRef.m_redoId);
+            }
+            else if (currentNodeRef.m_children.Count > 0)
             {
                 m_currentNodeId = currentNodeRef.m_children[0];           
                 // change current node
@@ -470,7 +475,8 @@ namespace MapEditor_TLCB.Actions
             ActionNode currentNodeRef = m_nodes[m_currentNodeId];
             if (currentNodeRef.m_parentId>=0)
             {
-                m_currentNodeId = currentNodeRef.m_parentId;            
+                int old = m_currentNodeId;
+                m_currentNodeId = currentNodeRef.m_parentId;
                 // build a list from the indices for returning
                 actions = new List<ActionInterface>();
                 foreach (int n in currentNodeRef.m_actionIds)
@@ -478,6 +484,9 @@ namespace MapEditor_TLCB.Actions
                 actions.Reverse(); // actions must be reversed when executed for undo (executed from start to end)
                 // change current node
                 currentNodeRef = m_nodes[m_currentNodeId];
+                // change return index
+                currentNodeRef.m_redoId = old;
+                //
                 newNodeDirty = true;
             }
             // return
@@ -604,10 +613,16 @@ namespace MapEditor_TLCB.Actions
         }
 
 
-        public void setCurrent(int p_id)
+        public List<ActionInterface> setCurrent(int p_id)
         {
-            m_currentNodeId = p_id;
-            newNodeDirty = true;
+            List<ActionInterface> returnPath = null;
+            if (m_currentNodeId != p_id)
+            {
+                returnPath = traverse(p_id);
+                m_currentNodeId = p_id;
+                newNodeDirty = true;
+            }
+            return returnPath;
         }
 
         public List<ActionInterface> setCurrentByPosition()
@@ -623,12 +638,9 @@ namespace MapEditor_TLCB.Actions
                     if (isHit(i,mousex,mousey))
                     {
                         // if passed, click hit
-                        if (m_currentNodeId != i)
-                        {
-                            returnPath = traverse(i);
-                            m_currentNodeId = i;
-                            newNodeDirty = true;
-                        }
+                        // int old = m_currentNodeId;
+                        returnPath = setCurrent(i);
+                        // m_nodes[m_currentNodeId].m_redoId = old;   Test without for now
                         break;
                     }
                 }

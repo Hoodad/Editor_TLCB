@@ -76,6 +76,7 @@ namespace MapEditor_TLCB.Actions
         public List<int> m_actionIds; ///< action reference
         public List<int> m_children;
         public int m_parentId;
+        public int m_redoId=-1;
         public int m_level; ///< level this node has in tree
         public int m_siblingId = 0; ///< id amongst siblings
         //public bool m_activeBranch = false; ///< whether this node is part of the active action branch
