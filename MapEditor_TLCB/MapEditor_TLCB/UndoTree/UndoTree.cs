@@ -101,6 +101,17 @@ namespace MapEditor_TLCB.Actions
 			m_startNodeId = m_currentNodeId;
 		}
 
+        public void Clear(int p_startId=-1)
+        {
+            scrollOffset = Vector2.Zero;
+            scrollInputBuffer = Vector2.Zero;
+            m_renderOffset = new Vector2(30, 100);
+            m_currentNodeId = p_startId;
+            m_startNodeId = p_startId;
+            m_nodes = new InvariableIndexList<ActionNode>();
+            m_actions = new InvariableIndexList<ActionInterface>(); 
+        }
+
         public Tuple<InvariableIndexList<ActionNode>, InvariableIndexList<ActionInterface>> GetData()
         {
             return new Tuple<InvariableIndexList<ActionNode>, InvariableIndexList<ActionInterface>>(

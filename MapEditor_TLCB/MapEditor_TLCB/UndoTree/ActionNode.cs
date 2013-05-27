@@ -54,6 +54,7 @@ namespace MapEditor_TLCB.Actions
             m_parentId = (int)info.GetValue("ParentId", typeof(int));
             m_level = (int)info.GetValue("Level", typeof(int));
             m_type = (NodeType)info.GetValue("Type", typeof(int));
+            m_redoId = (int)info.GetValue("RedoId", typeof(int));
 
             m_renderPos = Vector2.Zero;
 		}
@@ -65,6 +66,7 @@ namespace MapEditor_TLCB.Actions
             info.AddValue("ParentId", m_parentId);
             info.AddValue("Level", m_level);
             info.AddValue("Type", (int)m_type);
+            info.AddValue("RedoId", (int)m_redoId);
         }
 
         public string GetInfo()
