@@ -21,8 +21,6 @@ namespace MapEditor_TLCB.Systems
         Manager manager;
         Window undoTreeWindow;
 
-        Button undoBtn;
-        Button redoBtn;
         RadioButton viewMode;
 
         ScrollBar sbVert;
@@ -85,26 +83,6 @@ namespace MapEditor_TLCB.Systems
             //undoTreeContainer.MousePress += new TomShane.Neoforce.Controls.MouseEventHandler(OnContainerPanBehaviour);
 			undoTreeContainer.MouseMove += new MouseEventHandler(OnContainerPanBehaviour);
             undoTreeContainer.DoubleClicks = false;
-
-            undoBtn = new Button(manager);
-            undoBtn.Init();
-            undoBtn.Parent = undoTreeWindow;
-            undoBtn.Width = undoTreeWindow.Width / 2;
-            undoBtn.Height = 24;
-            undoBtn.Left = 0;
-            undoBtn.Top = 0;
-            undoBtn.Text = "Undo";
-            undoBtn.Click += new TomShane.Neoforce.Controls.EventHandler(UndoBehaviour);
-
-            redoBtn = new Button(manager);
-            redoBtn.Init();
-            redoBtn.Parent = undoTreeWindow;
-            redoBtn.Width = undoTreeWindow.Width / 2;
-            redoBtn.Height = 24;
-            redoBtn.Left = undoTreeWindow.Width / 2;
-            redoBtn.Top = 0;
-            redoBtn.Text = "Redo";
-            redoBtn.Click += new TomShane.Neoforce.Controls.EventHandler(RedoBehaviour);
 
             /*
             viewMode = new RadioButton(manager);
