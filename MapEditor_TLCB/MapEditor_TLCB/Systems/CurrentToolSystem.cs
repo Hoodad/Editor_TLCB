@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using MapEditor_TLCB.CustomControls;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace MapEditor_TLCB.Systems
 {
@@ -73,6 +74,22 @@ namespace MapEditor_TLCB.Systems
 		}
 		public override void Process()
 		{
+			StateSystem stateSys = (StateSystem)(world.SystemManager.GetSystem<StateSystem>()[0]);
+			if (stateSys.CanCanvasBeReached())
+			{
+				if (Keyboard.GetState(0).IsKeyDown(Keys.E))
+				{
+					SetCurrentTool(Tool.ERASE_TOOL);
+				}
+				else if (Keyboard.GetState(0).IsKeyDown(Keys.R))
+				{
+					SetCurrentTool(Tool.ROAD_TOOL);
+				}
+				else if (Keyboard.GetState(0).IsKeyDown(Keys.P))
+				{
+					SetCurrentTool(Tool.PAINT_TOOL);
+				}
+			}
 		}
         public void SetCurrentToolCB(object p_tool)
         {
