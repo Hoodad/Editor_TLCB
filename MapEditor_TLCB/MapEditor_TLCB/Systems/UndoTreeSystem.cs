@@ -54,12 +54,13 @@ namespace MapEditor_TLCB.Systems
             m_actionsystem = ((ActionSystem)world.SystemManager.GetSystem<ActionSystem>()[0]);
             Viewport viewport = contentSystem.GetViewport();
 
+            int toolbarwindowh = 360;
             undoTreeWindow = new Window(manager);
             undoTreeWindow.Init();
             undoTreeWindow.Text = "History";
-            undoTreeWindow.Width = 200;
-            undoTreeWindow.Height = (int)((float)viewport.Height * 0.6f);
-            undoTreeWindow.Top = 0;
+            undoTreeWindow.Width = 160;
+            undoTreeWindow.Height = (int)((float)viewport.Height - toolbarwindowh);
+            undoTreeWindow.Top = toolbarwindowh; // height of toolbarwindow
             undoTreeWindow.Left = 0;
             undoTreeWindow.Visible = true;
             undoTreeWindow.CloseButtonVisible = false;

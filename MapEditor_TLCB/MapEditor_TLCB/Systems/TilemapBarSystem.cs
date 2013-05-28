@@ -50,18 +50,20 @@ namespace MapEditor_TLCB.Systems
 			{
 				tilemapWindow.Resizable = false;
 				tilemapWindow.Movable = false;
-				tilemapWindow.Height = 160;
+				tilemapWindow.Height = viewport.Height;
 				tilemapWindow.MouseOver += new TomShane.Neoforce.Controls.MouseEventHandler(OnMouseOverBehavior);
 				tilemapWindow.MouseOut += new TomShane.Neoforce.Controls.MouseEventHandler(OnMouseOutBehavior);
 			}
 			else
 			{
-				tilemapWindow.Height = 196;
+				// tilemapWindow.Height = 196;
+                tilemapWindow.Height = viewport.Height;
 			}
-			tilemapWindow.Width = 576;
+			tilemapWindow.Width = 160;
 			tilemapWindow.Visible = true;
 			tilemapWindow.Top = viewport.Height - tilemapWindow.Height;
-			tilemapWindow.Left = (int)((float)viewport.Width -tilemapWindow.Width);
+            tilemapWindow.Left = viewport.Width - tilemapWindow.Width;
+                // (int)((float)viewport.Width -tilemapWindow.Width);
 			tilemapWindow.CloseButtonVisible = false;
 			tilemapWindow.MaximumHeight = 960 + 54;
 			tilemapWindow.MaximumWidth = 960 + 32;
@@ -274,7 +276,7 @@ namespace MapEditor_TLCB.Systems
 					if (position.Y >= tilemapWindow.Top && position.Y <= tilemapWindow.Top + tilemapWindow.Height)
 					{
 						tilemapWindow.Width = 960+32;
-						tilemapWindow.Height = tilemapWindow.Height * 2;
+						// tilemapWindow.Height = tilemapWindow.Height * 2;
 						tilemapWindow.Left = manager.ScreenWidth - tilemapWindow.Width;
 						tilemapWindow.Top = manager.ScreenHeight - tilemapWindow.Height;
 						windowIsLarge = true;
@@ -292,7 +294,7 @@ namespace MapEditor_TLCB.Systems
 					|| position.Y <= tilemapWindow.Top || position.Y >= tilemapWindow.Top + tilemapWindow.Height)
 				{
 					tilemapWindow.Width = 576;
-					tilemapWindow.Height = tilemapWindow.Height / 2;
+					// tilemapWindow.Height = tilemapWindow.Height / 2;
 					tilemapWindow.Left = manager.ScreenWidth - tilemapWindow.Width;
 					tilemapWindow.Top = manager.ScreenHeight - tilemapWindow.Height;
 					windowIsLarge = false;
