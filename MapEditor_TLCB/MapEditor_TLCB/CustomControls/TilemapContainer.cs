@@ -82,7 +82,35 @@ namespace MapEditor_TLCB.CustomControls
             selectorRect.Width = tileSize.X;
             selectorRect.Height = tileSize.Y;
 		}
+        public void DrawAddSelectionText(SpriteBatch p_sb)
+        {
+            if (showAddToRadial)
+            {
+                string s = "Add Selection to Radial Menu";
+                Rectangle dest;
+                dest.X = (int)addToRadialTextPos.X - 2;
+                dest.Y = (int)addToRadialTextPos.Y - 2;
+                dest.Width = (int)m_font.MeasureString(s).X + 4;
+                dest.Height = (int)m_font.MeasureString(s).Y + 4;
 
+                float mouseX = Mouse.GetState().X - windowParent.AbsoluteLeft;
+                float mouseY = Mouse.GetState().Y - windowParent.AbsoluteTop;
+
+                Microsoft.Xna.Framework.Color drawColor = Color.White;
+
+                if (mouseX > dest.X && mouseY > dest.Y)
+                    if (mouseX < dest.X + dest.Width && mouseY < dest.Y + dest.Height)
+                        drawColor = Color.Green;
+
+                p_sb.Draw(whiteDot, dest, Color.Black);
+                dest.X = (int)addToRadialTextPos.X;
+                dest.Y = (int)addToRadialTextPos.Y;
+                dest.Width = (int)m_font.MeasureString(s).X;
+                dest.Height = (int)m_font.MeasureString(s).Y;
+                p_sb.Draw(whiteDot, dest, drawColor);
+                p_sb.DrawString(m_font, s, addToRadialTextPos, Color.Black);
+            }
+        }
 		protected override void DrawControl(TomShane.Neoforce.Controls.Renderer renderer, Microsoft.Xna.Framework.Rectangle rect, Microsoft.Xna.Framework.GameTime gameTime)
 		{
 			if (tilemapImage != null)
@@ -116,7 +144,7 @@ namespace MapEditor_TLCB.CustomControls
 			renderer.Draw(tileSelectorImage, selectRect, markedRect, Color.CornflowerBlue);
 
 
-			if (showAddToRadial)
+			if (false)//showAddToRadial)
 			{
 				string s = "Add Selection to Radial Menu";
 				Rectangle dest;

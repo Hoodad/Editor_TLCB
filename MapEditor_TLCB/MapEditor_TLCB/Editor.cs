@@ -69,7 +69,7 @@ namespace MapEditor_TLCB
 			// Create an instance of manager using Default skin. We set the fourth parameter to false,
 			// so the instance of manager is not registered as an XNA game component and methods
 			// like Initialize(), Update() and Draw() are called manually in the game loop.
-			manager = new Manager(this, graphics, "Blue");
+			manager = new Manager(this, graphics, "Default");
 
 			// Setting up the shared skins directory
 			manager.SkinDirectory = "Content/Skins/";
@@ -354,6 +354,10 @@ namespace MapEditor_TLCB
 			spriteBatch.Begin();
 			RadialMenuSystem radial = (RadialMenuSystem)world.SystemManager.GetSystem<RadialMenuSystem>()[0];
 			radial.Render(spriteBatch);
+
+            TilemapBarSystem tm = (TilemapBarSystem)world.SystemManager.GetSystem<TilemapBarSystem>()[0];
+            tm.drawAddSelectionText(spriteBatch);
+
 			spriteBatch.End();
 		}
 		void f_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
