@@ -371,14 +371,18 @@ namespace MapEditor_TLCB
                     drawRect.Height = (int)rectSize2;
 
                     Color c = drawColor;
+                    Color backdropC = new Color(255, 255, 200, 255);
                     if (i != arrowTarget)
                     {
-                        byte alpha = drawColor.A;
+                        /*byte alpha = drawColor.A;
                         c *= 0.5f;
-                        c.A = alpha;
+                        c.A = alpha;*/
+                        backdropC.R = 100;
+                        backdropC.G = 100;
+                        backdropC.B = 100;
                     }
 
-                    Color backdropC = new Color(100, 100, 100, 255);
+
                     backdropC *= 0.25f;
                     sp.Draw(m_largeWhiteDot, drawRect, backdropC);
 
@@ -574,12 +578,12 @@ namespace MapEditor_TLCB
             if (m_symbol != null)
             {
                 Color c = drawColor;
-                if (arrowTarget >= 0)
+                /*if (arrowTarget >= 0)
                 {
                     byte alpha = c.A;
                     c *= 0.7f;
                     c.A = alpha;
-                }
+                }*/
                 sp.Draw(m_symbol, dest, c * opacity);
             }
 
