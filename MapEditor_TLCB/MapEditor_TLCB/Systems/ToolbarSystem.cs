@@ -47,7 +47,7 @@ namespace MapEditor_TLCB.Systems
 			toolbarWindow.Init();
 			toolbarWindow.Text = "Toolbar";
 			toolbarWindow.Width = 100;
-			toolbarWindow.Height = 250;
+			toolbarWindow.Height = 300;
 			toolbarWindow.Top = 10;
 			toolbarWindow.Left = viewport.Width - toolbarWindow.Width;
 			toolbarWindow.Resizable = false;
@@ -57,12 +57,13 @@ namespace MapEditor_TLCB.Systems
 			toolbarWindow.Movable = false;
 			manager.Add(toolbarWindow);
 
+			int toolWidth = toolbarWindow.Width / 2;
 			roadTool = new ImageBasedButton(manager);
 			roadTool.Init();
 			roadTool.Parent = toolbarWindow;
-			roadTool.Width = toolbarWindow.Width / 2;
-			roadTool.Height = roadTool.Width;
-			roadTool.Left = 0;
+			roadTool.Width = toolWidth;
+			roadTool.Height = toolWidth;
+			roadTool.Left = toolWidth / 2;
 			roadTool.Top = 0;
 			roadTool.Text = "";
 			roadTool.image = sys.LoadTexture("RoadIcon");
@@ -73,10 +74,10 @@ namespace MapEditor_TLCB.Systems
 			eraserTool = new ImageBasedButton(manager);
 			eraserTool.Init();
 			eraserTool.Parent = toolbarWindow;
-			eraserTool.Width = toolbarWindow.Width / 2;
-			eraserTool.Height = eraserTool.Width;
-			eraserTool.Left = 50;
-			eraserTool.Top = 0;
+			eraserTool.Width = toolWidth;
+			eraserTool.Height = toolWidth;
+			eraserTool.Left = toolWidth / 2;
+			eraserTool.Top = toolWidth;
 			eraserTool.Text = "";
 			eraserTool.image = sys.LoadTexture("EraserIcon");
             eraserTool.Click += new TomShane.Neoforce.Controls.EventHandler(EraseToolBehavior);
@@ -84,10 +85,10 @@ namespace MapEditor_TLCB.Systems
 			paintTool = new ImageBasedButton(manager);
 			paintTool.Init();
 			paintTool.Parent = toolbarWindow;
-			paintTool.Width = toolbarWindow.Width / 2;
-			paintTool.Height = paintTool.Width;
-			paintTool.Left = 0;
-			paintTool.Top = roadTool.Height;
+			paintTool.Width = toolWidth;
+			paintTool.Height = toolWidth;
+			paintTool.Left = toolWidth / 2;
+			paintTool.Top = 2 * toolWidth;
 			paintTool.Text = "";
 			paintTool.image = sys.LoadTexture("PaintingIcon");
             paintTool.Click += new TomShane.Neoforce.Controls.EventHandler(PaintToolBehavior);
