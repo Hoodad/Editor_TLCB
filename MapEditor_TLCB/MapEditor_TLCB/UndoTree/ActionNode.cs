@@ -54,6 +54,7 @@ namespace MapEditor_TLCB.Actions
             m_parentId = (int)info.GetValue("ParentId", typeof(int));
             m_level = (int)info.GetValue("Level", typeof(int));
             m_type = (NodeType)info.GetValue("Type", typeof(int));
+            m_redoId = (int)info.GetValue("RedoId", typeof(int));
 
             m_renderPos = Vector2.Zero;
 		}
@@ -65,6 +66,7 @@ namespace MapEditor_TLCB.Actions
             info.AddValue("ParentId", m_parentId);
             info.AddValue("Level", m_level);
             info.AddValue("Type", (int)m_type);
+            info.AddValue("RedoId", (int)m_redoId);
         }
 
         public string GetInfo()
@@ -76,6 +78,7 @@ namespace MapEditor_TLCB.Actions
         public List<int> m_actionIds; ///< action reference
         public List<int> m_children;
         public int m_parentId;
+        public int m_redoId=-1;
         public int m_level; ///< level this node has in tree
         public int m_siblingId = 0; ///< id amongst siblings
         //public bool m_activeBranch = false; ///< whether this node is part of the active action branch

@@ -16,8 +16,8 @@
     <XnaProfile>HiDef</XnaProfile>
     <XnaCrossPlatformGroupID>75b5690f-5011-448c-aa31-e0778fc36b37</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
-    <ApplicationIcon>Game.ico</ApplicationIcon>
-    <Thumbnail>GameThumbnail.png</Thumbnail>
+    <ApplicationIcon>cheesyEditor.ico</ApplicationIcon>
+    <Thumbnail>cheesyEditor.png</Thumbnail>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -176,10 +176,6 @@
     <Compile Include="WallMapper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Game.ico" />
-    <Content Include="GameThumbnail.png" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\MapEditor_TLCBContent\MapEditor_TLCBContent.contentproj">
       <Name>MapEditor_TLCBContent</Name>
       <XnaReferenceType>Content</XnaReferenceType>
@@ -212,7 +208,10 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="cheesyEditor.ico" />
+    <Content Include="cheesyEditor.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!--

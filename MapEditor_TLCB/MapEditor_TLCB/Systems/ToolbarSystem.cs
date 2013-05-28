@@ -47,7 +47,7 @@ namespace MapEditor_TLCB.Systems
 			toolbarWindow.Init();
 			toolbarWindow.Text = "Toolbar";
 			toolbarWindow.Width = 100;
-			toolbarWindow.Height = (int)((float)viewport.Height * 0.35f);
+			toolbarWindow.Height = 250;
 			toolbarWindow.Top = 10;
 			toolbarWindow.Left = viewport.Width - toolbarWindow.Width;
 			toolbarWindow.Resizable = false;
@@ -108,7 +108,7 @@ namespace MapEditor_TLCB.Systems
 			pathsValid.ToolTip.Init();
 			pathsValid.ToolTip.Text = "0";
 			pathsValid.ToolTip.TextColor = Color.White;
-			pathsValid.ToolTip.Left = -100;
+			pathsValid.ToolTip.Visible = false;
 			pathsValid.ToolTip.Color = Color.Red;
 
 			playerValid = new CheckBox(manager);
@@ -125,6 +125,7 @@ namespace MapEditor_TLCB.Systems
 			playerValid.ToolTip.Init();
 			playerValid.ToolTip.Text = "1";
 			playerValid.ToolTip.TextColor = Color.White;
+			playerValid.ToolTip.Visible = false;
 			playerValid.ToolTip.Color = Color.Red;
 
 			switchesValid = new CheckBox(manager);
@@ -141,6 +142,7 @@ namespace MapEditor_TLCB.Systems
 			switchesValid.ToolTip.Init();
 			switchesValid.ToolTip.Text = "2";
 			switchesValid.ToolTip.TextColor = Color.White;
+			switchesValid.ToolTip.Visible = false;
 			switchesValid.ToolTip.Color = Color.Red;
 			//
 
@@ -228,6 +230,17 @@ namespace MapEditor_TLCB.Systems
 
 		public override void Process()
 		{
+			CurrentToolSystem toolSys = (CurrentToolSystem)(world.SystemManager.GetSystem<CurrentToolSystem>()[0]);
+			if (toolSys.GetDirtyTool())
+			{
+				if(toolSys.GetCurrentTool() == Tool.ERASE_TOOL)
+					HighligthButton(eraserTool);
+				else if(toolSys.GetCurrentTool() == Tool.PAINT_TOOL)
+					HighligthButton(paintTool);
+				else if(toolSys.GetCurrentTool() == Tool.ROAD_TOOL)
+					HighligthButton(roadTool);
+				toolSys.SetDirtyTool(false);
+			}
 		}
 
 		public void ExitBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)

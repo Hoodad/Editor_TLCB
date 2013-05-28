@@ -20,6 +20,7 @@ namespace MapEditor_TLCB.Systems
         ContentManager m_content;
 
         CurrentToolContainer m_container;
+		bool m_dirtyTool = true;
 
         bool penInfo = false;
 
@@ -102,6 +103,7 @@ namespace MapEditor_TLCB.Systems
                 noteSys.AddNotification(note);
                 penInfo = true;
             }
+			m_dirtyTool = true;
         }
         public void SetCurrentDrawToolIndex(IntPair p_index)
         {
@@ -130,5 +132,14 @@ namespace MapEditor_TLCB.Systems
             Notification n = new Notification("This window shows the current tool. Draw by left clicking on the canvas.", NotificationType.INFO);
             noteSys.AddNotification(n);
         }
+		public bool GetDirtyTool()
+		{
+			return m_dirtyTool;
+		}
+
+		public void SetDirtyTool(bool p_dirty)
+		{
+			m_dirtyTool = p_dirty;
+		}
     }
 }

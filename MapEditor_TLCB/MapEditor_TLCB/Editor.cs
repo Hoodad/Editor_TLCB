@@ -14,6 +14,7 @@ using TomShane.Neoforce.Controls;
 using MapEditor_TLCB.Systems;
 using MapEditor_TLCB.Components;
 using System.Diagnostics;
+using System.IO;
 
 namespace MapEditor_TLCB
 {
@@ -28,20 +29,30 @@ namespace MapEditor_TLCB
 		private Manager manager;
 		Dictionary<string, Texture2D> textures;
 		RenderTarget2D canvasRender;
-		bool useFullScreen;
-		bool useMaxRes;
+		bool enableTilemapAutoSize = false;
+		bool useMaxRes = false;
 		float repeatDelay;
 		float repeatTime;
 
 		private KeyboardState oldState;
 
-		public Editor(bool p_useFullScreen, bool p_useMaxRes)
+		public Editor(string[] arguments)
 		{
 			graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
 			textures = new Dictionary<string, Texture2D>();
-			useFullScreen = p_useFullScreen;
-			useMaxRes = p_useMaxRes;
+
+			foreach (string arg in arguments)
+			{
+				if (arg == "maximizeWindow")
+				{
+					useMaxRes = true;
+				}
+				else if (arg == "enableAutoSize")
+				{
+					enableTilemapAutoSize = true;
+				}
+			}
 
 			repeatDelay = 0.3f;
 			repeatTime = 0;			
@@ -61,11 +72,13 @@ namespace MapEditor_TLCB
 			manager = new Manager(this, graphics, "Blue");
 
 			// Setting up the shared skins directory
-			manager.SkinDirectory = "../../../Neoforce/Skins";
+			manager.SkinDirectory = "Content/Skins/";
 			manager.RenderTarget = new RenderTarget2D(GraphicsDevice, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.DiscardContents);
 			manager.TargetFrames = 120;
 			manager.Initialize();
-
+#if(!DEBUG)
+			manager.LogUnhandledExceptions = false;
+#endif
 			world = new EntityWorld();
 
 
@@ -85,7 +98,6 @@ namespace MapEditor_TLCB
 			}
 			IsMouseVisible = true;
 
-			graphics.IsFullScreen = useFullScreen;
 			graphics.SynchronizeWithVerticalRetrace = true;
 			graphics.ApplyChanges();
 
@@ -121,13 +133,13 @@ namespace MapEditor_TLCB
 			systemManager.SetSystem(new UndoTreeSystem(manager, GraphicsDevice, Content), ExecutionType.Update);
 			systemManager.SetSystem(new ActionSystem(), ExecutionType.Update);
 			systemManager.SetSystem(new NotificationBarSystem(manager, GraphicsDevice, Content), ExecutionType.Update);
-			systemManager.SetSystem(new TilemapBarSystem(manager, Content), ExecutionType.Update);
+			systemManager.SetSystem(new TilemapBarSystem(manager, Content, enableTilemapAutoSize), ExecutionType.Update);
 			systemManager.SetSystem(new XNAInputSystem(), ExecutionType.Update);
 			systemManager.SetSystem(new StateSystem(manager), ExecutionType.Update);
 			systemManager.SetSystem(new RoadAndWallMapperSystem(), ExecutionType.Update);
 			systemManager.SetSystem(new RoadToolSystem(), ExecutionType.Update);
 			systemManager.SetSystem(new CurrentToolSystem(manager, GraphicsDevice, Content), ExecutionType.Update);
-			systemManager.SetSystem(new StartupDialogSystem(manager), ExecutionType.Update);
+			systemManager.SetSystem(new StartupDialogSystem(manager, textures), ExecutionType.Update);
 			systemManager.SetSystem(new RadialMenuSystem(GraphicsDevice, Content, manager), ExecutionType.Update);
 			systemManager.SetSystem(new ExportMapSystem(), ExecutionType.Update); //Have to be run after tilemaphandling systems
 			systemManager.SetSystem(new MapValidationSystem(manager), ExecutionType.Update);
@@ -205,8 +217,14 @@ namespace MapEditor_TLCB
 
 			KeyDelta.initialize();
 
-			textures.Add("tilemap_garden", Content.Load<Texture2D>("TileSheets/tilemap_garden"));
-			textures.Add("tilemap_winecellar", Content.Load<Texture2D>("TileSheets/tilemap_winecellar"));
+			using (FileStream fileStream = new FileStream(@"Content\TileSheets\tilemap_garden.png", FileMode.Open, FileAccess.Read, FileShare.Read))
+			{
+				textures.Add("tilemap_garden", Texture2D.FromStream(graphics.GraphicsDevice, fileStream));
+			}
+			using (FileStream fileStream = new FileStream(@"Content\TileSheets\tilemap_winecellar.png", FileMode.Open, FileAccess.Read, FileShare.Read))
+			{
+				textures.Add("tilemap_winecellar", Texture2D.FromStream(graphics.GraphicsDevice, fileStream));
+			}
 			textures.Add("debugBlock", Content.Load<Texture2D>("debugBlock"));
 			textures.Add("canvas_shadow", Content.Load<Texture2D>("canvas_shadow"));
 			textures.Add("canvas_shadow_10px", Content.Load<Texture2D>("canvas_shadow_10px"));

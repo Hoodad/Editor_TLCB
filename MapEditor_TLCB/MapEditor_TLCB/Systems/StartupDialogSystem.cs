@@ -24,11 +24,14 @@ namespace MapEditor_TLCB.Systems
 		private bool hasChangedTilemap;
 		private bool requestToChangeTilemap;
 
-		public StartupDialogSystem(Manager p_manager)
+		private Dictionary<string, Texture2D> textures;
+
+		public StartupDialogSystem(Manager p_manager, Dictionary<string, Texture2D> p_textures)
 		{
 			manager = p_manager;
 			hasChangedTilemap = false;
 			requestToChangeTilemap = false;
+			textures = p_textures;
 		}
 		public override void Process()
 		{
@@ -138,7 +141,7 @@ namespace MapEditor_TLCB.Systems
 			possibleMaps.Parent = startupDialog;
 			possibleMaps.Width = 189;
 			possibleMaps.Height = 122;
-			possibleMaps.Text = "Start a new Map?";
+			possibleMaps.Text = "Select a Theme?";
 			possibleMaps.Top = 1;
 
 			int buttonSize = 80;
@@ -150,7 +153,7 @@ namespace MapEditor_TLCB.Systems
 			tileMapGarden.Height = buttonSize;
 			tileMapGarden.Top = buttonSize * 0 + 8;
 			tileMapGarden.Left = buttonSize * 0 + 8 * 1;
-			tileMapGarden.tilemap = contentSystem.LoadTexture("TileSheets/tilemap_garden");
+			tileMapGarden.tilemap = textures["tilemap_garden"];
 			tileMapGarden.tilemap.Name = "Tilemap_garden";
 			tileMapGarden.Click += new TomShane.Neoforce.Controls.EventHandler(OnTilemapButtonClickBehavior);
 			tileMapGarden.MouseOver += new MouseEventHandler(OnTilemapButtonMouseOverBehavior);
@@ -165,7 +168,7 @@ namespace MapEditor_TLCB.Systems
 			tileMapCellar.Height = buttonSize;
 			tileMapCellar.Top = buttonSize * 0 + 8;
 			tileMapCellar.Left = buttonSize * 1 + 8 * 2;
-			tileMapCellar.tilemap = contentSystem.LoadTexture("TileSheets/tilemap_winecellar");
+			tileMapCellar.tilemap = textures["tilemap_winecellar"];
 			tileMapCellar.tilemap.Name = "Tilemap_winecellar";
 			tileMapCellar.Click += new TomShane.Neoforce.Controls.EventHandler(OnTilemapButtonClickBehavior);
 			tileMapCellar.MouseOver += new MouseEventHandler(OnTilemapButtonMouseOverBehavior);

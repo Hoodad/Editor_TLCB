@@ -14,9 +14,11 @@ namespace MapEditor_TLCB.Actions.Interface
 		//public List<ActionInterface> queuedActions;
 		public InvariableIndexList<ActionNode> nodes;
 		public InvariableIndexList<ActionInterface> actions;
+        public int currentNode = 0;
 
 		const String ACTIONNODE = "ActionNode";
 		const String ACTION = "ActionInterface";
+        const String CURRENTNODE = "CurrentNode";
 
 		public ActionsSerialized()
 		{
@@ -28,7 +30,7 @@ namespace MapEditor_TLCB.Actions.Interface
 			//queuedActions = (List<ActionInterface>)info.GetValue("Queued", typeof(List<ActionInterface>));
 			nodes	= (InvariableIndexList<ActionNode>)info.GetValue(		ACTIONNODE,		typeof(InvariableIndexList<ActionNode>));
 			actions = (InvariableIndexList<ActionInterface>)info.GetValue(	ACTION,			typeof(InvariableIndexList<ActionInterface>));
-
+            currentNode = (int)info.GetValue(CURRENTNODE, typeof(int));
 		}
 
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -36,6 +38,7 @@ namespace MapEditor_TLCB.Actions.Interface
 			//info.AddValue("Queued", queuedActions);
 			info.AddValue(ACTIONNODE, nodes);
 			info.AddValue(ACTION, actions);
+            info.AddValue(CURRENTNODE, currentNode);
 		}
 	}
 }

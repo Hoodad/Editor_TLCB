@@ -296,6 +296,8 @@ namespace MapEditor_TLCB.CustomControls
 			highlightRect.Y = 0;
 			highlightRect.Width = 0;
 			highlightRect.Height = 0;
+
+			base.OnMouseOut(e);
 		}
 
 		private Point GetDesiredPoint(Vector2 p_redPosition, Vector2 p_bluePosition, RectanglePoint p_type)

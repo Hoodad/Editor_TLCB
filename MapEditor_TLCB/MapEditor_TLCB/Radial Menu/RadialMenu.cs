@@ -136,16 +136,19 @@ namespace MapEditor_TLCB
                     if ((pressed[i] >= Keys.A && pressed[i] <= Keys.Z) ||
                         (pressed[i] >= Keys.D1 && pressed[i] <= Keys.D9))
                     {
-                        if (m_items[arrowTarget].activateEvent != null)
-                        {
-                            m_items[arrowTarget].activateEvent.setHotkey(pressed[i]);
-                            break;
-                        }
-                        else if (m_items[arrowTarget].submenu != null)
-                        {
-                            //m_items[arrowTarget].submenu.m_hotKey = pressed[i];
-                            m_items[arrowTarget].submenu.m_openEvent.hotkey = pressed[i];
-                        }
+						if (arrowTarget >= 0)
+						{
+							if (m_items[arrowTarget].activateEvent != null)
+							{
+								m_items[arrowTarget].activateEvent.setHotkey(pressed[i]);
+								break;
+							}
+							else if (m_items[arrowTarget].submenu != null)
+							{
+								//m_items[arrowTarget].submenu.m_hotKey = pressed[i];
+								m_items[arrowTarget].submenu.m_openEvent.hotkey = pressed[i];
+							}
+						}
                     }
                 }
             }
