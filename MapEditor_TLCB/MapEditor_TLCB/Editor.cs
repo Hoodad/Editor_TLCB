@@ -143,6 +143,7 @@ namespace MapEditor_TLCB
 			systemManager.SetSystem(new RadialMenuSystem(GraphicsDevice, Content, manager), ExecutionType.Update);
 			systemManager.SetSystem(new ExportMapSystem(), ExecutionType.Update); //Have to be run after tilemaphandling systems
 			systemManager.SetSystem(new MapValidationSystem(manager), ExecutionType.Update);
+			systemManager.SetSystem(new CreditsSystem(manager), ExecutionType.Update);
 
 			world.SystemManager.SetSystem(new DrawCanvasSystem(textures, GraphicsDevice,
 				canvasRender, manager), ExecutionType.Draw);

@@ -153,6 +153,7 @@
     <Compile Include="Systems\ActionSystem.cs" />
     <Compile Include="Systems\CanvasControlSystem.cs" />
     <Compile Include="Systems\ContentSystem.cs" />
+    <Compile Include="Systems\CreditsSystem.cs" />
     <Compile Include="Systems\CurrentToolSystem.cs" />
     <Compile Include="Systems\InputDeltaSystem.cs" />
     <Compile Include="Systems\EventSystem.cs" />
