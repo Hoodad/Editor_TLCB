@@ -52,7 +52,7 @@ namespace MapEditor_TLCB.Systems
 			toolbarWindow.Height = 360;
 			toolbarWindow.Top = 0;
             toolbarWindow.IconVisible = false;
-			toolbarWindow.Left = 0;
+            toolbarWindow.Left = viewport.Width - toolbarWindow.Width;
             toolbarWindow.Resizable = false;
             toolbarWindow.AutoScroll = false;
 			toolbarWindow.CloseButtonVisible = false;

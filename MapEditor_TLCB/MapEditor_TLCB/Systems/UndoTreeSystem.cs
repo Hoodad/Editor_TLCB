@@ -61,7 +61,7 @@ namespace MapEditor_TLCB.Systems
             undoTreeWindow.Width = 160;
             undoTreeWindow.Height = (int)((float)viewport.Height - toolbarwindowh);
             undoTreeWindow.Top = toolbarwindowh; // height of toolbarwindow
-            undoTreeWindow.Left = 0;
+            undoTreeWindow.Left = viewport.Width - undoTreeWindow.Width;
             undoTreeWindow.Visible = true;
             undoTreeWindow.CloseButtonVisible = false;
             undoTreeWindow.Click += new TomShane.Neoforce.Controls.EventHandler(OnWindowClickBehavior);

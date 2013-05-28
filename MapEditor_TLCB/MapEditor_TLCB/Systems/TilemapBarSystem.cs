@@ -59,10 +59,10 @@ namespace MapEditor_TLCB.Systems
 				// tilemapWindow.Height = 196;
                 tilemapWindow.Height = viewport.Height;
 			}
-			tilemapWindow.Width = 190;
+			tilemapWindow.Width = 210;
 			tilemapWindow.Visible = true;
 			tilemapWindow.Top = viewport.Height - tilemapWindow.Height;
-            tilemapWindow.Left = viewport.Width - tilemapWindow.Width;
+            tilemapWindow.Left = 0;
                 // (int)((float)viewport.Width -tilemapWindow.Width);
 			tilemapWindow.CloseButtonVisible = false;
 			tilemapWindow.MaximumHeight = 960 + 54;
