@@ -214,6 +214,8 @@ namespace MapEditor_TLCB.Systems
 			newMapConfirmationWindow.Width = 248;
 			newMapConfirmationWindow.Height = 48;
 			newMapConfirmationWindow.Center();
+            newMapConfirmationWindow.CloseButtonVisible = false;
+            newMapConfirmationWindow.IconVisible = false;
 			newMapConfirmationWindow.Visible = false;
 			newMapConfirmationWindow.Resizable = false;
 			manager.Add(newMapConfirmationWindow);

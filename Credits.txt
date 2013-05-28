@@ -11,3 +11,5 @@ Notification bar icons:
 Warning "System Error" by http://www.visualpharm.com
 Error "Cancel" by http://www.visualpharm.com
 "Info" by http://www.visualpharm.com
+
+Lightbulbs by FamFamFam: http://www.iconarchive.com/show/silk-icons-by-famfamfam.html
