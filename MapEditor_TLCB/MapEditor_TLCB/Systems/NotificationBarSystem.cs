@@ -42,11 +42,11 @@ namespace MapEditor_TLCB.Systems
 			notificationWindow = new Window(manager);
 			notificationWindow.Init();
 			notificationWindow.Text = "Notification Bar";
-			notificationWindow.Height = 160;
+			notificationWindow.Height = 80;
             notificationWindow.Width = originalWidth;
 			notificationWindow.Visible = true;
 			notificationWindow.Top = viewport.Height - notificationWindow.Height;
-			notificationWindow.Left = 0;
+			notificationWindow.Left = viewport.Width/2 - originalWidth/2;
 			notificationWindow.CloseButtonVisible = false;
             notificationWindow.AutoScroll = true;
             notificationWindow.Resizable = true;

@@ -48,25 +48,32 @@ namespace MapEditor_TLCB.Systems
 			toolbarWindow = new Window(manager);
 			toolbarWindow.Init();
 			toolbarWindow.Text = "Toolbar";
-			toolbarWindow.Width = 100;
-			toolbarWindow.Height = 300;
-			toolbarWindow.Top = 10;
-			toolbarWindow.Left = viewport.Width - toolbarWindow.Width;
-			toolbarWindow.Resizable = false;
+			toolbarWindow.Width = 160;
+			toolbarWindow.Height = 360;
+			toolbarWindow.Top = 0;
+            toolbarWindow.IconVisible = false;
+			toolbarWindow.Left = 0;
+            toolbarWindow.Resizable = false;
+            toolbarWindow.AutoScroll = false;
 			toolbarWindow.CloseButtonVisible = false;
-			toolbarWindow.BorderVisible = false;
+			toolbarWindow.BorderVisible = true;
             toolbarWindow.Click += new TomShane.Neoforce.Controls.EventHandler(OnWindowClickBehavior);
-			toolbarWindow.Movable = false;
+			toolbarWindow.Movable = true;
 			manager.Add(toolbarWindow);
 
-			int toolWidth = toolbarWindow.Width / 2;
+            
+            int toolHeight = 50;
+            int clientW = toolbarWindow.ClientWidth;
+			int toolWidth = toolHeight;
+            int toolMargin = 5;
+            
 			roadTool = new ImageBasedButton(manager);
 			roadTool.Init();
 			roadTool.Parent = toolbarWindow;
 			roadTool.Width = toolWidth;
-			roadTool.Height = toolWidth;
-			roadTool.Left = toolWidth / 2;
-			roadTool.Top = 0;
+            roadTool.Height = toolHeight;
+            roadTool.Left = clientW / 2 - toolWidth / 2;
+            roadTool.Top = toolMargin;
 			roadTool.Text = "";
 			roadTool.image = sys.LoadTexture("RoadIcon");
             roadTool.Click += new TomShane.Neoforce.Controls.EventHandler(RoadToolBehavior);
@@ -77,9 +84,9 @@ namespace MapEditor_TLCB.Systems
 			eraserTool.Init();
 			eraserTool.Parent = toolbarWindow;
 			eraserTool.Width = toolWidth;
-			eraserTool.Height = toolWidth;
-			eraserTool.Left = toolWidth / 2;
-			eraserTool.Top = toolWidth;
+            eraserTool.Height = toolHeight;
+            eraserTool.Left = clientW / 2 - toolWidth/2;
+            eraserTool.Top = toolHeight + toolMargin*2;
 			eraserTool.Text = "";
 			eraserTool.image = sys.LoadTexture("EraserIcon");
             eraserTool.Click += new TomShane.Neoforce.Controls.EventHandler(EraseToolBehavior);
@@ -88,20 +95,20 @@ namespace MapEditor_TLCB.Systems
 			paintTool.Init();
 			paintTool.Parent = toolbarWindow;
 			paintTool.Width = toolWidth;
-			paintTool.Height = toolWidth;
-			paintTool.Left = toolWidth / 2;
-			paintTool.Top = 2 * toolWidth;
+            paintTool.Height = toolHeight;
+            paintTool.Left = clientW / 2 - toolWidth / 2;
+            paintTool.Top = (toolHeight*2 + toolMargin * 3);
 			paintTool.Text = "";
 			paintTool.image = sys.LoadTexture("PaintingIcon");
             paintTool.Click += new TomShane.Neoforce.Controls.EventHandler(PaintToolBehavior);
 
 			//
-			int top = toolbarWindow.Height - 24 * 6 + 10;
+            int top = (toolHeight * 3 + toolMargin * 4) +10;
 			pathsValid = new CheckBox(manager);
 			pathsValid.Init();
 			pathsValid.Parent = toolbarWindow;
 			pathsValid.Text = "";
-			pathsValid.Left = 1;
+            pathsValid.Left = clientW/2 - 15/2 - 16;
 			pathsValid.Top = top;
 			pathsValid.Width = 15;
 			pathsValid.Enabled = false;
@@ -118,7 +125,7 @@ namespace MapEditor_TLCB.Systems
 			playerValid.Init();
 			playerValid.Parent = toolbarWindow;
 			playerValid.Text = "";
-			playerValid.Left = 16;
+            playerValid.Left = clientW / 2 - 15/2;
 			playerValid.Top = top;
 			playerValid.Width = 15;
 			playerValid.Enabled = false;
@@ -135,7 +142,7 @@ namespace MapEditor_TLCB.Systems
 			switchesValid.Init();
 			switchesValid.Parent = toolbarWindow;
 			switchesValid.Text = "";
-			switchesValid.Left = 31;
+			switchesValid.Left = clientW/2 - 15/2 +16;
 			switchesValid.Top = top;
 			switchesValid.Width = 15;
 			switchesValid.Enabled = false;
@@ -149,54 +156,55 @@ namespace MapEditor_TLCB.Systems
 			switchesValid.ToolTip.Color = Color.Red;
 			//
 
+            int btnW = (int)(toolbarWindow.ClientWidth * 0.8f);
 			exportMap = new Button(manager);
 			exportMap.Init();
 			exportMap.Parent = toolbarWindow;
 			exportMap.Text = "Export Map";
-			exportMap.Width = toolbarWindow.Width;
+            exportMap.Width = btnW;
 			exportMap.Height = 24;
-			exportMap.Left = 0;
-			exportMap.Top = toolbarWindow.Height - 24 * 5;
+            exportMap.Left = clientW / 2 - btnW / 2;
+            exportMap.Top = toolbarWindow.ClientHeight - 26 * 5;
 			exportMap.Click += new TomShane.Neoforce.Controls.EventHandler(ExportMapBehavior);
 
 			saveMap = new Button(manager);
 			saveMap.Init();
 			saveMap.Parent = toolbarWindow;
 			saveMap.Text = "Save Map";
-			saveMap.Width = toolbarWindow.Width;
+            saveMap.Width = btnW;
 			saveMap.Height = 24;
-			saveMap.Left = 0;
-			saveMap.Top = toolbarWindow.Height - 24 * 4;
+            saveMap.Left = clientW / 2 - btnW / 2;
+            saveMap.Top = toolbarWindow.ClientHeight - 26 * 4;
 			saveMap.Click += new TomShane.Neoforce.Controls.EventHandler(SaveMapBehavior);
 
 			newMap = new Button(manager);
 			newMap.Init();
 			newMap.Parent = toolbarWindow;
 			newMap.Text = "New Map";
-			newMap.Width = toolbarWindow.Width;
+            newMap.Width = btnW;
 			newMap.Height = 24;
-			newMap.Left = 0;
-			newMap.Top = toolbarWindow.Height - 24 * 3;
+            newMap.Left = clientW / 2 - btnW / 2;
+            newMap.Top = toolbarWindow.ClientHeight - 26 * 3;
 			newMap.Click += new TomShane.Neoforce.Controls.EventHandler(NewMapBehavior);
 
 			backToStartScreen = new Button(manager);
 			backToStartScreen.Init();
 			backToStartScreen.Parent = toolbarWindow;
 			backToStartScreen.Text = "To Start Screen";
-			backToStartScreen.Width = toolbarWindow.Width;
+            backToStartScreen.Width = btnW;
 			backToStartScreen.Height = 24;
-			backToStartScreen.Left = 0;
-			backToStartScreen.Top = toolbarWindow.Height - 24 * 2;
+            backToStartScreen.Left = clientW / 2 - btnW / 2;
+            backToStartScreen.Top = toolbarWindow.ClientHeight - 26 * 2;
 			backToStartScreen.Click += new TomShane.Neoforce.Controls.EventHandler(BackToStartScreenBehavior);
 
 			exitButton = new Button(manager);
 			exitButton.Init();
 			exitButton.Parent = toolbarWindow;
 			exitButton.Text = "Exit";
-			exitButton.Width = toolbarWindow.Width;
-			exitButton.Height = 25;
-			exitButton.Left = 0;
-			exitButton.Top = toolbarWindow.Height - exitButton.Height;
+            exitButton.Width = btnW;
+			exitButton.Height = 24;
+            exitButton.Left = clientW / 2 - btnW/2;
+            exitButton.Top = toolbarWindow.ClientHeight - 26;
 			exitButton.Click += new TomShane.Neoforce.Controls.EventHandler(ExitBehavior);
 			
 
