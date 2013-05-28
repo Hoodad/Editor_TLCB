@@ -94,7 +94,7 @@ namespace MapEditor_TLCB.Actions
             m_startNodeId=-1;
             scrollOffset = Vector2.Zero;
             scrollInputBuffer=Vector2.Zero;
-            m_renderOffset = new Vector2(25, 50);
+            m_renderOffset = new Vector2(30, 50);
 			m_nodes = new InvariableIndexList<ActionNode>();
 			m_actions = new InvariableIndexList<ActionInterface>();
 			m_currentNodeId = addAction(null);
@@ -105,7 +105,7 @@ namespace MapEditor_TLCB.Actions
         {
             scrollOffset = Vector2.Zero;
             scrollInputBuffer = Vector2.Zero;
-            m_renderOffset = new Vector2(25, 50);
+            m_renderOffset = new Vector2(30, 50);
             m_currentNodeId = p_startId;
             m_startNodeId = p_startId;
             m_nodes = new InvariableIndexList<ActionNode>();
