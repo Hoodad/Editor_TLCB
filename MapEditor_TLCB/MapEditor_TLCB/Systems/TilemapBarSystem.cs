@@ -120,6 +120,8 @@ namespace MapEditor_TLCB.Systems
                 spacePressed = false;
                 panningEnable = false;
             }
+
+			
 		}
         public void PanningMouseDownBehavior(object sender, TomShane.Neoforce.Controls.MouseEventArgs e)
         {
@@ -174,6 +176,18 @@ namespace MapEditor_TLCB.Systems
 
                 startingScrollLocation.X += difference.X;
                 startingScrollLocation.Y += difference.Y;
+
+				if (startingScrollLocation.X < 0)
+					startingScrollLocation.X = 0;
+				else if (startingScrollLocation.X > (tilemap.Width-tilemapWindow.Width + 32))
+					startingScrollLocation.X = tilemap.Width - tilemapWindow.Width + 32;
+
+				if (startingScrollLocation.Y < 0)
+					startingScrollLocation.Y = 0;
+				else if (startingScrollLocation.Y > (tilemap.Height-tilemapWindow.Height + 54))
+					startingScrollLocation.Y = tilemap.Height - tilemapWindow.Height + 54;
+
+				Debug.Print(startingScrollLocation.ToString());
 
                 tilemapWindow.ScrollTo(startingScrollLocation.X, startingScrollLocation.Y);
             }
