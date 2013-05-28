@@ -99,7 +99,7 @@ namespace MapEditor_TLCB.Systems
 
             //Character events
             EventData avatarEvent = new EventData(setToolCallback, new IntPair(270, 270));
-            EventData robot = new EventData(setToolCallback, new IntPair(302, 302));
+            EventData robot = new EventData(setToolCallback, new IntPair(301, 301));
             EventData rat1E = new EventData(setToolCallback, new IntPair(300, 300));
             EventData rat2E = new EventData(setToolCallback, new IntPair(301, 301));
             events.Add(avatarEvent);
@@ -154,7 +154,7 @@ namespace MapEditor_TLCB.Systems
             characterList.Add(new RadialMenuItem("Avatar", cheeseboy, avatarEvent));
             characterList.Add(new RadialMenuItem("Robotaparte", napoleon, robot));
             characterList.Add(new RadialMenuItem("Rat", rat1, rat1E));
-            characterList.Add(new RadialMenuItem("Infected Rat", rat2, rat2E));
+            //characterList.Add(new RadialMenuItem("Infected Rat", rat2, rat2E));
             RadialMenu charactersMenu = new RadialMenu(m_device, m_content, characterList, characters, null, ev, this);
 
             //POWER-UPS MENU

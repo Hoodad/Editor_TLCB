@@ -436,6 +436,14 @@ namespace MapEditor_TLCB
                 Color c = new Color(100, 100, 100, 255);
                 c *= 0.25f;
                 p_sb.Draw(m_largeWhiteDot, rect, c);
+
+                if (m_menus[m_current].GetCurrent() == null)
+                {
+                    c.R = 255;
+                    c.G = 255;
+                    c.B = 200;
+                    c *= 0.25f;
+                }
                 dotSize *= 0.5f;
                 rect.X = (int)(m_position.X - dotSize * 0.5);
                 rect.Y = (int)(m_position.Y - dotSize * 0.5f);

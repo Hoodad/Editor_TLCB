@@ -13,12 +13,16 @@ namespace MapEditor_TLCB.Systems
 	{
 		ContentManager contentManager;
 		GraphicsDeviceManager deviceManager;
+		Dictionary<string, Texture2D> textures;
 
-		public ContentSystem(ContentManager p_contentManager, 
-			GraphicsDeviceManager p_deviceManager) : base()
+		public ContentSystem(ContentManager p_contentManager,
+			GraphicsDeviceManager p_deviceManager, 
+			Dictionary<string, Texture2D>  p_textures)
+			: base()
 		{
 			contentManager = p_contentManager;
 			deviceManager = p_deviceManager;
+			textures = p_textures;
 		}
 		public Texture2D LoadTexture(string p_asset)
 		{
@@ -35,6 +39,10 @@ namespace MapEditor_TLCB.Systems
 		public Texture2D CreateANewTexture2D(int p_width, int p_height)
 		{
 			return new Texture2D(deviceManager.GraphicsDevice, p_width, p_height);
+		}
+		public Dictionary<string, Texture2D> GetTextureDictionary()
+		{
+			return textures;
 		}
 	}
 }

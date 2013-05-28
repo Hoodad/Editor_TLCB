@@ -7,6 +7,7 @@ using System.Diagnostics;
 using MapEditor_TLCB.Common;
 using System;
 using MapEditor_TLCB.Components;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MapEditor_TLCB
 {
@@ -154,24 +155,57 @@ namespace MapEditor_TLCB
 			Serializer seri = new Serializer();
 			obj = seri.DeSerializeObject(p_completePath);
 
-
+			//Avoid the action at place 0 since it's not a acttion
 			for (int i = 1; i < obj.actions.getSize(); i++ )
 			{
 				obj.actions.at(i).AddAffectedSystems(world.SystemManager);
 			}
 
+
+            // Add some form of better clear here
+            List<ActionInterface> actions = actionTree.undo();
+            while (actions != null)
+            {
+                foreach (ActionInterface action in actions)
+                    if (action != null) action.PerformAction();
+
+                actions = actionTree.undo();
+            }
+            ////////
+
+            actionTree.Clear(0); // zero: because we're adding data right away and we want to start from root
 			actionTree.SetData(obj.nodes, obj.actions);
+            PerformActionList(actionTree.setCurrent(obj.currentNode));
 
 			List<Paragraph> info = new List<Paragraph>();
 			info.Add(new Paragraph("Successfully loaded saved map from\n" + p_completePath));
 			Notification alreadySaving = new Notification("Successfully loaded saved map!", NotificationType.SUCCESS, info, "Load");
-			((NotificationBarSystem)(world.SystemManager.GetSystem<NotificationBarSystem>()[0])).AddNotification(alreadySaving);
+			NotificationBarSystem notSys = (NotificationBarSystem)(world.SystemManager.GetSystem<NotificationBarSystem>()[0]);
+			notSys.AddNotification(alreadySaving);
 
+			ContentSystem sys = ((ContentSystem)world.SystemManager.GetSystem<ContentSystem>()[0]);
+			Dictionary<string, Texture2D> textures = sys.GetTextureDictionary();
+			
+			Texture2D tileMap;
+			if (textures.ContainsKey(obj.preferredTileMap)){
+				tileMap = textures[obj.preferredTileMap];
+			}
+			else{
+				string tilemap_garden = "tilemap_garden";
+				tileMap = textures["tilemap_garden"];
+
+				List<Paragraph> missingTextureDetails = new List<Paragraph>();
+				missingTextureDetails.Add(new Paragraph("Failed to find the preferred tileSheet\n" + obj.preferredTileMap + "\nReverting back to " + tilemap_garden));
+				Notification missingTexture = new Notification("Failed to find tileSheet", NotificationType.WARNING, missingTextureDetails, "Missing Texture");
+				notSys.AddNotification(missingTexture);
+			}
+			((StartupDialogSystem)world.SystemManager.GetSystem<StartupDialogSystem>()[0]).RequestToChangeTilemap(tileMap);
 		}
 		public void SaveSerialiazedActions(string p_completePath)
 		{
 			ActionsSerialized obj = new ActionsSerialized();
 
+            int currentNode = actionTree.m_currentNodeId;
 
 			List<ActionInterface> actions = actionTree.undo();
 			while(actions != null)
@@ -184,6 +218,9 @@ namespace MapEditor_TLCB
 
 			obj.nodes = actionTree.GetData().Item1;
 			obj.actions = actionTree.GetData().Item2;
+            obj.currentNode = currentNode;
+			obj.preferredTileMap = ((StartupDialogSystem)(world.SystemManager.GetSystem<StartupDialogSystem>()[0])).tilemap.Name;
+
 
 			Serializer seri = new Serializer();
 			seri.SerializeObject(p_completePath, obj);
@@ -192,6 +229,8 @@ namespace MapEditor_TLCB
             info.Add(new Paragraph("Successfully saved the map to\n" + p_completePath));
 			Notification alreadySaving = new Notification("Successfully saved the map!", NotificationType.SUCCESS, info, "Save");
 			((NotificationBarSystem)(world.SystemManager.GetSystem<NotificationBarSystem>()[0])).AddNotification(alreadySaving);
+
+            PerformActionList(actionTree.setCurrent(currentNode));
 		}
 		public void ClearAllActions()
 		{

@@ -399,10 +399,12 @@ namespace MapEditor_TLCB
             }
             p_sb.DrawString(m_font, "Go Back", m_position + new Vector2(0, y), backColor);
             y += textSize.Y*1.5f;
+            y = (float)Math.Ceiling((double)y);
 
             textSize = m_font2.MeasureString(m_notifications[m_showAdditionalInformation].heading);
             p_sb.DrawString(m_font2, m_notifications[m_showAdditionalInformation].heading, m_position + new Vector2(0, y), Color.White);
             y += textSize.Y*1.1f;
+            y = (float)Math.Ceiling((double)y);
 
             for (int i = 0; i < paragraphs.Count; i++)
             {

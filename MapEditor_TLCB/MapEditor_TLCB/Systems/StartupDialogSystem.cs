@@ -70,6 +70,11 @@ namespace MapEditor_TLCB.Systems
 			StateSystem stateSys = (StateSystem)world.SystemManager.GetSystem<StateSystem>()[0];
 			stateSys.SetCanvasCanBeReached(false);
 		}
+		public void RequestToChangeTilemap(Texture2D p_texture)
+		{
+			tilemap = p_texture;
+			requestToChangeTilemap = true;
+		}
 		public bool IsVisible()
 		{
 			return startupDialog.Visible;
@@ -154,7 +159,7 @@ namespace MapEditor_TLCB.Systems
 			tileMapGarden.Top = buttonSize * 0 + 8;
 			tileMapGarden.Left = buttonSize * 0 + 8 * 1;
 			tileMapGarden.tilemap = textures["tilemap_garden"];
-			tileMapGarden.tilemap.Name = "Tilemap_garden";
+			tileMapGarden.tilemap.Name = "tilemap_garden";
 			tileMapGarden.Click += new TomShane.Neoforce.Controls.EventHandler(OnTilemapButtonClickBehavior);
 			tileMapGarden.MouseOver += new MouseEventHandler(OnTilemapButtonMouseOverBehavior);
 			tileMapGarden.FocusGained += new TomShane.Neoforce.Controls.EventHandler(OnTilemapButtonMouseOverBehavior);
@@ -169,7 +174,7 @@ namespace MapEditor_TLCB.Systems
 			tileMapCellar.Top = buttonSize * 0 + 8;
 			tileMapCellar.Left = buttonSize * 1 + 8 * 2;
 			tileMapCellar.tilemap = textures["tilemap_winecellar"];
-			tileMapCellar.tilemap.Name = "Tilemap_winecellar";
+			tileMapCellar.tilemap.Name = "tilemap_winecellar";
 			tileMapCellar.Click += new TomShane.Neoforce.Controls.EventHandler(OnTilemapButtonClickBehavior);
 			tileMapCellar.MouseOver += new MouseEventHandler(OnTilemapButtonMouseOverBehavior);
 			tileMapCellar.FocusGained += new TomShane.Neoforce.Controls.EventHandler(OnTilemapButtonMouseOverBehavior);

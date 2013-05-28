@@ -72,11 +72,13 @@ namespace MapEditor_TLCB
 			manager = new Manager(this, graphics, "Blue");
 
 			// Setting up the shared skins directory
-			manager.SkinDirectory = "../../../Neoforce/Skins";
+			manager.SkinDirectory = "Content/Skins/";
 			manager.RenderTarget = new RenderTarget2D(GraphicsDevice, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.DiscardContents);
 			manager.TargetFrames = 120;
 			manager.Initialize();
-
+#if(!DEBUG)
+			manager.LogUnhandledExceptions = false;
+#endif
 			world = new EntityWorld();
 
 
@@ -126,7 +128,7 @@ namespace MapEditor_TLCB
 			systemManager.SetSystem(new InputDeltaSystem(), ExecutionType.Update);
 			systemManager.SetSystem(new EventSystem(), ExecutionType.Update);
 			systemManager.SetSystem(new CanvasControlSystem(manager, canvasRender), ExecutionType.Update); // Canvas window is furthest back.
-			systemManager.SetSystem(new ContentSystem(Content, graphics), ExecutionType.Update);
+			systemManager.SetSystem(new ContentSystem(Content, graphics, textures), ExecutionType.Update);
 			systemManager.SetSystem(new ToolbarSystem(manager), ExecutionType.Update);
 			systemManager.SetSystem(new UndoTreeSystem(manager, GraphicsDevice, Content), ExecutionType.Update);
 			systemManager.SetSystem(new ActionSystem(), ExecutionType.Update);
@@ -215,11 +217,11 @@ namespace MapEditor_TLCB
 
 			KeyDelta.initialize();
 
-			using (FileStream fileStream = new FileStream(@"Content\TileSheets\tilemap_garden.png", FileMode.Open))
+			using (FileStream fileStream = new FileStream(@"Content\TileSheets\tilemap_garden.png", FileMode.Open, FileAccess.Read, FileShare.Read))
 			{
 				textures.Add("tilemap_garden", Texture2D.FromStream(graphics.GraphicsDevice, fileStream));
 			}
-			using (FileStream fileStream = new FileStream(@"Content\TileSheets\tilemap_winecellar.png", FileMode.Open))
+			using (FileStream fileStream = new FileStream(@"Content\TileSheets\tilemap_winecellar.png", FileMode.Open, FileAccess.Read, FileShare.Read))
 			{
 				textures.Add("tilemap_winecellar", Texture2D.FromStream(graphics.GraphicsDevice, fileStream));
 			}
