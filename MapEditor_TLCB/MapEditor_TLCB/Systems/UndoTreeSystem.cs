@@ -56,7 +56,7 @@ namespace MapEditor_TLCB.Systems
 
             undoTreeWindow = new Window(manager);
             undoTreeWindow.Init();
-            undoTreeWindow.Text = "Undo Tree";
+            undoTreeWindow.Text = "History";
             undoTreeWindow.Width = 200;
             undoTreeWindow.Height = (int)((float)viewport.Height * 0.6f);
             undoTreeWindow.Top = 0;
