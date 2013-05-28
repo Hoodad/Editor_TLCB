@@ -1,0 +1,13 @@
+Tool icons:
+"Eraser" by http://www.visualpharm.com
+"Pen" by http://www.visualpharm.com
+Road Tool "Wave" by http://adamwhitcroft.com/batch/
+
+Radial menu icons:
+"Arrow Down" by http://www.visualpharm.com
+
+Notification bar icons:
+"Ok" by http://www.visualpharm.com
+Warning "System Error" by http://www.visualpharm.com
+Error "Cancel" by http://www.visualpharm.com
+"Info" by http://www.visualpharm.com
