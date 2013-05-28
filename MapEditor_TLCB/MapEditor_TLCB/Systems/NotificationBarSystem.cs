@@ -36,13 +36,13 @@ namespace MapEditor_TLCB.Systems
 		{
 			Viewport viewport = ((ContentSystem)world.SystemManager.GetSystem<ContentSystem>()[0]).GetViewport();
 
-            originalWidth = (int)((float)viewport.Width * 0.4f);
+            originalWidth = (int)((float)viewport.Width * 0.5f);
 
 			//Notification Bar
 			notificationWindow = new Window(manager);
 			notificationWindow.Init();
 			notificationWindow.Text = "Notification Bar";
-			notificationWindow.Height = 80;
+			notificationWindow.Height = 100;
             notificationWindow.Width = originalWidth;
 			notificationWindow.Visible = true;
 			notificationWindow.Top = viewport.Height - notificationWindow.Height;
