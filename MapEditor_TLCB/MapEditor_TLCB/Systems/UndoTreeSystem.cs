@@ -27,6 +27,8 @@ namespace MapEditor_TLCB.Systems
         ScrollBar sbHorz;
         private const int scrollMax = 100;
 
+		bool haveShownUndoTreeInfo = false;
+
         public UndoTreeContainer undoTreeContainer;
         GraphicsDevice m_gd;
         ContentManager m_content;
@@ -154,10 +156,14 @@ namespace MapEditor_TLCB.Systems
         }
         public void OnWindowClickBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
-            NotificationBarSystem noteSys = (NotificationBarSystem)world.SystemManager.GetSystem<NotificationBarSystem>()[0];
-            Notification n = new Notification("The Undo Tree allows you to jump between various map states.", NotificationType.INFO);
-            noteSys.AddNotification(n);
+			if (!haveShownUndoTreeInfo)
+			{
+				NotificationBarSystem noteSys = (NotificationBarSystem)world.SystemManager.GetSystem<NotificationBarSystem>()[0];
+				Notification n = new Notification("The Undo Tree allows you to jump between various map states.", NotificationType.INFO);
+				noteSys.AddNotification(n);
 
+				haveShownUndoTreeInfo = true;
+			}
         }
 
 

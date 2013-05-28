@@ -25,6 +25,7 @@ namespace MapEditor_TLCB.Systems
         bool panningEnable = false;
         bool spacePressed = false;
         bool m_haveShownTilemapMessage = false;
+		bool haveShownTilemapBar = false;
 		bool windowIsLarge = false;
 		bool enableWindowAutoSize = false;
 
@@ -248,9 +249,14 @@ namespace MapEditor_TLCB.Systems
 		}
         public void OnWindowClickBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
-            NotificationBarSystem noteSys = (NotificationBarSystem)world.SystemManager.GetSystem<NotificationBarSystem>()[0];
-            Notification n = new Notification("Select a tile from the tilemap to start drawing.", NotificationType.INFO);
-            noteSys.AddNotification(n);
+			if (!haveShownTilemapBar)
+			{
+				NotificationBarSystem noteSys = (NotificationBarSystem)world.SystemManager.GetSystem<NotificationBarSystem>()[0];
+				Notification n = new Notification("Select a tile from the tilemap to start drawing.", NotificationType.INFO);
+				noteSys.AddNotification(n);
+
+				haveShownTilemapBar = true;
+			}
         }
         public TilemapContainer GetTilemapContainer()
         {

@@ -20,6 +20,8 @@ namespace MapEditor_TLCB.Systems
         GraphicsDevice m_device;
         ContentManager m_content;
 
+		bool hasShownNotificationInfo = false;
+
         int originalWidth;
 
         bool m_focus = false;
@@ -81,8 +83,13 @@ namespace MapEditor_TLCB.Systems
         }
         public void OnWindowClickBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
-            Notification n = new Notification("The notification bar shows information, warnings and errors.", NotificationType.INFO);
-            AddNotification(n);
+			if (!hasShownNotificationInfo)
+			{
+				Notification n = new Notification("The notification bar shows information, warnings and errors.", NotificationType.INFO);
+				AddNotification(n);
+
+				hasShownNotificationInfo = true;
+			}
         }
         public void OnGainFocus(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {

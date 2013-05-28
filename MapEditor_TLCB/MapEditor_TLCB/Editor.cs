@@ -128,7 +128,7 @@ namespace MapEditor_TLCB
 			systemManager.SetSystem(new InputDeltaSystem(), ExecutionType.Update);
 			systemManager.SetSystem(new EventSystem(), ExecutionType.Update);
 			systemManager.SetSystem(new CanvasControlSystem(manager, canvasRender), ExecutionType.Update); // Canvas window is furthest back.
-			systemManager.SetSystem(new ContentSystem(Content, graphics), ExecutionType.Update);
+			systemManager.SetSystem(new ContentSystem(Content, graphics, textures), ExecutionType.Update);
 			systemManager.SetSystem(new ToolbarSystem(manager), ExecutionType.Update);
 			systemManager.SetSystem(new UndoTreeSystem(manager, GraphicsDevice, Content), ExecutionType.Update);
 			systemManager.SetSystem(new ActionSystem(), ExecutionType.Update);

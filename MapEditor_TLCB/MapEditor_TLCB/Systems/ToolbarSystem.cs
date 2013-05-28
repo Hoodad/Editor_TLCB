@@ -33,6 +33,8 @@ namespace MapEditor_TLCB.Systems
 		Button accept;
 		Button cancel;
 
+		bool haveShownToolbarInfo = false;
+
 		public ToolbarSystem(Manager p_manager)
 		{
 			manager = p_manager;
@@ -270,9 +272,14 @@ namespace MapEditor_TLCB.Systems
         }
         public void OnWindowClickBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
         {
-            NotificationBarSystem noteSys = (NotificationBarSystem)world.SystemManager.GetSystem<NotificationBarSystem>()[0];
-            Notification n = new Notification("The toolbar enables you to select draw tools and handle the project.", NotificationType.INFO);
-            noteSys.AddNotification(n);
+			if (!haveShownToolbarInfo)
+			{
+				NotificationBarSystem noteSys = (NotificationBarSystem)world.SystemManager.GetSystem<NotificationBarSystem>()[0];
+				Notification n = new Notification("The toolbar enables you to select draw tools and handle the project.", NotificationType.INFO);
+				noteSys.AddNotification(n);
+
+				haveShownToolbarInfo = true;
+			}
         }
 		public void BackToStartScreenBehavior(object sender, TomShane.Neoforce.Controls.EventArgs e)
 		{
