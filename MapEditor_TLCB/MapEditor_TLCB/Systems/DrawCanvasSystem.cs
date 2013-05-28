@@ -138,7 +138,7 @@ namespace MapEditor_TLCB.Systems
 
         private bool checkAddQueueItem(int state, Vector2 position, List<QueuedForRender> queued, Color color)
         {
-            if (state >= 270 && state < 302)
+            if (state >= 270 && state < 301)
             {
                 QueuedForRender toQueue = new QueuedForRender();
 
@@ -161,7 +161,7 @@ namespace MapEditor_TLCB.Systems
 
                 return true;
             }
-            else if (state == 302)
+            else if (state == 301)
             {
                 QueuedForRender toQueue = new QueuedForRender();
                 toQueue.pos = position - new Vector2(37.5f, 32);
