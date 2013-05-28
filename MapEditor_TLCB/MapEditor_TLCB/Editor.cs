@@ -154,7 +154,7 @@ namespace MapEditor_TLCB
 			Entity entity = world.CreateEntity();
 			entity.Tag = "mainCamera";
 
-			float zoomLevel = GraphicsDevice.Viewport.Width / 2500.0f;
+			float zoomLevel = GraphicsDevice.Viewport.Width / 3000.0f;
 
 			Vector2 pos = new Vector2();
 			pos.X = Window.ClientBounds.Width/2; //center position
