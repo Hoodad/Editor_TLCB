@@ -109,7 +109,7 @@ namespace MapEditor_TLCB
 			if (xnaWindow != null)
 			{
 				xnaWindow.FormClosing += f_FormClosing;
-				xnaWindow.Text = "The Little Cheese Boy Editor - Pre Alpha";
+				xnaWindow.Text = "The Little Cheese Boy Editor - Beta";
 
 				if (useMaxRes && GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height > 960)
 				{
