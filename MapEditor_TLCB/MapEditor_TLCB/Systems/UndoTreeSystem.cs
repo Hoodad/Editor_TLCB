@@ -183,6 +183,14 @@ namespace MapEditor_TLCB.Systems
                 world.TagManager.GetEntity("mainTilemap").GetComponent<TilemapValidate>().validateThisTick = true;
             }
 
+            if (me.Button == MouseButton.Right)
+            {
+                List<ActionInterface> actions = undoTreeContainer.m_undoTree.directSelectiveUndoByPosition();
+                m_actionsystem.PerformActionList(actions);
+
+                world.TagManager.GetEntity("mainTilemap").GetComponent<TilemapValidate>().validateThisTick = true;
+            }
+
         }
 
         public void UndoBehaviour(object sender, TomShane.Neoforce.Controls.EventArgs e)

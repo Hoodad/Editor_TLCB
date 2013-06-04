@@ -659,6 +659,33 @@ namespace MapEditor_TLCB.Actions
             return returnPath;
         }
 
+        public List<ActionInterface> directSelectiveUndoByPosition()
+        {
+            List<ActionInterface> undoObj = null;
+            int mousex = m_currentMousePosX - (int)((scrollOffset.X) * m_zoomValue + m_renderOffset.X);
+            int mousey = m_currentMousePosY - (int)((scrollOffset.Y) * m_zoomValue + m_renderOffset.Y);
+            // only check the visible for collision
+            foreach (int i in m_renderBatch)
+            {
+                if (i != -1 && i < m_nodes.getSize() && m_nodes[i] != null)
+                {
+                    if (isHit(i, mousex, mousey))
+                    {
+                        // if passed, click hit
+                        // int old = m_currentNodeId;
+                        undoObj = new List<ActionInterface>();
+                        foreach (int n in m_nodes[i].m_actionIds)
+                            undoObj.Add(m_actions[n]);
+                        undoObj.Reverse(); // actions must be reversed when executed for undo (executed from start to end)
+                        m_currentNodeId = addActionGroup(m_nodes[i].m_type, undoObj);
+                        // m_nodes[m_currentNodeId].m_redoId = old;   Test without for now
+                        break;
+                    }
+                }
+            }
+            return undoObj;
+        }
+
         public bool isHit(int p_nodeID, int p_x, int p_y)
         {
             ActionNode currentRender = m_nodes[p_nodeID];
